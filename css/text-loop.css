@@ -1,0 +1,25 @@
+.text-loop {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.text-loop-svg {
+  display: block;
+  width: 100%;
+  height: clamp(96px, 15vw, 210px);
+}
+
+.text-loop-text {
+  font-family: var(--font-display);
+  user-select: none;
+}
+
+.text-loop-measure {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.text-loop-band {
+  padding-block: clamp(1rem, 3vw, 2.5rem);
+}

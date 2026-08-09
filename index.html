@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eduardo — Desenvolvedor Front-end</title>
+  <meta name="description" content="Portfólio de Eduardo, desenvolvedor front-end. Interfaces rápidas, acessíveis e com atenção ao detalhe.">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Eduardo — Desenvolvedor Front-end">
+  <meta property="og:description" content="Portfólio de Eduardo, desenvolvedor front-end. Interfaces rápidas, acessíveis e com atenção ao detalhe.">
+  <meta property="og:image" content="assets/img/retrato.webp">
+  <meta name="theme-color" content="#0c0a09">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/scroll-expand.css">
+  <link rel="stylesheet" href="css/staggered-menu.css">
+  <link rel="stylesheet" href="css/gradual-blur.css">
+  <link rel="stylesheet" href="css/text-loop.css">
+
+  <style>
+    #eb-preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #0c0a09;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: opacity .7s cubic-bezier(.7, .2, .2, 1);
+    }
+    #eb-preloader.eb-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #eb-preloader .eb-logo {
+      display: flex;
+      align-items: baseline;
+      font-family: "Archivo Black", "Space Grotesk", sans-serif;
+      font-size: clamp(4.5rem, 14vw, 9.4rem);
+      line-height: .8;
+      letter-spacing: -.02em;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: transform .7s cubic-bezier(.7, .2, .2, 1),
+                  opacity .7s cubic-bezier(.7, .2, .2, 1);
+      will-change: transform, opacity;
+    }
+    #eb-preloader .eb-logo.eb-in   { transform: translateY(0); opacity: 1; }
+    #eb-preloader .eb-logo.eb-hide { transform: translateY(-80px); opacity: 0; }
+
+    #eb-preloader .eb-e { color: #faf9f6; }
+    #eb-preloader .eb-b {
+      color: #faf9f6;
+      -webkit-text-stroke: 2px #faf9f6;
+    }
+    @supports (-webkit-text-stroke: 1px black) {
+      #eb-preloader .eb-b { color: transparent; }
+    }
+
+    html.is-loading, html.is-loading body { overflow: hidden; }
+
+    @media (prefers-reduced-motion: reduce) {
+      #eb-preloader { transition-duration: .12s; }
+      #eb-preloader .eb-logo {
+        transform: none;
+        transition: opacity .12s linear;
+      }
+      #eb-preloader .eb-logo.eb-hide { transform: none; }
+    }
+  </style>
+
+  <script>
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      document.documentElement.classList.add('anim-ready');
+      setTimeout(function () {
+        if (!window.__animsStarted) {
+          document.documentElement.classList.remove('anim-ready');
+        }
+      }, 2500);
+    })();
+  </script>
+</head>
+<body>
+
+  <div id="eb-preloader" role="status" aria-label="Carregando">
+    <div class="eb-logo" id="eb-logo" aria-hidden="true">
+      <span class="eb-e">E</span><span class="eb-b">B</span>
+    </div>
+  </div>
+
+  <a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+  <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress__bar"></span></div>
+
+  <div class="page-frame" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <div class="nav__inner">
+
+      <a href="#contato" class="btn btn--sm btn--primary nav__cta">Vamos conversar</a>
+
+      <button class="sm-toggle" type="button"
+              aria-label="Abrir menu" aria-expanded="false" aria-controls="staggered-menu-panel">
+        <span class="sm-toggle-textWrap" aria-hidden="true">
+          <span class="sm-toggle-textInner">
+            <span class="sm-toggle-line">Menu</span>
+          </span>
+        </span>
+        <span class="sm-icon" aria-hidden="true">
+          <span class="sm-icon-line"></span>
+          <span class="sm-icon-line sm-icon-line-v"></span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <div class="staggered-menu-wrapper" data-staggered-menu data-position="right">
+    <div class="sm-prelayers" aria-hidden="true">
+      <div class="sm-prelayer" style="background: #3d3934"></div>
+      <div class="sm-prelayer" style="background: #14110e"></div>
+    </div>
+
+    <aside id="staggered-menu-panel" class="staggered-menu-panel" aria-hidden="true" aria-label="Menu principal">
+      <div class="sm-panel-inner">
+        <ul class="sm-panel-list" role="list">
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item" href="#hero" aria-label="Ir para o início">
+              <span class="sm-panel-itemLabel">Início</span>
+            </a>
+          </li>
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item" href="#sobre" aria-label="Ir para a seção sobre mim">
+              <span class="sm-panel-itemLabel">Sobre</span>
+            </a>
+          </li>
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item" href="#projetos" aria-label="Ir para os projetos">
+              <span class="sm-panel-itemLabel">Projetos</span>
+            </a>
+          </li>
+          <li class="sm-panel-itemWrap">
+            <a class="sm-panel-item" href="#contato" aria-label="Ir para o contato">
+              <span class="sm-panel-itemLabel">Contato</span>
+            </a>
+          </li>
+        </ul>
+
+        <div class="sm-socials" aria-label="Redes sociais">
+          <h3 class="sm-socials-title">Redes</h3>
+          <ul class="sm-socials-list" role="list">
+
+            <li><a href="https://github.com/EduardoBCGomes" class="sm-socials-link" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+            <li><a href="https://www.linkedin.com/in/eduardo-borges-07228714a/" class="sm-socials-link" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a href="mailto:eduardo26eduardo@gmail.com" class="sm-socials-link">E-mail</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <main id="main">
+
+    <section class="hero" id="hero">
+
+      <div class="hero__bg" aria-hidden="true">
+        <canvas class="hero__dither" data-dither aria-hidden="true"></canvas>
+      </div>
+
+      <div class="container hero__inner">
+        <div class="hero__text">
+          <h1 class="hero__title">
+            <span class="hero__line" data-hero-title>Eduardo</span>
+            <span class="hero__line hero__line--accent" data-hero-title>Front-end</span>
+          </h1>
+
+          <p class="hero__lead" data-hero="lead">
+            Construo interfaces rápidas, acessíveis e com atenção obsessiva
+            ao detalhe — do primeiro pixel à última animação.
+          </p>
+
+          <div class="hero__actions" data-hero="actions">
+            <a href="#projetos" class="btn btn--primary">
+              Ver projetos
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+            <a href="#contato" class="btn btn--ghost">Entrar em contato</a>
+          </div>
+        </div>
+
+        <div class="hero__media" data-hero="media">
+          <div class="hero__photo-frame">
+            <img
+              src="assets/img/retrato.webp"
+              alt="Retrato de Eduardo ao ar livre, olhando para o lado"
+              width="820" height="1094"
+              fetchpriority="high"
+              class="hero__photo" data-hero-photo>
+            <div class="hero__photo-glow" aria-hidden="true"></div>
+          </div>
+          <div class="hero__badge" aria-hidden="true">
+            <span>HTML</span><span>CSS</span><span>JS</span><span>GSAP</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="#sobre" class="scroll-hint" data-hero="hint" aria-label="Rolar para a próxima seção">
+        <span class="scroll-hint__label">rolar</span>
+        <span class="scroll-hint__line" aria-hidden="true"></span>
+      </a>
+    </section>
+
+    <div class="text-loop-band">
+      <div
+        data-text-loop
+        data-text="Interfaces ✦ Animação ✦ Acessibilidade ✦ Performance ✦ Design System"
+        data-shape="wave"
+        data-separator="✦"
+        data-curviness="26"
+        data-speed="70"
+        data-direction="forward"
+        data-font-size="34"
+        data-font-weight="700"
+        data-letter-spacing="1"
+        data-uppercase="true"
+        data-color="#14110E"
+        data-ribbon="true"
+        data-ribbon-color="#FAF9F6"
+        data-ribbon-width="72"
+        data-view-height="190"
+        data-pause-on-hover="false"></div>
+    </div>
+
+    <section class="section sobre" id="sobre">
+      <div class="container">
+        <header class="section__head" data-reveal>
+          <h2 class="section__title">Sobre mim</h2>
+        </header>
+
+        <div class="sobre__grid">
+          <div class="sobre__media" data-reveal>
+            <div class="sobre__photo-wrap">
+              <img
+                src="assets/img/corpo.webp"
+                alt="Eduardo em pé ao ar livre, com um moinho de vento ao fundo"
+                width="820" height="1094" loading="lazy"
+                class="sobre__photo" data-about-photo>
+            </div>
+          </div>
+
+          <div class="sobre__content">
+            <p class="sobre__lead" data-split-lines>
+             Sou Desenvolvedor Front-end e bacharel em Ciência da Computação. 
+             Minha trajetória começou no suporte técnico, o que me deu uma visão muito prática sobre as dores do usuário final e resolução de problemas. 
+             Hoje, aplico essa bagagem combinada com a base acadêmica para construir aplicações web eficientes, acessíveis e intuitivas.
+            </p>
+
+            <p class="sobre__body" data-reveal>
+              No dia a dia trabalho com HTML, CSS e JavaScript, construindo
+              componentes reutilizáveis e cuidando de detalhes que
+              normalmente passam despercebidos: contraste, foco de teclado,
+              tempo de carregamento e a curva de cada animação.
+            </p>
+
+            <ul class="skills" data-stagger>
+              <li class="skill">JavaScript</li>
+              <li class="skill">GSAP</li>
+              <li class="skill">WebGL / Shaders</li>
+              <li class="skill">Responsivo</li>
+              <li class="skill">Acessibilidade</li>
+            </ul>
+
+            <dl class="stats" data-stagger>
+              <div class="stat">
+                <dt class="stat__label">Foco</dt>
+                <dd class="stat__value">Front-end</dd>
+              </div>
+              <div class="stat">
+                <dt class="stat__label">Base</dt>
+                <dd class="stat__value">Brasil</dd>
+              </div>
+              <div class="stat">
+                <dt class="stat__label">Status</dt>
+                <dd class="stat__value">Aberto a projetos</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section
+      class="scroll-expand"
+      data-scroll-expand
+      data-start-width="42"
+      data-start-height="58"
+      data-start-radius="24"
+      data-end-radius="0"
+      data-media-zoom="1.35"
+      data-scroll-distance="1.2"
+      data-hold-distance="0.35"
+      data-smoothing="0.1"
+      data-overlay-scrim="0.5"
+      aria-label="Apresentação em tela cheia">
+
+      <div class="scroll-expand__track">
+        <div class="scroll-expand__stage">
+
+          <div class="scroll-expand__frame">
+
+            <canvas class="scroll-expand__media" data-physics-field aria-hidden="true"></canvas>
+
+            <div class="scroll-expand__scrim" aria-hidden="true"></div>
+
+            <div class="scroll-expand__overlay">
+              <h2 class="scroll-expand__overlay-title">Cada pixel, no lugar certo</h2>
+              <p class="scroll-expand__overlay-text">
+                Da arquitetura do código ao refinamento das animações: a interface ideal é aquela que desaparece para dar todo o protagonismo ao conteúdo.
+              </p>
+            </div>
+          </div>
+
+          <div class="scroll-expand__title">Do pixel ao produto</div>
+          <div class="scroll-expand__hint">role para expandir</div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section projetos" id="projetos">
+      <div class="container">
+        <header class="section__head" data-reveal>
+          <h2 class="section__title">Projetos</h2>
+          <p class="section__desc">Uma seleção do que venho construindo.</p>
+        </header>
+
+        <div class="projetos__grid" data-cards>
+
+          <article class="project-card" data-card>
+            <div class="project-card__top">
+              <span class="project-card__num">01</span>
+              <span class="project-card__tag">Aplicação</span>
+            </div>
+            <h3 class="project-card__title">Fluxo</h3>
+            <p class="project-card__desc">
+              Painel de chamados nascido da minha época de suporte: fila,
+              filtros e busca que respondem na hora. Feito para ser operado
+              inteiro pelo teclado, sem tirar a mão para o mouse.
+            </p>
+            <ul class="project-card__stack">
+              <li>JavaScript</li><li>CSS Grid</li><li>LocalStorage</li>
+            </ul>
+            <a href="#" class="project-card__link">
+              Ver projeto
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </article>
+
+          <article class="project-card" data-card>
+            <div class="project-card__top">
+              <span class="project-card__num">02</span>
+              <span class="project-card__tag">Landing page</span>
+            </div>
+            <h3 class="project-card__title">Cadência</h3>
+            <p class="project-card__desc">
+              Página de produto em que o scroll conduz a narrativa: cada
+              bloco entra no seu tempo. Com animação desligada nas
+              preferências do sistema, o conteúdo continua inteiro.
+            </p>
+            <ul class="project-card__stack">
+              <li>GSAP</li><li>ScrollTrigger</li><li>HTML</li>
+            </ul>
+            <a href="#" class="project-card__link">
+              Ver projeto
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </article>
+
+          <article class="project-card" data-card>
+            <div class="project-card__top">
+              <span class="project-card__num">03</span>
+              <span class="project-card__tag">Experimento</span>
+            </div>
+            <h3 class="project-card__title">Prisma</h3>
+            <p class="project-card__desc">
+              Playground de shaders no navegador: mexa nos parâmetros e veja
+              o GLSL responder quadro a quadro. Saiu da vontade de entender
+              WebGL escrevendo, não lendo.
+            </p>
+            <ul class="project-card__stack">
+              <li>WebGL</li><li>GLSL</li><li>Canvas</li>
+            </ul>
+            <a href="#" class="project-card__link">
+              Ver projeto
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="section contato" id="contato">
+      <div class="container">
+        <header class="section__head" data-reveal>
+          <h2 class="section__title">Contato</h2>
+        </header>
+
+        <div class="contato__grid">
+          <div class="contato__cta">
+            <p class="contato__big" data-split-lines>
+              Tem um projeto em mente? Vamos construir juntos.
+            </p>
+
+            <a href="mailto:eduardo26eduardo@gmail.com" class="contato__mail" data-reveal>
+              eduardo26eduardo@gmail.com
+            </a>
+
+            <ul class="socials" data-stagger>
+
+              <li><a href="https://github.com/EduardoBCGomes" class="social" data-magnetic target="_blank" rel="noopener noreferrer">GitHub</a></li>
+              <li><a href="https://www.linkedin.com/in/eduardo-borges-07228714a/" class="social" data-magnetic target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            </ul>
+          </div>
+
+          <form class="contact-form" id="contactForm" novalidate data-reveal>
+            <div class="field">
+              <label for="nome">Nome</label>
+              <input type="text" id="nome" name="nome" required autocomplete="name" placeholder="Como te chamo?">
+              <p class="field__error" data-error-for="nome"></p>
+            </div>
+
+            <div class="field">
+              <label for="email">E-mail</label>
+              <input type="email" id="email" name="email" required autocomplete="email" placeholder="voce@email.com">
+              <p class="field__error" data-error-for="email"></p>
+            </div>
+
+            <div class="field">
+              <label for="mensagem">Mensagem</label>
+              <textarea id="mensagem" name="mensagem" rows="5" required placeholder="Conte um pouco sobre a ideia..."></textarea>
+              <p class="field__error" data-error-for="mensagem"></p>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--block">Enviar mensagem</button>
+
+            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div data-gradual-blur
+       data-target="page"
+       data-position="bottom"
+       data-height="4.5rem"
+       data-strength="1.1"
+       data-div-count="3"
+       data-curve="bezier"
+       data-exponential="false"
+       data-opacity="1"
+       data-z-index="-10"></div>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>© <span id="year"></span> Eduardo. Todos os direitos reservados.</p>
+      <a href="#hero" class="footer__top">Voltar ao topo ↑</a>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+
+  <script src="js/preloader.js"></script>
+  <script src="js/dither.js"></script>
+  <script src="js/physics-field.js"></script>
+  <script src="js/scroll-expand.js"></script>
+  <script src="js/staggered-menu.js"></script>
+  <script src="js/gradual-blur.js"></script>
+  <script src="js/text-loop.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/animations.js"></script>
+</body>
+</html>
