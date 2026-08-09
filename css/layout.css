@@ -1,4 +1,4 @@
-.scroll-progress {
+﻿.scroll-progress {
   position: fixed;
   inset: 0 0 auto 0;
   height: 2px;
@@ -183,6 +183,7 @@
   position: relative;
   justify-self: end;
   width: min(100%, 400px);
+  will-change: transform;
 }
 .hero__photo-frame {
   position: relative;
@@ -198,7 +199,6 @@
   height: 100%;
   object-fit: cover;
   object-position: center 22%;
-  will-change: transform;
 }
 .hero__photo-frame::after {
   content: "";
@@ -213,34 +213,6 @@
   height: 55%;
   background: radial-gradient(50% 100% at 50% 100%, var(--accent-glow), transparent 72%);
   pointer-events: none;
-}
-
-.hero__badge {
-  position: absolute;
-  left: 50%;
-  translate: -50% 0;
-  bottom: 1.25rem;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: .4rem;
-  width: max-content;
-  max-width: calc(100% - 2rem);
-}
-.hero__badge span {
-  padding: .38rem .8rem;
-  border-radius: var(--radius-pill);
-  font-size: var(--fs-xs);
-  font-weight: 500;
-  letter-spacing: .04em;
-  white-space: nowrap;
-
-  background: linear-gradient(180deg, rgba(250, 249, 246, .14), rgba(250, 249, 246, .06));
-  border: 1px solid rgba(250, 249, 246, .16);
-  box-shadow:
-    inset 0 1px 0 rgba(250, 249, 246, .28),
-    inset 0 -1px 0 rgba(250, 249, 246, .08),
-    0 8px 22px -14px rgba(0, 0, 0, .9);
 }
 
 .scroll-hint {

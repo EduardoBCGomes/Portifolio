@@ -80,8 +80,8 @@
          .to('[data-hero="media"]',   { opacity: 1, duration: .8 }, .2)
          .to('[data-hero="hint"]',    { opacity: 1, y: 0, duration: .6 }, .9);
 
-    gsap.to('.hero__photo', {
-      yPercent: 12,
+    gsap.to('.hero__media', {
+      yPercent: -7,
       ease: 'none',
       scrollTrigger: {
         trigger: '.hero',
