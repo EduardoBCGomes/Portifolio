@@ -320,12 +320,7 @@
   margin-bottom: 2.4rem;
 }
 
-.projetos__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: clamp(1rem, 2.4vw, 1.75rem);
-  perspective: 1200px;
-}
+
 
 .contato__grid {
   display: grid;

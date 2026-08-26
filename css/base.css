@@ -186,11 +186,6 @@ p { text-wrap: pretty; }
   transform: translateY(20px);
 }
 
-.anim-ready [data-card] {
-  opacity: 0;
-  transform: translateY(50px);
-}
-
 .anim-ready .scroll-progress__bar { transform: scaleX(0); }
 
 @media (prefers-reduced-motion: reduce) {

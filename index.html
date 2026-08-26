@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="css/staggered-menu.css">
   <link rel="stylesheet" href="css/gradual-blur.css">
   <link rel="stylesheet" href="css/text-loop.css">
+  <link rel="stylesheet" href="css/morph-slider.css">
 
   <style>
     #eb-preloader {
@@ -281,20 +282,6 @@
               <li class="skill">Acessibilidade</li>
             </ul>
 
-            <dl class="stats" data-stagger>
-              <div class="stat">
-                <dt class="stat__label">Foco</dt>
-                <dd class="stat__value">Front-end</dd>
-              </div>
-              <div class="stat">
-                <dt class="stat__label">Base</dt>
-                <dd class="stat__value">Brasil</dd>
-              </div>
-              <div class="stat">
-                <dt class="stat__label">Status</dt>
-                <dd class="stat__value">Aberto a projetos</dd>
-              </div>
-            </dl>
           </div>
         </div>
       </div>
@@ -342,71 +329,37 @@
       <div class="container">
         <header class="section__head" data-reveal>
           <h2 class="section__title">Projetos</h2>
-          <p class="section__desc">Uma seleção do que venho construindo.</p>
+          <p class="section__desc">Arraste, use as setas ou espere — cada projeto abre no botão.</p>
         </header>
 
-        <div class="projetos__grid" data-cards>
+        <div class="morph-slider" data-morph-slider
+             data-transition="melt"
+             data-intensity="0.5"
+             data-aberration="0.3"
+             data-drift="0.35"
+             data-duration="1.1"
+             data-autoplay="true"
+             data-autoplay-delay="5"
+             data-overlay-color="#0c0a09">
 
-          <article class="project-card" data-card>
-            <div class="project-card__top">
-              <span class="project-card__num">01</span>
-              <span class="project-card__tag">Aplicação</span>
-            </div>
-            <h3 class="project-card__title">Fluxo</h3>
-            <p class="project-card__desc">
-              Painel de chamados nascido da minha época de suporte: fila,
-              filtros e busca que respondem na hora. Feito para ser operado
-              inteiro pelo teclado, sem tirar a mão para o mouse.
-            </p>
-            <ul class="project-card__stack">
-              <li>JavaScript</li><li>CSS Grid</li><li>LocalStorage</li>
-            </ul>
-            <a href="#" class="project-card__link">
-              Ver projeto
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </article>
+          <ol class="morph-slider-items">
+            <li class="morph-slider-item"
+                data-titulo="AFlo"
+                data-descricao="Loja de buquês artesanais de Chenile, com montador passo a passo, checkout no Mercado Pago e painel de produção.">
+              <a href="https://aflo-aflo.vercel.app/">Ver projeto</a>
+              <img src="assets/projetos/aflo.webp" alt="Vitrine da loja AFlo, com o buquê Primavera em destaque" width="1600" height="759" loading="lazy">
+            </li>
 
-          <article class="project-card" data-card>
-            <div class="project-card__top">
-              <span class="project-card__num">02</span>
-              <span class="project-card__tag">Landing page</span>
-            </div>
-            <h3 class="project-card__title">Cadência</h3>
-            <p class="project-card__desc">
-              Página de produto em que o scroll conduz a narrativa: cada
-              bloco entra no seu tempo. Com animação desligada nas
-              preferências do sistema, o conteúdo continua inteiro.
-            </p>
-            <ul class="project-card__stack">
-              <li>GSAP</li><li>ScrollTrigger</li><li>HTML</li>
-            </ul>
-            <a href="#" class="project-card__link">
-              Ver projeto
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </article>
+            <li class="morph-slider-item"
+                data-titulo="Portfólio"
+                data-descricao="Este site. HTML, CSS e JavaScript puro, com animações em scroll e dois fundos em WebGL escritos à mão.">
+              <a href="https://eduardobcg.com.br" target="_blank" rel="noopener noreferrer">Abrir site</a>
+              <img src="assets/projetos/portfolio.webp" alt="Página inicial do portfólio de Eduardo" width="1600" height="1000" loading="lazy">
+            </li>
 
-          <article class="project-card" data-card>
-            <div class="project-card__top">
-              <span class="project-card__num">03</span>
-              <span class="project-card__tag">Experimento</span>
-            </div>
-            <h3 class="project-card__title">Prisma</h3>
-            <p class="project-card__desc">
-              Playground de shaders no navegador: mexa nos parâmetros e veja
-              o GLSL responder quadro a quadro. Saiu da vontade de entender
-              WebGL escrevendo, não lendo.
-            </p>
-            <ul class="project-card__stack">
-              <li>WebGL</li><li>GLSL</li><li>Canvas</li>
-            </ul>
-            <a href="#" class="project-card__link">
-              Ver projeto
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </a>
-          </article>
+            
 
+          </ol>
         </div>
       </div>
     </section>
@@ -492,6 +445,7 @@
   <script src="js/staggered-menu.js"></script>
   <script src="js/gradual-blur.js"></script>
   <script src="js/text-loop.js"></script>
+  <script src="js/morph-slider.js"></script>
   <script src="js/main.js"></script>
   <script src="js/animations.js"></script>
 </body>
