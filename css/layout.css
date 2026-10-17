@@ -307,6 +307,9 @@
   will-change: transform;
 }
 
+/* item de grid: sem isto o trilho do LogoLoop (max-content) estica a coluna */
+.sobre__content { min-width: 0; }
+
 .sobre__lead {
   font-family: var(--font-display);
   font-size: clamp(1.3rem, 2.8vw, 2rem);

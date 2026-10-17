@@ -1,0 +1,77 @@
+.logoloop {
+  width: 100%;
+  max-width: 100%;
+  --logoloop-gap: 32px;
+  --logoloop-logoHeight: 28px;
+  position: relative;
+  overflow: hidden;
+  overflow: clip;
+  margin-bottom: 2.5rem;
+  padding-block: .4rem;
+  color: var(--muted);
+  cursor: grab;
+  touch-action: pan-y pinch-zoom;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.logoloop[data-dragging],
+.logoloop[data-dragging] * { cursor: grabbing; }
+
+.logoloop__track {
+  position: relative;
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.logoloop__list {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.logoloop__item {
+  position: relative;
+  flex: 0 0 auto;
+  margin-right: var(--logoloop-gap);
+  font-size: var(--logoloop-logoHeight);
+  line-height: 1;
+}
+
+.anim-ready .logoloop[data-intro] .logoloop__item { opacity: 0; }
+
+.logoloop__content {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--logoloop-logoHeight) * .42);
+  color: inherit;
+  transition: color .35s var(--ease-out);
+}
+
+.logoloop__node {
+  display: inline-flex;
+  align-items: center;
+}
+.logoloop__node svg {
+  width: var(--logoloop-logoHeight);
+  height: var(--logoloop-logoHeight);
+  fill: currentColor;
+}
+
+.logoloop__label {
+  font-family: var(--font-display);
+  font-size: max(13px, calc(var(--logoloop-logoHeight) * .68));
+  font-weight: 500;
+  letter-spacing: -.01em;
+  white-space: nowrap;
+}
+
+.logoloop__item:hover .logoloop__content { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .logoloop__content { transition: none; }
+}
