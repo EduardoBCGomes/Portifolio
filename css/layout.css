@@ -50,22 +50,28 @@
   inset: 0 0 auto 0;
   z-index: 120;
   padding-block: clamp(.9rem, 2vw, 1.4rem);
-  transition: background .4s var(--ease-out),
-              backdrop-filter .4s var(--ease-out),
-              border-color .4s var(--ease-out);
-  border-bottom: 1px solid transparent;
   will-change: transform;
 }
 
-.nav.is-stuck {
+/* O vidro fica numa camada própria para poder sumir com fade: degradê e
+   backdrop-filter não fazem transição, então trocavam de uma vez. */
+.nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
   background: linear-gradient(180deg, rgba(250, 249, 246, .06), rgba(12, 10, 9, .62));
   backdrop-filter: blur(18px) saturate(165%);
   -webkit-backdrop-filter: blur(18px) saturate(165%);
-  border-bottom-color: var(--line);
+  border-bottom: 1px solid var(--line);
   box-shadow:
     inset 0 1px 0 rgba(250, 249, 246, .16),
     inset 0 -1px 0 rgba(250, 249, 246, .14);
+  opacity: 0;
+  transition: opacity .4s var(--ease-out);
+  pointer-events: none;
 }
+.nav.is-stuck::before { opacity: 1; }
 
 .nav__inner {
   width: 100%;
@@ -91,7 +97,6 @@
   line-height: 1;
   letter-spacing: -.02em;
   color: var(--accent);
-  transition: opacity .25s var(--ease-out);
 }
 .nav__logo-b {
   color: var(--muted);
@@ -99,31 +104,41 @@
 }
 .nav__logo:hover .nav__logo-b { color: var(--accent); }
 
-.nav__cta { transition: opacity .25s var(--ease-out); }
-
-.nav--menu-open {
-  background: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-bottom-color: transparent !important;
+/* Menu abrindo: EB e "Vamos conversar" ficam no lugar e só somem com
+   fade, junto com o vidro da barra. Ao fechar voltam com um pequeno
+   atraso, depois que o painel começou a sair. (O seletor com .nav vence o
+   transition do .btn, que antes engolia o fade do botão.) */
+.nav .nav__logo,
+.nav .nav__cta {
+  transition: opacity .45s var(--ease-out) .18s,
+              visibility 0s linear 0s,
+              transform .3s var(--ease-out),
+              background .3s var(--ease-out),
+              border-color .3s var(--ease-out),
+              color .3s var(--ease-out),
+              box-shadow .3s var(--ease-out);
 }
 
-.nav--menu-open .nav__cta,
-.nav--menu-open .nav__logo {
+.nav.nav--menu-open::before { opacity: 0; }
+
+.nav.nav--menu-open .nav__logo,
+.nav.nav--menu-open .nav__cta {
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
+  transition: opacity .25s var(--ease-out) 0s,
+              visibility 0s linear .25s,
+              transform .3s var(--ease-out),
+              background .3s var(--ease-out),
+              box-shadow .3s var(--ease-out);
 }
 
-.nav--menu-open .sm-toggle { color: #0c0a09; }
-
-.nav__inner {
-  transition: max-width .45s var(--ease-out), padding-inline .45s var(--ease-out);
-}
-@media (min-width: 768px) {
-  .nav--menu-open .nav__inner {
-    max-width: none;
-    padding-inline: var(--gutter) calc(10px + clamp(1.5rem, 4vw, 2.5rem));
-  }
+/* "Menu"/"Fechar" escurece quando o painel claro chega por baixo dele e
+   clareia de novo quando o painel já está saindo */
+.sm-toggle { transition: color .3s var(--ease-out) .12s; }
+.nav--menu-open .sm-toggle {
+  color: #0c0a09;
+  transition: color .3s var(--ease-out) .22s;
 }
 
 .hero {

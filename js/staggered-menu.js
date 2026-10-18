@@ -206,7 +206,27 @@
     });
   }
 
-  const FOCUSABLE = 'a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])';
+  // A barra do topo não muda mais de largura ao abrir (isso arrastava o EB
+  // e o botão). Só em telas muito largas o botão fica fora do painel claro;
+  // aí ele desliza até a borda interna do painel, junto com a entrada dele.
+  let toggleTween = null;
+  function moverToggle(opening) {
+    toggleTween?.kill();
+    let dx = 0;
+    if (opening) {
+      const caixa = wrapper.getBoundingClientRect();
+      const recuo = parseFloat(getComputedStyle(panel).paddingRight) || 0;
+      const t = toggleBtn.getBoundingClientRect();
+      const esquerdaPainel = caixa.right - panel.offsetWidth;
+      if (t.left < esquerdaPainel + 8) dx = caixa.right - recuo - t.right;
+    }
+    if (!opening && !gsap.getProperty(toggleBtn, 'x')) return;
+    toggleTween = opening
+      ? gsap.to(toggleBtn, { x: dx, duration: d(0.65), ease: 'power4.out', delay: d(0.1) })
+      : gsap.to(toggleBtn, { x: 0, duration: d(0.4), ease: 'power3.inOut' });
+  }
+
+  const FOCUSABLE ='a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])';
   let lastFocused = null;
 
   function onKeydown(e) {
@@ -247,6 +267,7 @@
     document.getElementById('nav')?.classList.add('nav--menu-open');
 
     playOpen();
+    moverToggle(true);
     animateIcon(true);
     animateText(true);
 
@@ -267,6 +288,7 @@
     document.getElementById('nav')?.classList.remove('nav--menu-open');
 
     playClose();
+    moverToggle(false);
     animateIcon(false);
     animateText(false);
 
