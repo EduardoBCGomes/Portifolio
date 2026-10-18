@@ -180,17 +180,26 @@
         return;
       }
 
-      const split = new SplitText(el, { type: 'lines', mask: 'lines' });
-      splits.push(split);
+      // As linhas dependem da largura do texto. Divididas uma vez só, ficavam
+      // congeladas: se a largura mudava depois (navegador de app que abre
+      // estreito, celular girando, janela redimensionada) saía uma palavra
+      // por linha. Com autoSplit o SplitText refaz a divisão quando a largura
+      // muda ou a fonte termina de carregar, e o tween devolvido no onSplit
+      // continua do ponto em que estava.
       gsap.set(el, { opacity: 1, y: 0 });
-
-      gsap.from(split.lines, {
-        yPercent: 110,
-        duration: .95,
-        ease: EASE,
-        stagger: .08,
-        scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+      const split = SplitText.create(el, {
+        type: 'lines',
+        mask: 'lines',
+        autoSplit: true,
+        onSplit: (self) => gsap.from(self.lines, {
+          yPercent: 110,
+          duration: .95,
+          ease: EASE,
+          stagger: .08,
+          scrollTrigger: { trigger: el, start: 'top 85%', once: true }
+        })
       });
+      splits.push(split);
     });
 
     gsap.fromTo('[data-about-photo]',
