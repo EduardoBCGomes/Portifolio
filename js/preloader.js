@@ -23,8 +23,14 @@
 
   const inicio = performance.now();
 
-  const fonteEmCena = (document.fonts && document.fonts.ready)
-    ? document.fonts.ready.catch(() => {})
+  // Espera a fonte do monograma de verdade: o document.fonts.ready lido
+  // aqui resolvia antes de a Archivo Black ser pedida, e o "EB" entrava
+  // com a fonte reserva e trocava no meio da animação.
+  const fonteEmCena = (document.fonts && document.fonts.load)
+    ? Promise.race([
+        document.fonts.load('1em "Archivo Black"', 'EB').catch(() => {}),
+        new Promise((r) => setTimeout(r, 1500))
+      ])
     : Promise.resolve();
 
   fonteEmCena.then(() => logo && logo.classList.add('eb-in'));

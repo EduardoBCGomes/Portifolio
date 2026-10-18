@@ -3,14 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eduardo — Desenvolvedor Front-end</title>
-  <meta name="description" content="Portfólio de Eduardo, desenvolvedor front-end. Interfaces rápidas, acessíveis e com atenção ao detalhe.">
+  <title>Eduardo Borges — Desenvolvedor Front-end</title>
+  <meta name="description" content="Portfólio de Eduardo Borges, desenvolvedor front-end. Interfaces rápidas, acessíveis e com atenção ao detalhe.">
+  <link rel="canonical" href="https://www.eduardobcg.com.br/">
 
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Eduardo — Desenvolvedor Front-end">
-  <meta property="og:description" content="Portfólio de Eduardo, desenvolvedor front-end. Interfaces rápidas, acessíveis e com atenção ao detalhe.">
-  <meta property="og:image" content="assets/img/retrato.webp">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:url" content="https://www.eduardobcg.com.br/">
+  <meta property="og:title" content="Eduardo Borges — Desenvolvedor Front-end">
+  <meta property="og:description" content="Portfólio de Eduardo Borges, desenvolvedor front-end. Interfaces rápidas, acessíveis e com atenção ao detalhe.">
+  <meta property="og:image" content="https://www.eduardobcg.com.br/assets/img/retrato.webp">
+  <meta property="og:image:alt" content="Retrato de Eduardo Borges">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="theme-color" content="#0c0a09">
+  <meta name="color-scheme" content="dark">
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Eduardo Borges",
+      "jobTitle": "Desenvolvedor Front-end",
+      "url": "https://www.eduardobcg.com.br/",
+      "image": "https://www.eduardobcg.com.br/assets/img/retrato.webp",
+      "email": "mailto:eduardo26eduardo@gmail.com",
+      "sameAs": [
+        "https://github.com/EduardoBCGomes",
+        "https://www.linkedin.com/in/eduardo-borges-07228714a/"
+      ]
+    }
+  </script>
 
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -19,7 +41,9 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- a Archivo Black só desenha o monograma "EB": pedir só essas letras corta o arquivo da fonte para ~1 KB -->
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&text=EB&display=block" rel="stylesheet">
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -114,6 +138,10 @@
 
   <header class="nav" id="nav">
     <div class="nav__inner">
+
+      <a href="#hero" class="nav__logo" aria-label="Eduardo Borges — voltar ao início">
+        <span class="nav__logo-e" aria-hidden="true">E</span><span class="nav__logo-b" aria-hidden="true">B</span>
+      </a>
 
       <a href="#contato" class="btn btn--sm btn--primary nav__cta">Vamos conversar</a>
 
@@ -264,9 +292,11 @@
 
           <div class="sobre__content">
             <p class="sobre__lead" data-split-lines>
-             Sou Desenvolvedor Front-end e bacharel em Ciência da Computação. 
-             Minha trajetória começou no suporte técnico, o que me deu uma visão muito prática sobre as dores do usuário final e resolução de problemas. 
-             Hoje, aplico essa bagagem combinada com a base acadêmica para construir aplicações web eficientes, acessíveis e intuitivas.
+              <span class="sobre__lead-destaque">Sou desenvolvedor front-end e bacharel em Ciência da Computação.</span>
+              Minha trajetória começou no suporte técnico, o que me deu uma visão muito prática
+              sobre as dores do usuário final e a resolução de problemas. Hoje, combino essa
+              bagagem com a base acadêmica para construir aplicações web eficientes,
+              acessíveis e intuitivas.
             </p>
 
             <p class="sobre__body" data-reveal>
@@ -304,6 +334,8 @@
       data-scroll-expand
       data-start-width="42"
       data-start-height="58"
+      data-start-width-mobile="80"
+      data-start-height-mobile="48"
       data-start-radius="24"
       data-end-radius="0"
       data-media-zoom="1.35"
@@ -340,6 +372,8 @@
             </div>
           </div>
 
+          <div class="scroll-expand__edge" aria-hidden="true"></div>
+
           <div class="scroll-expand__title">Do pixel ao produto</div>
           <div class="scroll-expand__hint">role para expandir</div>
 
@@ -351,7 +385,7 @@
       <div class="container">
         <header class="section__head" data-reveal>
           <h2 class="section__title">Projetos</h2>
-          <p class="section__desc">Arraste, use as setas ou espere — cada projeto abre no botão.</p>
+          <p class="section__desc" data-dica-lista="Alguns projetos que desenvolvi.">Arraste, use as setas ou espere — cada projeto abre no botão.</p>
         </header>
 
         <div class="morph-slider" data-morph-slider
@@ -367,15 +401,17 @@
           <ol class="morph-slider-items">
             <li class="morph-slider-item"
                 data-titulo="AFlo"
-                data-descricao="Loja de buquês artesanais de chenille, com montador passo a passo, checkout no Mercado Pago e painel de produção.">
+                data-descricao="Loja de buquês artesanais de chenille, com montador passo a passo, checkout no Mercado Pago e painel de produção."
+                data-stack="Next.js · TypeScript · Tailwind CSS · Prisma · PostgreSQL · Mercado Pago">
               <a href="https://aflo-aflo.vercel.app/" target="_blank" rel="noopener noreferrer">Ver projeto</a>
               <img src="assets/projetos/aflo.webp" alt="Página inicial da loja AFlo, com um buquê de flores de chenille" width="1600" height="759" loading="lazy">
             </li>
 
             <li class="morph-slider-item"
                 data-titulo="Portfólio"
-                data-descricao="Este site. HTML, CSS e JavaScript puro, com animações em scroll e dois fundos em WebGL escritos à mão.">
-              <a href="https://eduardobcg.com.br" target="_blank" rel="noopener noreferrer">Abrir site</a>
+                data-descricao="Meu portfólio pessoal, o site que você está vendo agora. Feito do zero, sem frameworks."
+                data-stack="HTML · CSS · JavaScript · GSAP · WebGL">
+              <a href="https://www.eduardobcg.com.br" target="_blank" rel="noopener noreferrer">Abrir site</a>
               <img src="assets/projetos/portfolio.webp" alt="Página inicial do portfólio de Eduardo" width="1600" height="1000" loading="lazy">
             </li>
 
@@ -398,9 +434,14 @@
               Tem um projeto em mente? Vamos construir juntos.
             </p>
 
-            <a href="mailto:eduardo26eduardo@gmail.com" class="contato__mail" data-reveal>
-              eduardo26eduardo@gmail.com
-            </a>
+            <div class="contato__mail-row" data-reveal>
+              <a href="mailto:eduardo26eduardo@gmail.com" class="contato__mail">eduardo26eduardo@gmail.com</a>
+              <button type="button" class="contato__copy" data-copiar="eduardo26eduardo@gmail.com">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M15 9V6.5A2.5 2.5 0 0 0 12.5 4h-6A2.5 2.5 0 0 0 4 6.5v6A2.5 2.5 0 0 0 6.5 15H9" stroke="currentColor" stroke-width="1.8"/></svg>
+                <span class="contato__copy-label">Copiar e-mail</span>
+              </button>
+              <p class="sr-only" role="status" aria-live="polite" data-copiar-status></p>
+            </div>
 
             <ul class="socials" data-stagger>
 
@@ -412,20 +453,20 @@
           <form class="contact-form" id="contactForm" novalidate data-reveal>
             <div class="field">
               <label for="nome">Nome</label>
-              <input type="text" id="nome" name="nome" required autocomplete="name" placeholder="Como te chamo?">
-              <p class="field__error" data-error-for="nome"></p>
+              <input type="text" id="nome" name="nome" required autocomplete="name" placeholder="Como te chamo?" aria-describedby="erro-nome">
+              <p class="field__error" id="erro-nome" data-error-for="nome"></p>
             </div>
 
             <div class="field">
               <label for="email">E-mail</label>
-              <input type="email" id="email" name="email" required autocomplete="email" placeholder="voce@email.com">
-              <p class="field__error" data-error-for="email"></p>
+              <input type="email" id="email" name="email" required autocomplete="email" placeholder="voce@email.com" aria-describedby="erro-email">
+              <p class="field__error" id="erro-email" data-error-for="email"></p>
             </div>
 
             <div class="field">
               <label for="mensagem">Mensagem</label>
-              <textarea id="mensagem" name="mensagem" rows="5" required placeholder="Conte um pouco sobre a ideia..."></textarea>
-              <p class="field__error" data-error-for="mensagem"></p>
+              <textarea id="mensagem" name="mensagem" rows="5" required placeholder="Conte um pouco sobre a ideia..." aria-describedby="erro-mensagem"></textarea>
+              <p class="field__error" id="erro-mensagem" data-error-for="mensagem"></p>
             </div>
 
             <button type="submit" class="btn btn--primary btn--block">Enviar mensagem</button>
@@ -451,10 +492,16 @@
 
   <footer class="footer">
     <div class="container footer__inner">
-      <p>© <span id="year"></span> Eduardo. Todos os direitos reservados.</p>
-      <a href="#hero" class="footer__top">Voltar ao topo ↑</a>
+      <p>© <span id="year"></span> Eduardo Borges</p>
+      <a href="#hero" class="footer__top">Voltar ao topo <span aria-hidden="true">↑</span></a>
     </div>
   </footer>
+
+  <!-- espaço depois do rodapé: rolar por ele faz as colunas subirem -->
+  <div class="aurora" data-aurora-dither aria-hidden="true">
+    <div class="aurora__espaco"></div>
+    <canvas class="aurora__canvas"></canvas>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
@@ -462,6 +509,7 @@
 
   <script src="js/preloader.js"></script>
   <script src="js/dither.js"></script>
+  <script src="js/footer-dither.js"></script>
   <script src="js/cubes.js"></script>
   <script src="js/scroll-expand.js"></script>
   <script src="js/staggered-menu.js"></script>

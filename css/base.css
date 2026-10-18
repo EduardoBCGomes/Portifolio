@@ -6,6 +6,7 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  color-scheme: dark;
 
   scrollbar-gutter: stable;
 }
@@ -29,6 +30,7 @@ a { color: inherit; text-decoration: none; }
   --surface-2:   #211d18;
   --text:        #ece8e1;
   --muted:       #8f8a83;
+  --placeholder: #6f6a63;
   --line:        rgba(250, 249, 246, .09);
   --line-strong: rgba(250, 249, 246, .18);
 
@@ -112,13 +114,15 @@ h1, h2, h3, h4 {
   font-weight: 700;
   line-height: 1.04;
   letter-spacing: -.03em;
+  text-wrap: balance;
 }
 
 p { text-wrap: pretty; }
 
+/* o acento virou quase branco: texto branco por cima sumia na seleção */
 ::selection {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 :focus-visible {
@@ -134,7 +138,7 @@ p { text-wrap: pretty; }
   border-radius: var(--radius-pill);
   border: 2px solid var(--bg);
 }
-::-webkit-scrollbar-thumb:hover { background: #2e2e36; }
+::-webkit-scrollbar-thumb:hover { background: #3d3934; }
 
 .container {
   width: 100%;
@@ -150,7 +154,7 @@ p { text-wrap: pretty; }
   translate: -50% -120%;
   z-index: 999;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   padding: .7rem 1.4rem;
   border-radius: 0 0 var(--radius-sm) var(--radius-sm);
   font-size: var(--fs-sm);

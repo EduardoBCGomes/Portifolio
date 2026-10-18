@@ -4,6 +4,49 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
+  // Nem todo mundo tem um app de e-mail configurado: o mailto abre o nada.
+  // Copiar o endereço resolve esse caso com um clique.
+  function copiarTexto(texto) {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(texto);
+    }
+    return new Promise((resolve, reject) => {
+      const campo = document.createElement('textarea');
+      campo.value = texto;
+      campo.setAttribute('readonly', '');
+      campo.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+      document.body.appendChild(campo);
+      campo.select();
+      const ok = document.execCommand('copy');
+      campo.remove();
+      ok ? resolve() : reject(new Error('copy'));
+    });
+  }
+
+  document.querySelectorAll('[data-copiar]').forEach((botao) => {
+    const rotulo = botao.querySelector('.contato__copy-label');
+    const status = botao.parentElement.querySelector('[data-copiar-status]');
+    const textoOriginal = rotulo ? rotulo.textContent : '';
+    let timer = 0;
+
+    botao.addEventListener('click', () => {
+      copiarTexto(botao.dataset.copiar).then(() => {
+        botao.classList.add('is-copied');
+        if (rotulo) rotulo.textContent = 'Copiado!';
+        if (status) status.textContent = 'E-mail copiado para a área de transferência.';
+      }).catch(() => {
+        if (rotulo) rotulo.textContent = 'Não deu para copiar';
+      }).finally(() => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          botao.classList.remove('is-copied');
+          if (rotulo) rotulo.textContent = textoOriginal;
+          if (status) status.textContent = '';
+        }, 2200);
+      });
+    });
+  });
+
   const form = document.getElementById('contactForm');
   const status = document.getElementById('formStatus');
 

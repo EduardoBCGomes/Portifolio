@@ -239,15 +239,30 @@
   });
   }
 
-  const fontesProntas = (document.fonts && document.fonts.ready)
-    ? document.fonts.ready
-    : Promise.resolve();
-
   const cortinaFora = (window.portfolioPreloader && window.portfolioPreloader.done)
     ? window.portfolioPreloader.done
     : Promise.resolve();
 
-  Promise.all([fontesProntas, cortinaFora]).then(init).catch(init);
+  // O document.fonts.ready lido aqui no começo resolve na hora: nenhuma
+  // fonte foi pedida ainda. Com cache frio a Space Grotesk chegava depois
+  // da cortina e o SplitText media as linhas com a fonte reserva — quebra
+  // de linha errada no texto mascarado. Pedimos as fontes do texto
+  // dividido explicitamente e esperamos o ready de novo, com um teto para
+  // nunca segurar a página.
+  function fontesDoTexto() {
+    if (!document.fonts || !document.fonts.load) return Promise.resolve();
+    return Promise.all([
+      document.fonts.load('700 1em "Space Grotesk"'),
+      document.fonts.load('400 1em "Space Grotesk"')
+    ]).then(() => document.fonts.ready);
+  }
+
+  const comTeto = (promessa, ms) =>
+    Promise.race([promessa.catch(() => {}), new Promise((r) => setTimeout(r, ms))]);
+
+  cortinaFora
+    .then(() => comTeto(fontesDoTexto(), 1500))
+    .then(init, init);
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
 })();

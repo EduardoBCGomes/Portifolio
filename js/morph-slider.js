@@ -469,6 +469,16 @@
     };
   }
 
+  function listaDeStack(texto) {
+    return texto.split('·').map((t) => t.trim()).filter(Boolean);
+  }
+
+  function htmlDaStack(texto) {
+    const itens = listaDeStack(texto || '');
+    if (!itens.length) return '';
+    return `<ul class="morph-slider-stack" aria-label="Tecnologias">${itens.map((t) => `<li>${t}</li>`).join('')}</ul>`;
+  }
+
   // Na lista as imagens sao o conteudo, nao um extra adiado: com
   // loading="lazy" elas ficavam sem ser pedidas e o quadro aparecia vazio.
   function carregarImagensAgora(raiz) {
@@ -476,6 +486,24 @@
       img.removeAttribute('loading');
       img.src = img.getAttribute('src');
     });
+  }
+
+  // Modo lista (celular ou sem WebGL): a stack entra como elemento de
+  // verdade, e a dica do cabecalho deixa de falar em arrastar e setas.
+  function prepararLista(raiz) {
+    carregarImagensAgora(raiz);
+
+    raiz.querySelectorAll('.morph-slider-item[data-stack]').forEach((li) => {
+      if (li.querySelector('.morph-slider-stack')) return;
+      const link = li.querySelector('a');
+      const html = htmlDaStack(li.dataset.stack);
+      if (!html) return;
+      if (link) link.insertAdjacentHTML('beforebegin', html);
+      else li.insertAdjacentHTML('beforeend', html);
+    });
+
+    const dica = raiz.closest('section')?.querySelector('[data-dica-lista]');
+    if (dica) dica.textContent = dica.dataset.dicaLista;
   }
 
   function iniciar(raiz) {
@@ -490,6 +518,7 @@
         alt: img ? img.getAttribute('alt') : '',
         titulo: (li.dataset.titulo || '').trim(),
         descricao: (li.dataset.descricao || '').trim(),
+        stack: (li.dataset.stack || '').trim(),
         href: link ? link.getAttribute('href') : null,
         rotulo: link ? link.textContent.trim() : 'Ver projeto'
       };
@@ -524,7 +553,7 @@
     // ainda e melhor: mostra todos os projetos de uma vez, sem navegar.
     if (window.matchMedia('(max-width: 699px)').matches) {
       raiz.classList.add('sem-webgl');
-      carregarImagensAgora(raiz);
+      prepararLista(raiz);
       return;
     }
 
@@ -546,6 +575,7 @@
       <div class="morph-slider-slide ${i === cfg.startIndex ? 'is-active' : ''}" ${i === cfg.startIndex ? '' : 'aria-hidden="true"'}>
         <h3 class="morph-slider-title">${it.titulo}</h3>
         ${it.descricao ? `<p class="morph-slider-desc">${it.descricao}</p>` : ''}
+        ${htmlDaStack(it.stack)}
         ${it.href ? `<a class="morph-slider-link" href="${it.href}"${/^https?:/.test(it.href) ? ' target="_blank" rel="noopener noreferrer"' : ''}>${it.rotulo}
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>` : ''}
@@ -589,7 +619,7 @@
       legenda.remove();
       raiz.classList.remove('is-ready');
       raiz.classList.add('sem-webgl');
-      carregarImagensAgora(raiz);
+      prepararLista(raiz);
     }
 
     const motor = criarMotor(palco, itens, cfg, (i) => {
@@ -609,7 +639,7 @@
       lista.hidden = false;
       area.remove(); legenda.remove(); controles.remove(); pontos.remove();
       raiz.classList.add('sem-webgl');
-      carregarImagensAgora(raiz);
+      prepararLista(raiz);
       return;
     }
 

@@ -222,8 +222,21 @@
       acordar();
     }).observe(raiz);
 
-    const pronto = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+    // A largura do periodo depende da fonte dos rótulos. Com cache frio o
+    // ready resolvia antes de a Space Grotesk chegar e o loop dava um salto
+    // a cada volta; por isso pedimos a fonte e remedimos quando ela troca.
+    const pronto = document.fonts && document.fonts.load
+      ? document.fonts.load('500 1em "Space Grotesk"').then(() => document.fonts.ready).catch(() => {})
+      : Promise.resolve();
     pronto.then(() => { montarCopias(); acordar(); });
+
+    if (document.fonts && document.fonts.addEventListener) {
+      document.fonts.addEventListener('loadingdone', () => {
+        if (original.getBoundingClientRect().width === st.periodo) return;
+        montarCopias();
+        acordar();
+      });
+    }
   }
 
   document.querySelectorAll('[data-logo-loop]').forEach(iniciar);

@@ -69,6 +69,26 @@
 
 .nav__inner { justify-content: flex-end; }
 
+/* monograma em dois tons: o B vazado da tela de carregamento não
+   funciona nesse tamanho (o contorno fecha os furos da letra) */
+.nav__logo {
+  margin-right: auto;
+  display: inline-flex;
+  align-items: baseline;
+  padding: .3rem .1rem;
+  font-family: "Archivo Black", var(--font-display);
+  font-size: 1.45rem;
+  line-height: 1;
+  letter-spacing: -.02em;
+  color: var(--accent);
+  transition: opacity .25s var(--ease-out);
+}
+.nav__logo-b {
+  color: var(--muted);
+  transition: color .3s var(--ease-out);
+}
+.nav__logo:hover .nav__logo-b { color: var(--accent); }
+
 .nav__cta { transition: opacity .25s var(--ease-out); }
 
 .nav--menu-open {
@@ -78,7 +98,8 @@
   border-bottom-color: transparent !important;
 }
 
-.nav--menu-open .nav__cta {
+.nav--menu-open .nav__cta,
+.nav--menu-open .nav__logo {
   opacity: 0;
   pointer-events: none;
 }
@@ -316,7 +337,10 @@
   line-height: 1.32;
   letter-spacing: -.02em;
   margin-bottom: 1.6rem;
+  color: var(--accent-2);
 }
+/* o parágrafo é longo: a primeira frase em destaque dá um ponto de entrada */
+.sobre__lead-destaque { color: var(--text); }
 .sobre__body {
   color: var(--muted);
   max-width: 60ch;
@@ -340,6 +364,13 @@
   margin-bottom: 2rem;
 }
 
+.contato__mail-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .6rem 1rem;
+}
+
 .contato__mail {
   display: inline-block;
   font-size: var(--fs-lead);
@@ -359,6 +390,37 @@
   color: var(--muted);
   font-size: var(--fs-sm);
 }
+
+/* Aurora em dither (ideia do Aurora Footer da Reverse UI / site do Dia):
+   o espaço fica no fim da página e o canvas fica preso na base da tela.
+   As colunas sobem conforme a rolagem atravessa o espaço. */
+.aurora__espaco { height: 175px; }
+
+.aurora__canvas {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  display: block;
+  width: 100%;
+  height: 175px;
+  image-rendering: pixelated;
+  pointer-events: none;
+  visibility: hidden;
+}
+.aurora.is-ativa .aurora__canvas { visibility: visible; }
+
+@media (min-width: 600px) {
+  .aurora__espaco { height: 300px; margin-top: 50px; }
+  .aurora__canvas { height: 300px; }
+}
+
+@media (min-width: 1200px) {
+  .aurora__espaco,
+  .aurora__canvas { height: 65vh; }
+}
+
 .footer__inner {
   display: flex;
   flex-wrap: wrap;
@@ -399,5 +461,20 @@
 
   .scroll-hint { display: none; }
 
+  /* em retrato o 3:4 ocupava a tela inteira; 4:5 deixa ver o que vem depois */
+  .hero__photo-frame,
+  .sobre__photo-wrap { aspect-ratio: 4 / 5; }
+
   .sobre__media { max-width: 100%; }
+
+  .nav__logo { font-size: 1.3rem; }
+}
+
+@media (max-width: 480px) {
+  /* os dois botões cabem lado a lado; abaixo de ~340px voltam a empilhar */
+  .hero__actions { gap: .6rem; }
+  .hero__actions .btn {
+    flex: 1 1 auto;
+    padding-inline: 1.1rem;
+  }
 }

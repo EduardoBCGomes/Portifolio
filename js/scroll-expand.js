@@ -23,12 +23,15 @@
     const title = root.querySelector('.scroll-expand__title');
     const overlay = root.querySelector('.scroll-expand__overlay');
     const hint = root.querySelector('.scroll-expand__hint');
+    const edge = root.querySelector('.scroll-expand__edge');
 
     if (!track || !stage || !frame || !media) return null;
 
     const cfg = {
       startWidth: num(root, 'startWidth', 42),
       startHeight: num(root, 'startHeight', 58),
+      startWidthMobile: num(root, 'startWidthMobile', num(root, 'startWidth', 42)),
+      startHeightMobile: num(root, 'startHeightMobile', num(root, 'startHeight', 58)),
       startRadius: num(root, 'startRadius', 24),
       endRadius: num(root, 'endRadius', 0),
       mediaZoom: num(root, 'mediaZoom', 1.35),
@@ -39,18 +42,31 @@
     };
 
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const telaEstreita = window.matchMedia('(max-width: 699px)');
+
+    // Em retrato, 42% x 58% vira uma tira fina e alta; no celular o quadro
+    // começa mais largo e mais baixo para o cartão continuar parecendo um cartão.
+    const inicio = { w: cfg.startWidth, h: cfg.startHeight };
 
     function applyProgress(p) {
       const e = smoothstep(0, 1, p);
 
-      const w = cfg.startWidth + (100 - cfg.startWidth) * e;
-      const h = cfg.startHeight + (100 - cfg.startHeight) * e;
+      const w = inicio.w + (100 - inicio.w) * e;
+      const h = inicio.h + (100 - inicio.h) * e;
       const ix = Math.max(0, (100 - w) / 2);
       const iy = Math.max(0, (100 - h) / 2);
       const r = cfg.startRadius + (cfg.endRadius - cfg.startRadius) * e;
 
       frame.style.clipPath = `inset(${iy}% ${ix}% ${iy}% ${ix}% round ${r}px)`;
       media.style.transform = `scale(${cfg.mediaZoom + (1 - cfg.mediaZoom) * e})`;
+
+      // Contorno fino seguindo o recorte: com faces escuras sobre fundo
+      // escuro, o cartão inicial quase não se separava da página.
+      if (edge) {
+        edge.style.inset = `${iy}% ${ix}%`;
+        edge.style.borderRadius = `${r}px`;
+        edge.style.opacity = String(1 - smoothstep(0.55, 0.95, e));
+      }
 
       if (scrim) scrim.style.opacity = String(cfg.overlayScrim * e);
 
@@ -84,14 +100,19 @@
       stageH = window.innerHeight;
       if (stageH <= 0) return;
 
+      const estreita = telaEstreita.matches;
+      inicio.w = estreita ? cfg.startWidthMobile : cfg.startWidth;
+      inicio.h = estreita ? cfg.startHeightMobile : cfg.startHeight;
+
       stage.style.height = `${stageH}px`;
       track.style.height =
         `${stageH * (1 + Math.max(0, cfg.scrollDistance) + Math.max(0, cfg.holdDistance))}px`;
 
       const w = root.clientWidth || stageH;
 
-      stage.style.setProperty('--se-title-size', `${clamp(w * 0.042, 18, 54)}px`);
-      stage.style.setProperty('--se-title-max', `${cfg.startWidth}%`);
+      // o título acompanha a largura do cartão, não a da tela
+      stage.style.setProperty('--se-title-size', `${clamp(w * (inicio.w / 100) * 0.1, 18, 54)}px`);
+      stage.style.setProperty('--se-title-max', `${inicio.w}%`);
     }
 
     function readProgress() {
