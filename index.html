@@ -82,8 +82,6 @@
        quando ela chega (autoSplit) -->
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"></noscript>
-  <!-- a Archivo Black só desenha o monograma "EB": pedir só essas letras corta o arquivo da fonte para ~1 KB -->
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&text=EB&display=block" rel="stylesheet">
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -97,6 +95,17 @@
   <link rel="stylesheet" href="css/logo-loop.css">
 
   <style>
+    /* Archivo Black só com as letras E e B (~2,7 KB), embutida: o "EB" da
+       cortina é a primeira coisa na tela e não espera nenhum pedido de rede */
+    @font-face {
+      font-family: "Archivo Black";
+      font-style: normal;
+      font-weight: 400;
+      font-display: block;
+      src: url(data:font/woff2;base64,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) format("woff2");
+      unicode-range: U+42, U+45;
+    }
+
     #eb-preloader {
       position: fixed;
       inset: 0;
