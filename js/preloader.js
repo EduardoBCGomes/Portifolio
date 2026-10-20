@@ -11,7 +11,9 @@
   const logo = document.getElementById('eb-logo');
   const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const MIN_VISIVEL = reduzido ? 0 : 1100;
+  // 800 ms bastam para o "EB" ser lido; cada milissegundo aqui atrasa o
+  // primeiro conteúdo (LCP), que o Google usa no ranking
+  const MIN_VISIVEL = reduzido ? 0 : 800;
   const MAX_ESPERA  = 5000;
   const SAIDA       = reduzido ? 120 : 700;
 
@@ -35,14 +37,24 @@
 
   fonteEmCena.then(() => logo && logo.classList.add('eb-in'));
 
-  const paginaCarregada = new Promise((r) => {
-    if (document.readyState === 'complete') return r();
-    window.addEventListener('load', r, { once: true });
+  // A cortina sai quando a primeira tela está pronta: estrutura da página e
+  // foto do topo. Esperar o "load" inteiro (imagens dos projetos, fontes de
+  // outras seções) segurava o primeiro conteúdo à toa em rede lenta.
+  const estruturaPronta = new Promise((r) => {
+    if (document.readyState !== 'loading') return r();
+    document.addEventListener('DOMContentLoaded', r, { once: true });
+  });
+
+  const fotoTopo = document.querySelector('.hero__photo');
+  const fotoPronta = new Promise((r) => {
+    if (!fotoTopo || fotoTopo.complete) return r();
+    fotoTopo.addEventListener('load', r, { once: true });
+    fotoTopo.addEventListener('error', r, { once: true });
   });
 
   const teto = new Promise((r) => setTimeout(r, MAX_ESPERA));
 
-  Promise.race([Promise.all([paginaCarregada, fonteEmCena]), teto])
+  Promise.race([Promise.all([estruturaPronta, fotoPronta, fonteEmCena]), teto])
     .then(() => {
       const decorrido = performance.now() - inicio;
       const restante = Math.max(0, MIN_VISIVEL - decorrido);

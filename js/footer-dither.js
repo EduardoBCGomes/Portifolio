@@ -269,5 +269,15 @@
     agendarVolta();
   }
 
-  document.querySelectorAll('[data-aurora-dither]').forEach(iniciar);
+  // Fica no fim da página: só monta o WebGL quando o fim está a uma tela de
+  // distância, em vez de compilar o shader no carregamento.
+  document.querySelectorAll('[data-aurora-dither]').forEach((raiz) => {
+    if (!('IntersectionObserver' in window)) return iniciar(raiz);
+    const io = new IntersectionObserver((entradas) => {
+      if (!entradas.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      iniciar(raiz);
+    }, { rootMargin: '100% 0px' });
+    io.observe(raiz);
+  });
 })();

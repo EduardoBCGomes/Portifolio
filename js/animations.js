@@ -63,7 +63,9 @@
       intro.set('.hero__title', { opacity: 1 }, 0);
 
       heroTitles.forEach((line, i) => {
-        const split = new SplitText(line, { type: 'chars' });
+        // o texto lido por leitores de tela e pelo Google é o .sr-only do h1;
+        // aria 'auto' poria aria-label num span, o que não é permitido
+        const split = new SplitText(line, { type: 'chars', aria: 'none' });
         splits.push(split);
         intro.from(split.chars, {
           yPercent: 115,
@@ -75,8 +77,8 @@
       intro.to('.hero__title', { opacity: 1, y: 0, duration: .9 }, .15);
     }
 
-    intro.to('[data-hero="lead"]',    { opacity: 1, y: 0, duration: .8 }, .6)
-         .to('[data-hero="actions"]', { opacity: 1, y: 0, duration: .8 }, .72)
+    intro.to('[data-hero="lead"]',    { opacity: 1, y: 0, duration: .8 }, .4)
+         .to('[data-hero="actions"]', { opacity: 1, y: 0, duration: .8 }, .52)
          .to('[data-hero="media"]',   { opacity: 1, duration: .8 }, .2)
          .to('[data-hero="hint"]',    { opacity: 1, y: 0, duration: .6 }, .9);
 
@@ -190,6 +192,9 @@
       const split = SplitText.create(el, {
         type: 'lines',
         mask: 'lines',
+        // linhas não quebram palavras: o texto continua legível como está,
+        // sem o aria-label em <p> que o modo 'auto' colocaria
+        aria: 'none',
         autoSplit: true,
         onSplit: (self) => gsap.from(self.lines, {
           yPercent: 110,

@@ -265,36 +265,47 @@
   const canvas = document.querySelector('[data-dither]');
   if (!canvas) return;
 
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isCoarse = window.matchMedia('(hover: none)').matches;
+  // Compilar o shader e desenhar disputa a thread com o carregamento da
+  // página. Durante a tela de carregamento o fundo nem aparece, então ele
+  // só liga quando ela sai (e a opacidade já entra com transição).
+  const cortina = (window.portfolioPreloader && window.portfolioPreloader.done)
+    ? window.portfolioPreloader.done
+    : Promise.resolve();
 
-  const instance = createDither(canvas, {
-    waveColor: [0.73, 0.73, 0.73],
-    waveSpeed: 0.035,
-    waveFrequency: 2.6,
-    waveAmplitude: 0.32,
-    colorNum: 4,
-    pixelSize: 3,
-    mouseRadius: 0.5,
-    disableAnimation: prefersReduced,
-    enableMouseInteraction: !isCoarse && !prefersReduced
-  });
+  cortina.then(ligar);
 
-  if (!instance) {
-    canvas.remove();
-    return;
+  function ligar() {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isCoarse = window.matchMedia('(hover: none)').matches;
+
+    const instance = createDither(canvas, {
+      waveColor: [0.73, 0.73, 0.73],
+      waveSpeed: 0.035,
+      waveFrequency: 2.6,
+      waveAmplitude: 0.32,
+      colorNum: 4,
+      pixelSize: 3,
+      mouseRadius: 0.5,
+      disableAnimation: prefersReduced,
+      enableMouseInteraction: !isCoarse && !prefersReduced
+    });
+
+    if (!instance) {
+      canvas.remove();
+      return;
+    }
+
+    canvas.classList.add('is-ready');
+    document.documentElement.classList.add('has-dither');
+
+    const io = new IntersectionObserver(
+      ([entry]) => instance.setPaused(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    io.observe(canvas);
+
+    document.addEventListener('visibilitychange', () => {
+      instance.setPaused(document.hidden);
+    });
   }
-
-  canvas.classList.add('is-ready');
-  document.documentElement.classList.add('has-dither');
-
-  const io = new IntersectionObserver(
-    ([entry]) => instance.setPaused(!entry.isIntersecting),
-    { threshold: 0 }
-  );
-  io.observe(canvas);
-
-  document.addEventListener('visibilitychange', () => {
-    instance.setPaused(document.hidden);
-  });
 })();

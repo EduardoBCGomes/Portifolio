@@ -553,5 +553,15 @@ void main() {
     resize();
   }
 
-  document.querySelectorAll('[data-cubes]').forEach(iniciar);
+  // A seção dos cubos fica no meio da página: o contexto WebGL e o shader
+  // só são criados quando ela está a uma tela de distância.
+  document.querySelectorAll('[data-cubes]').forEach((container) => {
+    if (!('IntersectionObserver' in window)) return iniciar(container);
+    const io = new IntersectionObserver((entradas) => {
+      if (!entradas.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      iniciar(container);
+    }, { rootMargin: '100% 0px' });
+    io.observe(container);
+  });
 })();

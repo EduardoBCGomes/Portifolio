@@ -1,0 +1,16 @@
+{
+  "redirects": [
+    {
+      "source": "/:caminho*",
+      "has": [{ "type": "host", "value": "eduardobcg.com.br" }],
+      "destination": "https://www.eduardobcg.com.br/:caminho*",
+      "permanent": true
+    },
+    {
+      "source": "/:caminho*",
+      "has": [{ "type": "host", "value": "eduardobcg.vercel.app" }],
+      "destination": "https://www.eduardobcg.com.br/:caminho*",
+      "permanent": true
+    }
+  ]
+}

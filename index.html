@@ -4,36 +4,72 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eduardo Borges — Desenvolvedor Front-end</title>
-  <meta name="description" content="Portfólio de Eduardo Borges, desenvolvedor front-end. Interfaces rápidas, acessíveis e com atenção ao detalhe.">
+  <meta name="description" content="Portfólio de Eduardo Borges, desenvolvedor front-end. Sites e aplicações web rápidos e acessíveis com HTML, CSS, JavaScript, TypeScript, React e Next.js.">
+  <meta name="author" content="Eduardo Borges">
+  <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="canonical" href="https://www.eduardobcg.com.br/">
 
-  <meta property="og:type" content="website">
+  <meta property="og:type" content="profile">
   <meta property="og:locale" content="pt_BR">
+  <meta property="og:site_name" content="Eduardo Borges">
   <meta property="og:url" content="https://www.eduardobcg.com.br/">
   <meta property="og:title" content="Eduardo Borges — Desenvolvedor Front-end">
-  <meta property="og:description" content="Portfólio de Eduardo Borges, desenvolvedor front-end. Interfaces rápidas, acessíveis e com atenção ao detalhe.">
-  <meta property="og:image" content="https://www.eduardobcg.com.br/assets/img/retrato.webp">
-  <meta property="og:image:alt" content="Retrato de Eduardo Borges">
+  <meta property="og:description" content="Sites e aplicações web rápidos e acessíveis com HTML, CSS, JavaScript, TypeScript, React e Next.js.">
+  <meta property="og:image" content="https://www.eduardobcg.com.br/assets/og-image.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Eduardo Borges, desenvolvedor front-end">
+  <meta property="profile:first_name" content="Eduardo">
+  <meta property="profile:last_name" content="Borges">
   <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Eduardo Borges — Desenvolvedor Front-end">
+  <meta name="twitter:description" content="Sites e aplicações web rápidos e acessíveis com HTML, CSS, JavaScript, TypeScript, React e Next.js.">
+  <meta name="twitter:image" content="https://www.eduardobcg.com.br/assets/og-image.jpg">
   <meta name="theme-color" content="#0c0a09">
   <meta name="color-scheme" content="dark">
 
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Eduardo Borges",
-      "jobTitle": "Desenvolvedor Front-end",
-      "url": "https://www.eduardobcg.com.br/",
-      "image": "https://www.eduardobcg.com.br/assets/img/retrato.webp",
-      "email": "mailto:eduardo26eduardo@gmail.com",
-      "sameAs": [
-        "https://github.com/EduardoBCGomes",
-        "https://www.linkedin.com/in/eduardo-borges-07228714a/"
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://www.eduardobcg.com.br/#site",
+          "url": "https://www.eduardobcg.com.br/",
+          "name": "Eduardo Borges",
+          "inLanguage": "pt-BR",
+          "publisher": { "@id": "https://www.eduardobcg.com.br/#eduardo" }
+        },
+        {
+          "@type": "ProfilePage",
+          "@id": "https://www.eduardobcg.com.br/#pagina",
+          "url": "https://www.eduardobcg.com.br/",
+          "name": "Eduardo Borges — Desenvolvedor Front-end",
+          "inLanguage": "pt-BR",
+          "isPartOf": { "@id": "https://www.eduardobcg.com.br/#site" },
+          "mainEntity": { "@id": "https://www.eduardobcg.com.br/#eduardo" }
+        },
+        {
+          "@type": "Person",
+          "@id": "https://www.eduardobcg.com.br/#eduardo",
+          "name": "Eduardo Borges",
+          "jobTitle": "Desenvolvedor Front-end",
+          "description": "Desenvolvedor front-end e bacharel em Ciência da Computação, com experiência anterior em suporte técnico.",
+          "url": "https://www.eduardobcg.com.br/",
+          "image": "https://www.eduardobcg.com.br/assets/img/retrato.webp",
+          "email": "mailto:eduardo26eduardo@gmail.com",
+          "knowsAbout": ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Tailwind CSS", "GSAP", "WebGL", "Acessibilidade web"],
+          "sameAs": [
+            "https://github.com/EduardoBCGomes",
+            "https://www.linkedin.com/in/eduardo-borges-07228714a/"
+          ]
+        }
       ]
     }
   </script>
 
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
   <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png">
@@ -41,7 +77,11 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Inter e Space Grotesk carregam sem segurar a primeira pintura: a tela
+       de carregamento cobre a troca de fonte e o texto animado é redividido
+       quando ela chega (autoSplit) -->
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap"></noscript>
   <!-- a Archivo Black só desenha o monograma "EB": pedir só essas letras corta o arquivo da fonte para ~1 KB -->
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&text=EB&display=block" rel="stylesheet">
 
@@ -191,15 +231,15 @@
           </li>
         </ul>
 
-        <div class="sm-socials" aria-label="Redes sociais">
-          <h3 class="sm-socials-title">Redes</h3>
+        <nav class="sm-socials" aria-label="Redes sociais">
+          <p class="sm-socials-title">Redes</p>
           <ul class="sm-socials-list" role="list">
 
             <li><a href="https://github.com/EduardoBCGomes" class="sm-socials-link" target="_blank" rel="noopener noreferrer">GitHub</a></li>
             <li><a href="https://www.linkedin.com/in/eduardo-borges-07228714a/" class="sm-socials-link" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
             <li><a href="mailto:eduardo26eduardo@gmail.com" class="sm-socials-link">E-mail</a></li>
           </ul>
-        </div>
+        </nav>
       </div>
     </aside>
   </div>
@@ -215,8 +255,9 @@
       <div class="container hero__inner">
         <div class="hero__text">
           <h1 class="hero__title">
-            <span class="hero__line" data-hero-title>Eduardo</span>
-            <span class="hero__line hero__line--accent" data-hero-title>Front-end</span>
+            <span class="sr-only">Eduardo Borges, desenvolvedor front-end</span>
+            <span class="hero__line" data-hero-title aria-hidden="true">Eduardo</span>
+            <span class="hero__line hero__line--accent" data-hero-title aria-hidden="true">Front-end</span>
           </h1>
 
           <p class="hero__lead" data-hero="lead">
@@ -237,7 +278,9 @@
           <div class="hero__photo-frame">
             <img
               src="assets/img/retrato.webp"
-              alt="Retrato de Eduardo ao ar livre, olhando para o lado"
+              srcset="assets/img/retrato-480.webp 480w, assets/img/retrato.webp 820w"
+              sizes="(max-width: 768px) calc(100vw - 2.5rem), 400px"
+              alt="Retrato de Eduardo Borges ao ar livre, olhando para o lado"
               width="820" height="1094"
               fetchpriority="high"
               class="hero__photo" data-hero-photo>
@@ -284,7 +327,9 @@
             <div class="sobre__photo-wrap">
               <img
                 src="assets/img/corpo.webp"
-                alt="Eduardo em pé ao ar livre, com um moinho de vento ao fundo"
+                srcset="assets/img/corpo-480.webp 480w, assets/img/corpo.webp 820w"
+                sizes="(max-width: 768px) calc(100vw - 2.5rem), (max-width: 1024px) 340px, 430px"
+                alt="Eduardo Borges em pé ao ar livre, com um moinho de vento ao fundo"
                 width="820" height="1094" loading="lazy"
                 class="sobre__photo" data-about-photo>
             </div>
@@ -404,7 +449,7 @@
                 data-descricao="Loja de buquês artesanais de chenille, com montador passo a passo, checkout no Mercado Pago e painel de produção."
                 data-stack="Next.js · TypeScript · Tailwind CSS · Prisma · PostgreSQL · Mercado Pago">
               <a href="https://aflo-aflo.vercel.app/" target="_blank" rel="noopener noreferrer">Ver projeto</a>
-              <img src="assets/projetos/aflo.webp" alt="Página inicial da loja AFlo, com um buquê de flores de chenille" width="1600" height="759" loading="lazy">
+              <img src="assets/projetos/aflo.webp" srcset="assets/projetos/aflo-800.webp 800w, assets/projetos/aflo.webp 1600w" sizes="(max-width: 699px) calc(100vw - 4.5rem), 1100px" alt="Página inicial da loja AFlo, com um buquê de flores de chenille" width="1600" height="759" loading="lazy">
             </li>
 
             <li class="morph-slider-item"
@@ -412,7 +457,7 @@
                 data-descricao="Meu portfólio pessoal, o site que você está vendo agora."
                 data-stack="HTML · CSS · JavaScript · GSAP · WebGL">
               <a href="https://www.eduardobcg.com.br" target="_blank" rel="noopener noreferrer">Abrir site</a>
-              <img src="assets/projetos/portfolio.webp" alt="Página inicial do portfólio de Eduardo" width="1600" height="1000" loading="lazy">
+              <img src="assets/projetos/portfolio.webp" srcset="assets/projetos/portfolio-800.webp 800w, assets/projetos/portfolio.webp 1600w" sizes="(max-width: 699px) calc(100vw - 4.5rem), 1100px" alt="Página inicial do portfólio de Eduardo Borges" width="1600" height="1000" loading="lazy">
             </li>
 
             
