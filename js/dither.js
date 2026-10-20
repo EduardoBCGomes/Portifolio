@@ -265,14 +265,19 @@
   const canvas = document.querySelector('[data-dither]');
   if (!canvas) return;
 
-  // Compilar o shader e desenhar disputa a thread com o carregamento da
-  // página. Durante a tela de carregamento o fundo nem aparece, então ele
-  // só liga quando ela sai (e a opacidade já entra com transição).
+  // Compilar o shader e desenhar disputa a thread com o carregamento e com a
+  // entrada do topo. O fundo só liga depois que a cortina sai e o movimento
+  // principal da entrada passou (a opacidade dele já entra com transição).
   const cortina = (window.portfolioPreloader && window.portfolioPreloader.done)
     ? window.portfolioPreloader.done
     : Promise.resolve();
 
-  cortina.then(ligar);
+  cortina.then(() => {
+    setTimeout(() => {
+      if ('requestIdleCallback' in window) requestIdleCallback(ligar, { timeout: 600 });
+      else ligar();
+    }, 700);
+  });
 
   function ligar() {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -11,11 +11,11 @@
   const logo = document.getElementById('eb-logo');
   const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // 800 ms bastam para o "EB" ser lido; cada milissegundo aqui atrasa o
-  // primeiro conteúdo (LCP), que o Google usa no ranking
-  const MIN_VISIVEL = reduzido ? 0 : 800;
+  // O "EB" entra em 0,5 s e precisa de um instante parado para ser lido;
+  // cada milissegundo a mais aqui atrasa o primeiro conteúdo da página
+  const MIN_VISIVEL = reduzido ? 0 : 650;
   const MAX_ESPERA  = 5000;
-  const SAIDA       = reduzido ? 120 : 700;
+  const SAIDA       = reduzido ? 120 : 500;
 
   document.documentElement.classList.add('is-loading');
 
@@ -70,9 +70,9 @@
     preloader.classList.add('eb-out');
     document.documentElement.classList.remove('is-loading');
 
-    setTimeout(() => {
-      preloader.remove();
-      resolver();
-    }, SAIDA);
+    // A entrada do topo começa junto com a cortina saindo: antes ela só
+    // começava depois do fade inteiro, e as duas etapas somavam ~1,5 s.
+    resolver();
+    setTimeout(() => preloader.remove(), SAIDA);
   }
 })();

@@ -45,9 +45,11 @@
     const heroTitles = gsap.utils.toArray('[data-hero-title]');
     let splits = [];
 
+    // Roda enquanto a cortina ainda está saindo (ela libera no começo do
+    // fade), então quase não precisa de atraso próprio.
     const intro = gsap.timeline({
       defaults: { ease: EASE },
-      delay: .15,
+      delay: .05,
       onComplete: () => ScrollTrigger.refresh()
     });
 
@@ -71,16 +73,16 @@
           yPercent: 115,
           duration: .9,
           stagger: .035
-        }, i === 0 ? .15 : .3);
+        }, i === 0 ? .1 : .22);
       });
     } else {
-      intro.to('.hero__title', { opacity: 1, y: 0, duration: .9 }, .15);
+      intro.to('.hero__title', { opacity: 1, y: 0, duration: .9 }, .1);
     }
 
-    intro.to('[data-hero="lead"]',    { opacity: 1, y: 0, duration: .8 }, .4)
-         .to('[data-hero="actions"]', { opacity: 1, y: 0, duration: .8 }, .52)
-         .to('[data-hero="media"]',   { opacity: 1, duration: .8 }, .2)
-         .to('[data-hero="hint"]',    { opacity: 1, y: 0, duration: .6 }, .9);
+    intro.to('[data-hero="lead"]',    { opacity: 1, y: 0, duration: .8 }, .3)
+         .to('[data-hero="actions"]', { opacity: 1, y: 0, duration: .8 }, .4)
+         .to('[data-hero="media"]',   { opacity: 1, duration: .8 }, .1)
+         .to('[data-hero="hint"]',    { opacity: 1, y: 0, duration: .6 }, .75);
 
     gsap.to('.hero__media', {
       yPercent: -7,

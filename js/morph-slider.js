@@ -622,85 +622,97 @@
       prepararLista(raiz);
     }
 
-    const motor = criarMotor(palco, itens, cfg, (i) => {
-      slides.forEach((s, n) => {
-        s.classList.toggle('is-active', n === i);
-        if (n === i) s.removeAttribute('aria-hidden');
-        else s.setAttribute('aria-hidden', 'true');
-      });
-      dots.forEach((d, n) => {
-        d.classList.toggle('is-active', n === i);
-        d.setAttribute('aria-selected', String(n === i));
-      });
-    }, voltarParaLista);
+    // O WebGL (contexto, shader e upload das texturas) travava ~300 ms no
+    // carregamento com o carrossel lá embaixo. A estrutura já fica pronta
+    // agora, sem mudar o layout depois; o motor liga a uma tela de distância.
+    const vigia = new IntersectionObserver((entradas) => {
+      if (!entradas.some((e) => e.isIntersecting)) return;
+      vigia.disconnect();
+      ligarMotor();
+    }, { rootMargin: '100% 0px' });
+    vigia.observe(raiz);
 
-    if (!motor) {
-      // Sem WebGL o fallback é a própria lista de imagens com links.
-      lista.hidden = false;
-      area.remove(); legenda.remove(); controles.remove(); pontos.remove();
-      raiz.classList.add('sem-webgl');
-      prepararLista(raiz);
-      return;
-    }
+    function ligarMotor() {
+      const motor = criarMotor(palco, itens, cfg, (i) => {
+        slides.forEach((s, n) => {
+          s.classList.toggle('is-active', n === i);
+          if (n === i) s.removeAttribute('aria-hidden');
+          else s.setAttribute('aria-hidden', 'true');
+        });
+        dots.forEach((d, n) => {
+          d.classList.toggle('is-active', n === i);
+          d.setAttribute('aria-selected', String(n === i));
+        });
+      }, voltarParaLista);
 
-    raiz.classList.add('is-ready');
-
-    controles.querySelector('[data-anterior]')?.addEventListener('click', () => motor.ir(-1));
-    controles.querySelector('[data-proximo]')?.addEventListener('click', () => motor.ir(1));
-
-    dots.forEach((d, i) => d.addEventListener('click', () => {
-      const atual = motor.indice();
-      if (i === atual) return;
-      motor.ir(i > atual ? 1 : -1);
-    }));
-
-    area.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') { e.preventDefault(); motor.ir(1); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); motor.ir(-1); }
-    });
-
-    let arrastando = false;
-    let xInicial = 0;
-    let largura = 1;
-
-    area.addEventListener('pointerdown', (e) => {
-      const r = area.getBoundingClientRect();
-      largura = r.width || 1;
-      xInicial = e.clientX;
-      motor.apontar((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
-      arrastando = motor.iniciarArrasto();
-      if (arrastando) {
-        try { area.setPointerCapture(e.pointerId); } catch (err) {}
+      if (!motor) {
+        // Sem WebGL o fallback é a própria lista de imagens com links.
+        lista.hidden = false;
+        area.remove(); legenda.remove(); controles.remove(); pontos.remove();
+        raiz.classList.add('sem-webgl');
+        prepararLista(raiz);
+        return;
       }
-    });
-    area.addEventListener('pointermove', (e) => {
-      if (!arrastando) return;
-      motor.arrastar((e.clientX - xInicial) / largura);
-    });
-    const soltar = () => {
-      if (!arrastando) return;
-      arrastando = false;
-      motor.terminarArrasto();
-    };
-    area.addEventListener('pointerup', soltar);
-    area.addEventListener('pointercancel', soltar);
 
-    let timer = 0;
-    let sobre = false;
-    function agendar() {
-      clearTimeout(timer);
-      if (!cfg.autoplay || sobre || cfg.reduzido) return;
-      timer = setTimeout(() => { motor.ir(1); agendar(); }, Math.max(cfg.autoplayDelay, 1) * 1000);
+      raiz.classList.add('is-ready');
+
+      controles.querySelector('[data-anterior]')?.addEventListener('click', () => motor.ir(-1));
+      controles.querySelector('[data-proximo]')?.addEventListener('click', () => motor.ir(1));
+
+      dots.forEach((d, i) => d.addEventListener('click', () => {
+        const atual = motor.indice();
+        if (i === atual) return;
+        motor.ir(i > atual ? 1 : -1);
+      }));
+
+      area.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') { e.preventDefault(); motor.ir(1); }
+        else if (e.key === 'ArrowLeft') { e.preventDefault(); motor.ir(-1); }
+      });
+
+      let arrastando = false;
+      let xInicial = 0;
+      let largura = 1;
+
+      area.addEventListener('pointerdown', (e) => {
+        const r = area.getBoundingClientRect();
+        largura = r.width || 1;
+        xInicial = e.clientX;
+        motor.apontar((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
+        arrastando = motor.iniciarArrasto();
+        if (arrastando) {
+          try { area.setPointerCapture(e.pointerId); } catch (err) {}
+        }
+      });
+      area.addEventListener('pointermove', (e) => {
+        if (!arrastando) return;
+        motor.arrastar((e.clientX - xInicial) / largura);
+      });
+      const soltar = () => {
+        if (!arrastando) return;
+        arrastando = false;
+        motor.terminarArrasto();
+      };
+      area.addEventListener('pointerup', soltar);
+      area.addEventListener('pointercancel', soltar);
+
+      let timer = 0;
+      let sobre = false;
+      function agendar() {
+        clearTimeout(timer);
+        if (!cfg.autoplay || sobre || cfg.reduzido) return;
+        timer = setTimeout(() => { motor.ir(1); agendar(); }, Math.max(cfg.autoplayDelay, 1) * 1000);
+      }
+      raiz.addEventListener('pointerenter', () => { sobre = true; clearTimeout(timer); });
+      raiz.addEventListener('pointerleave', () => { sobre = false; agendar(); });
+      agendar();
+
+      // Não gasta GPU com o slider fora da tela.
+      new IntersectionObserver(([entrada]) => {
+        motor.pausar(!entrada.isIntersecting);
+        if (entrada.isIntersecting) agendar(); else clearTimeout(timer);
+      }, { threshold: 0 }).observe(raiz);
     }
-    raiz.addEventListener('pointerenter', () => { sobre = true; clearTimeout(timer); });
-    raiz.addEventListener('pointerleave', () => { sobre = false; agendar(); });
-    agendar();
-
-    // Não gasta GPU com o slider fora da tela.
-    new IntersectionObserver(([entrada]) => {
-      motor.pausar(!entrada.isIntersecting);
-      if (entrada.isIntersecting) agendar(); else clearTimeout(timer);
-    }, { threshold: 0 }).observe(raiz);
   }
 
   document.querySelectorAll('[data-morph-slider]').forEach(iniciar);
