@@ -37,6 +37,19 @@
 
   fonteEmCena.then(() => logo && logo.classList.add('eb-in'));
 
+  // As fontes do texto também: prontas antes de a cortina sair, o texto
+  // nunca aparece numa fonte reserva e troca de desenho na frente da pessoa.
+  // Elas são do próprio site e já começam a baixar no <head> (preload).
+  const fontesTexto = (document.fonts && document.fonts.load)
+    ? Promise.race([
+        Promise.all([
+          document.fonts.load('700 1em "Space Grotesk"'),
+          document.fonts.load('400 1em "Inter"')
+        ]).catch(() => {}),
+        new Promise((r) => setTimeout(r, 2000))
+      ])
+    : Promise.resolve();
+
   // A cortina sai quando a primeira tela está pronta: estrutura da página e
   // foto do topo. Esperar o "load" inteiro (imagens dos projetos, fontes de
   // outras seções) segurava o primeiro conteúdo à toa em rede lenta.
@@ -54,7 +67,7 @@
 
   const teto = new Promise((r) => setTimeout(r, MAX_ESPERA));
 
-  Promise.race([Promise.all([estruturaPronta, fotoPronta, fonteEmCena]), teto])
+  Promise.race([Promise.all([estruturaPronta, fotoPronta, fonteEmCena, fontesTexto]), teto])
     .then(() => {
       const decorrido = performance.now() - inicio;
       const restante = Math.max(0, MIN_VISIVEL - decorrido);

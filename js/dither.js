@@ -230,18 +230,27 @@
     let paused = false;
     let elapsed = 0;
     let last = performance.now();
+    let ultimoDesenho = 0;
+
+    // As ondas andam devagar: 30 quadros por segundo bastam e deixam a GPU
+    // livre para a entrada do topo e a rolagem.
+    const INTERVALO = 1000 / 30;
 
     function frame(now) {
       rafId = requestAnimationFrame(frame);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
       if (paused) return;
-      if (!opts.disableAnimation) {
-        elapsed += dt;
-        gl.uniform1f(u.time, elapsed);
-      }
+      if (!opts.disableAnimation) elapsed += dt;
+      if (now - ultimoDesenho < INTERVALO - 2) return;
+      ultimoDesenho = now;
+      gl.uniform1f(u.time, elapsed);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
+
+    // primeiro quadro já desenhado: o canvas nunca aparece vazio (preto)
+    gl.uniform1f(u.time, 0);
+    gl.drawArrays(gl.TRIANGLES, 0, 3);
     rafId = requestAnimationFrame(frame);
 
     return {
@@ -265,19 +274,10 @@
   const canvas = document.querySelector('[data-dither]');
   if (!canvas) return;
 
-  // Compilar o shader e desenhar disputa a thread com o carregamento e com a
-  // entrada do topo. O fundo só liga depois que a cortina sai e o movimento
-  // principal da entrada passou (a opacidade dele já entra com transição).
-  const cortina = (window.portfolioPreloader && window.portfolioPreloader.done)
-    ? window.portfolioPreloader.done
-    : Promise.resolve();
-
-  cortina.then(() => {
-    setTimeout(() => {
-      if ('requestIdleCallback' in window) requestIdleCallback(ligar, { timeout: 600 });
-      else ligar();
-    }, 700);
-  });
+  // Liga logo no carregamento, por baixo da cortina do "EB": a compilação do
+  // shader acontece onde ninguém vê, e quando a cortina sai o fundo já está
+  // lá, estável. Ligar depois da entrada fazia ele surgir atrasado e piscar.
+  ligar();
 
   function ligar() {
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
