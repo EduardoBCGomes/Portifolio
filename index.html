@@ -101,58 +101,29 @@
       unicode-range: U+42, U+45;
     }
 
+    /* cortina do primeiro quadro: só o fundo preto, até o js/preloader.js
+       montar a entrada (o EB em SVG) por cima dela e removê-la */
     #eb-preloader {
       position: fixed;
       inset: 0;
       z-index: 9999;
       background: #0c0a09;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      transition: opacity .5s cubic-bezier(.7, .2, .2, 1);
-    }
-    #eb-preloader.eb-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    #eb-preloader .eb-logo {
-      display: flex;
-      align-items: baseline;
-      font-family: "Archivo Black", "Archivo", sans-serif;
-      font-size: clamp(4.5rem, 14vw, 9.4rem);
-      line-height: .8;
-      letter-spacing: -.02em;
-      transform: translateY(80px);
-      opacity: 0;
-      transition: transform .5s cubic-bezier(.7, .2, .2, 1),
-                  opacity .5s cubic-bezier(.7, .2, .2, 1);
-      will-change: transform, opacity;
-    }
-    #eb-preloader .eb-logo.eb-in   { transform: translateY(0); opacity: 1; }
-    #eb-preloader .eb-logo.eb-hide { transform: translateY(-80px); opacity: 0; }
-
-    #eb-preloader .eb-e { color: #faf9f6; }
-    #eb-preloader .eb-b {
-      color: #faf9f6;
-      -webkit-text-stroke: 2px #faf9f6;
-    }
-    @supports (-webkit-text-stroke: 1px black) {
-      #eb-preloader .eb-b { color: transparent; }
     }
 
     html.is-loading, html.is-loading body { overflow: hidden; }
 
-    @media (prefers-reduced-motion: reduce) {
-      #eb-preloader { transition-duration: .12s; }
-      #eb-preloader .eb-logo {
-        transform: none;
-        transition: opacity .12s linear;
-      }
-      #eb-preloader .eb-logo.eb-hide { transform: none; }
+    /* a entrada do site: zoom através do EB (js/preloader.js) */
+    .revelar {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      width: 100%;
+      height: 100%;
     }
   </style>
+
+  <!-- sem JavaScript não há entrada animada: a cortina não pode ficar -->
+  <noscript><style>#eb-preloader { display: none; }</style></noscript>
 
   <script>
     (function () {
@@ -168,11 +139,7 @@
 </head>
 <body>
 
-  <div id="eb-preloader" role="status" aria-label="Carregando">
-    <div class="eb-logo" id="eb-logo" aria-hidden="true">
-      <span class="eb-e">E</span><span class="eb-b">B</span>
-    </div>
-  </div>
+  <div id="eb-preloader" role="status" aria-label="Carregando"></div>
 
   <a class="skip-link" href="#main">Pular para o conteúdo</a>
 

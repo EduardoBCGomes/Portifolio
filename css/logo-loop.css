@@ -42,7 +42,9 @@
   line-height: 1;
 }
 
-.anim-ready .logoloop[data-intro] .logoloop__item { opacity: 0; }
+/* a entrada recorta em vez de esmaecer: o texto nunca fica semitransparente
+   (o teste de contraste media os nomes no meio do fade) */
+.anim-ready .logoloop[data-intro] .logoloop__item { clip-path: inset(0 0 100% 0); }
 
 .logoloop__content {
   display: inline-flex;

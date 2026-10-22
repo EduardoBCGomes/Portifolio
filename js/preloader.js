@@ -1,91 +1,217 @@
 (function () {
   'use strict';
 
-  const preloader = document.getElementById('eb-preloader');
+  // Entrada do site: "zoom através do logo". A cortina preta do HTML segura a
+  // tela até aqui; este script monta o EB em SVG por cima dela e a remove.
+  //  1. encenação e máscara: o EB sobe de trás de uma linha invisível;
+  //  2. comprimir e esticar: cada letra estica ao subir e assenta no lugar;
+  //  3. ação secundária: a linha embaixo mostra o carregamento real;
+  //  4. antecipação: pronto o carregamento, o EB recua como quem pega impulso;
+  //  5. exagero e transformação: as letras viram janelas e a câmera mergulha
+  //     pela haste do E até a página ocupar a tela;
+  //  6. continuação e sobreposição: o topo chega ampliado e desfocado e
+  //     assenta, com a entrada do título começando ainda durante o zoom.
 
-  if (!preloader) {
-    window.portfolioPreloader = { done: Promise.resolve() };
+  const cortina = document.getElementById('eb-preloader');
+  const raiz = document.documentElement;
+
+  let liberar;
+  const done = new Promise((r) => { liberar = r; });
+  window.portfolioPreloader = { done };
+
+  function soltarSemAnimacao() {
+    cortina?.remove();
+    raiz.classList.remove('is-loading');
+    liberar();
+  }
+
+  // sem cortina ou sem GSAP (CDN fora do ar), a página entra direto
+  if (!cortina || typeof gsap === 'undefined') {
+    soltarSemAnimacao();
     return;
   }
 
-  const logo = document.getElementById('eb-logo');
+  raiz.classList.add('is-loading');
+
   const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const NS = 'http://www.w3.org/2000/svg';
+  const CREME = '#faf9f6';
+  const FUNDO = '#0c0a09';
+  const MIN_VISIVEL = 900; // ms: o EB precisa entrar e ser lido
+  const MAX_ESPERA = 5000;
 
-  // O "EB" entra em 0,5 s e precisa de um instante parado para ser lido;
-  // cada milissegundo a mais aqui atrasa o primeiro conteúdo da página
-  const MIN_VISIVEL = reduzido ? 0 : 650;
-  const MAX_ESPERA  = 5000;
-  const SAIDA       = reduzido ? 120 : 500;
+  const W = window.innerWidth;
+  const H = window.innerHeight;
+  const fs = Math.round(Math.min(150, Math.max(72, W * 0.14)));
+  const base = Math.round(H / 2 + fs * 0.36); // linha de base: caixa alta centrada
 
-  document.documentElement.classList.add('is-loading');
+  const svg = document.createElementNS(NS, 'svg');
+  svg.setAttribute('class', 'revelar');
+  svg.setAttribute('aria-hidden', 'true');
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.innerHTML = `
+    <defs>
+      <mask id="revelar-mascara" maskUnits="userSpaceOnUse" x="0" y="0" width="${W}" height="${H}">
+        <rect width="${W}" height="${H}" fill="#fff"/>
+        <g class="revelar__furo" opacity="0">
+          <text class="revelar__e" y="${base}" fill="#000">E</text>
+          <text class="revelar__b" y="${base}" fill="#000">B</text>
+        </g>
+      </mask>
+      <clipPath id="revelar-corte">
+        <rect width="${W}" height="${base + fs * 0.04}"/>
+      </clipPath>
+    </defs>
+    <rect class="revelar__fundo" width="${W}" height="${H}" fill="${FUNDO}" mask="url(#revelar-mascara)"/>
+    <g class="revelar__marca" clip-path="url(#revelar-corte)">
+      <text class="revelar__e" y="${base}" fill="${CREME}">E</text>
+      <text class="revelar__b" y="${base}" fill="none" stroke="${CREME}" stroke-width="2">B</text>
+    </g>
+    <line class="revelar__linha" x1="${W / 2 - fs * 0.7}" x2="${W / 2 + fs * 0.7}"
+          y1="${base + fs * 0.22}" y2="${base + fs * 0.22}" stroke="${CREME}" stroke-width="1.5"/>
+  `;
+  svg.querySelectorAll('text').forEach((t) => {
+    t.setAttribute('font-family', '"Archivo Black", "Archivo", sans-serif');
+    t.setAttribute('font-size', fs);
+  });
+  document.body.appendChild(svg);
 
-  let resolver;
-  const done = new Promise((r) => { resolver = r; });
-  window.portfolioPreloader = { done };
+  // o SVG já cobre a tela: a cortina do HTML cumpriu o papel
+  cortina.remove();
 
-  const inicio = performance.now();
+  const furo = svg.querySelector('.revelar__furo');
+  const marca = svg.querySelector('.revelar__marca');
+  const linha = svg.querySelector('.revelar__linha');
+  const letrasVisiveis = [...marca.querySelectorAll('text')];
 
-  // Espera a fonte do monograma de verdade: o document.fonts.ready lido
-  // aqui resolvia antes de a Archivo Black ser pedida, e o "EB" entrava
-  // com a fonte reserva e trocava no meio da animação.
-  const fonteEmCena = (document.fonts && document.fonts.load)
-    ? Promise.race([
-        document.fonts.load('1em "Archivo Black"', 'EB').catch(() => {}),
-        new Promise((r) => setTimeout(r, 1500))
-      ])
+  // E e B lado a lado, centrados, iguais na máscara e na marca visível
+  function posicionar() {
+    const e = marca.querySelector('.revelar__e');
+    const b = marca.querySelector('.revelar__b');
+    const le = e.getComputedTextLength();
+    const lb = b.getComputedTextLength();
+    const x0 = W / 2 - (le + lb) / 2;
+    svg.querySelectorAll('.revelar__e').forEach((t) => t.setAttribute('x', x0));
+    svg.querySelectorAll('.revelar__b').forEach((t) => t.setAttribute('x', x0 + le));
+    // ponto de mergulho: o meio da haste do E (traço cheio do Archivo Black)
+    return { x: x0 + fs * 0.17, y: base - fs * 0.36 };
+  }
+
+  function espera(ms) { return new Promise((r) => setTimeout(r, ms)); }
+
+  // ---- carregamento real, mostrado pela linha (ação secundária) ----
+  // A entrada espera a primeira tela pronta: estrutura da página, foto do
+  // topo e fontes (do EB e do texto), para nada trocar de fonte na frente
+  // da pessoa. O "load" inteiro (imagens dos projetos) não segura nada.
+  const etapas = [];
+  const progresso = { p: 0 };
+  let feitas = 0;
+  gsap.set(linha, { scaleX: 0, svgOrigin: `${W / 2} 0` });
+  const contar = (promessa) => {
+    etapas.push(promessa);
+    promessa.then(() => {
+      feitas++;
+      gsap.to(progresso, {
+        p: feitas / etapas.length,
+        duration: 0.5,
+        ease: 'power2.out',
+        onUpdate: () => gsap.set(linha, { scaleX: progresso.p })
+      });
+    });
+  };
+
+  const temFontes = Boolean(document.fonts && document.fonts.load);
+  const fonteMarca = temFontes
+    ? Promise.race([document.fonts.load('1em "Archivo Black"', 'EB').catch(() => {}), espera(1500)])
     : Promise.resolve();
 
-  fonteEmCena.then(() => logo && logo.classList.add('eb-in'));
-
-  // As fontes do texto também: prontas antes de a cortina sair, o texto
-  // nunca aparece numa fonte reserva e troca de desenho na frente da pessoa.
-  // Elas são do próprio site e já começam a baixar no <head> (preload).
-  const fontesTexto = (document.fonts && document.fonts.load)
+  contar(new Promise((r) => {
+    if (document.readyState !== 'loading') return r();
+    document.addEventListener('DOMContentLoaded', r, { once: true });
+  }));
+  const foto = document.querySelector('.hero__photo');
+  contar(new Promise((r) => {
+    if (!foto || foto.complete) return r();
+    foto.addEventListener('load', r, { once: true });
+    foto.addEventListener('error', r, { once: true });
+  }));
+  contar(fonteMarca);
+  contar(temFontes
     ? Promise.race([
         Promise.all([
           document.fonts.load('700 1em "Archivo"'),
           document.fonts.load('400 1em "Atkinson Hyperlegible Next"')
         ]).catch(() => {}),
-        new Promise((r) => setTimeout(r, 2000))
+        espera(2000)
       ])
-    : Promise.resolve();
+    : Promise.resolve());
 
-  // A cortina sai quando a primeira tela está pronta: estrutura da página e
-  // foto do topo. Esperar o "load" inteiro (imagens dos projetos, fontes de
-  // outras seções) segurava o primeiro conteúdo à toa em rede lenta.
-  const estruturaPronta = new Promise((r) => {
-    if (document.readyState !== 'loading') return r();
-    document.addEventListener('DOMContentLoaded', r, { once: true });
+  const inicio = performance.now();
+  const pronto = Promise.race([Promise.all(etapas), espera(MAX_ESPERA)]);
+
+  if (reduzido) {
+    pronto.then(() => {
+      raiz.classList.remove('is-loading');
+      liberar();
+      gsap.to(svg, { opacity: 0, duration: 0.3, onComplete: () => svg.remove() });
+    });
+    return;
+  }
+
+  fonteMarca.then(() => {
+    const mergulho = posicionar();
+
+    // ---- 1 e 2: entrada por máscara, esticando e assentando ----
+    gsap.set(letrasVisiveis, { y: fs * 1.05, scaleY: 1.35, transformOrigin: '50% 100%' });
+    const entrada = gsap.timeline();
+    entrada.to(letrasVisiveis, { y: 0, duration: 0.8, ease: 'expo.out', stagger: 0.09 }, 0.1);
+    entrada.to(letrasVisiveis, { scaleY: 1, duration: 0.9, ease: 'elastic.out(1, 0.45)', stagger: 0.09 }, 0.22);
+
+    pronto
+      .then(() => espera(Math.max(0, MIN_VISIVEL - (performance.now() - inicio))))
+      .then(() => sair(mergulho));
   });
 
-  const fotoTopo = document.querySelector('.hero__photo');
-  const fotoPronta = new Promise((r) => {
-    if (!fotoTopo || fotoTopo.complete) return r();
-    fotoTopo.addEventListener('load', r, { once: true });
-    fotoTopo.addEventListener('error', r, { once: true });
-  });
+  function sair(mergulho) {
+    const hero = document.querySelector('.hero');
+    const ambos = [marca, furo];
+    gsap.set(ambos, { svgOrigin: `${mergulho.x} ${mergulho.y}` });
 
-  const teto = new Promise((r) => setTimeout(r, MAX_ESPERA));
+    const tl = gsap.timeline({
+      onComplete: () => {
+        svg.remove();
+        if (hero) gsap.set(hero, { clearProps: 'transform,filter' });
+      }
+    });
 
-  Promise.race([Promise.all([estruturaPronta, fotoPronta, fonteEmCena, fontesTexto]), teto])
-    .then(() => {
-      const decorrido = performance.now() - inicio;
-      const restante = Math.max(0, MIN_VISIVEL - decorrido);
-      return new Promise((r) => setTimeout(r, restante));
-    })
-    .then(sair);
+    // a linha cumpriu o papel: recolhe para o centro
+    tl.to(linha, { scaleX: 0, opacity: 0, duration: 0.35, ease: 'power3.in' }, 0);
 
-  function sair() {
-    if (logo) {
-      logo.classList.remove('eb-in');
-      logo.classList.add('eb-hide');
+    // 4: antecipação, o EB recua antes do salto
+    tl.to(ambos, { scale: 0.86, duration: 0.45, ease: 'power2.inOut' }, 0.1);
+
+    // 5: as letras viram janelas para a página
+    tl.to(furo, { attr: { opacity: 1 }, duration: 0.01 }, 0.42);
+    tl.to(letrasVisiveis, { opacity: 0, duration: 0.3, ease: 'power1.out' }, 0.42);
+    tl.set(svg, { pointerEvents: 'none' }, 0.42);
+
+    // 6: a página chega ampliada e desfocada e assenta, por baixo do zoom
+    if (hero) {
+      tl.fromTo(hero,
+        { scale: 1.18, filter: 'blur(10px)', transformOrigin: '50% 45%' },
+        { scale: 1, filter: 'blur(0px)', duration: 1.5, ease: 'expo.out' },
+        0.5);
     }
-    preloader.classList.add('eb-out');
-    document.documentElement.classList.remove('is-loading');
 
-    // A entrada do topo começa junto com a cortina saindo: antes ela só
-    // começava depois do fade inteiro, e as duas etapas somavam ~1,5 s.
-    resolver();
-    setTimeout(() => preloader.remove(), SAIDA);
+    // 5: o mergulho pela haste do E
+    tl.to(ambos, { scale: 110, duration: 1.15, ease: 'expo.in' }, 0.55);
+
+    // a entrada do título começa quando as letras viram janelas: o texto já
+    // vai aparecendo por dentro do EB e termina junto com o mergulho
+    tl.call(() => {
+      raiz.classList.remove('is-loading');
+      liberar();
+    }, null, 0.42);
   }
 })();

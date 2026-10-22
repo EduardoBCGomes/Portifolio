@@ -126,7 +126,7 @@
           const r = it.getBoundingClientRect();
           const pos = limitar((r.left + r.width / 2 - rr.left) / Math.max(1, rr.width), 0, 1);
           const e = saida(limitar((t - pos * INTRO_ESCALONADO) / INTRO_TEMPO, 0, 1));
-          it.style.opacity = e >= 1 ? '' : e.toFixed(3);
+          it.style.clipPath = e >= 1 ? '' : `inset(0 0 ${((1 - e) * 100).toFixed(1)}% 0)`;
           it.style.transform = e >= 1 ? '' : `translateY(${((1 - e) * 14).toFixed(2)}px)`;
         });
         if (t >= INTRO_TEMPO + INTRO_ESCALONADO) {
