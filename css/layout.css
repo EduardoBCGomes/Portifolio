@@ -194,6 +194,11 @@
 
 .hero__dither.is-ready { opacity: .5; }
 
+/* no celular o texto fica por cima do pontilhado: fundo mais discreto */
+@media (max-width: 768px) {
+  .hero__dither.is-ready { opacity: .32; }
+}
+
 .hero__inner,
 .scroll-hint { z-index: 1; }
 
@@ -228,7 +233,8 @@
 .hero__lead {
   max-width: 46ch;
   font-size: var(--fs-lead);
-  color: var(--muted);
+  /* mais claro que o cinza de rótulos: fica sobre o pontilhado do fundo */
+  color: var(--accent-2);
   margin-bottom: 2.4rem;
 }
 
@@ -283,7 +289,7 @@
   flex-direction: column;
   align-items: center;
   gap: .6rem;
-  color: var(--muted);
+  color: var(--accent-2);
   font-size: var(--fs-xs);
   letter-spacing: .22em;
   text-transform: uppercase;
@@ -378,7 +384,7 @@
 /* o parágrafo é longo: a primeira frase em destaque dá um ponto de entrada */
 .sobre__lead-destaque { color: var(--text); }
 .sobre__body {
-  color: var(--muted);
+  color: var(--text-2);
   max-width: 60ch;
   margin-bottom: 2.4rem;
 }
@@ -404,7 +410,7 @@
 .contato__texto {
   max-width: 46ch;
   margin-bottom: 1.4rem;
-  color: var(--muted);
+  color: var(--text-2);
 }
 
 /* disponibilidade: fato confirmado que responde "ele pode pegar agora?" */

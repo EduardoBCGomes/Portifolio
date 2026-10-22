@@ -83,12 +83,10 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/scroll-expand.css">
-  <link rel="stylesheet" href="css/cubes.css">
   <link rel="stylesheet" href="css/staggered-menu.css">
   <link rel="stylesheet" href="css/gradual-blur.css">
   <link rel="stylesheet" href="css/text-loop.css">
-  <link rel="stylesheet" href="css/morph-slider.css">
+  <link rel="stylesheet" href="css/carrossel.css">
   <link rel="stylesheet" href="css/logo-loop.css">
 
   <style>
@@ -305,7 +303,7 @@
     <div class="text-loop-band">
       <div
         data-text-loop
-        data-text="Interfaces ✦ Animação ✦ Acessibilidade ✦ Performance ✦ Design System"
+        data-text="Interfaces ✦ Animação ✦ Acessibilidade ✦ Performance"
         data-shape="wave"
         data-separator="✦"
         data-curviness="26"
@@ -391,91 +389,62 @@
       <div class="container">
         <header class="section__head" data-reveal>
           <h2 class="section__title">Projetos</h2>
-          <p class="section__desc">Alguns projetos que desenvolvi.</p>
         </header>
 
-        <div class="morph-slider" data-morph-slider
-             data-transition="melt"
-             data-intensity="0.5"
-             data-aberration="0.3"
-             data-drift="0.35"
-             data-duration="1.1"
-             data-autoplay="true"
-             data-autoplay-delay="5"
-             data-overlay-color="#0c0a09">
-
-          <ol class="morph-slider-items">
-            <li class="morph-slider-item"
-                data-titulo="AFlo"
-                data-descricao="Loja online de buquês artesanais de chenille. Construí o montador em que o cliente escolhe flor por flor, o checkout com Mercado Pago e o painel que organiza a produção dos pedidos."
-                data-stack="Next.js · TypeScript · Tailwind CSS · Prisma · PostgreSQL · Mercado Pago">
-              <a href="https://aflo-aflo.vercel.app/" target="_blank" rel="noopener noreferrer">Ver projeto</a>
-              <img src="assets/projetos/aflo.webp" srcset="assets/projetos/aflo-800.webp 800w, assets/projetos/aflo.webp 1600w" sizes="(max-width: 699px) calc(100vw - 4.5rem), 1100px" alt="Página inicial da loja AFlo, com um buquê de flores de chenille" width="1600" height="759" loading="lazy">
-            </li>
-
-            <li class="morph-slider-item"
-                data-titulo="Portfólio"
-                data-descricao="Meu portfólio pessoal, o site que você está vendo agora."
-                data-stack="HTML · CSS · JavaScript · GSAP · WebGL">
-              <a href="https://www.eduardobcg.com.br" target="_blank" rel="noopener noreferrer">Abrir site</a>
-              <img src="assets/projetos/portfolio.webp" srcset="assets/projetos/portfolio-800.webp 800w, assets/projetos/portfolio.webp 1600w" sizes="(max-width: 699px) calc(100vw - 4.5rem), 1100px" alt="Página inicial do portfólio de Eduardo Borges" width="1600" height="1000" loading="lazy">
-            </li>
-
-            
-
-          </ol>
-        </div>
-      </div>
-    </section>
-
-    <section
-      class="scroll-expand"
-      data-scroll-expand
-      data-start-width="42"
-      data-start-height="58"
-      data-start-width-mobile="80"
-      data-start-height-mobile="48"
-      data-start-radius="24"
-      data-end-radius="0"
-      data-media-zoom="1.35"
-      data-scroll-distance="0.8"
-      data-hold-distance="0.2"
-      data-smoothing="0.1"
-      data-overlay-scrim="0.5"
-      aria-label="Apresentação em tela cheia">
-
-      <div class="scroll-expand__track">
-        <div class="scroll-expand__stage">
-
-          <div class="scroll-expand__frame">
-
-            <div class="scroll-expand__media cubes-container" data-cubes
-                 data-grid-size="9"
-                 data-gap="0.18"
-                 data-face-color="#0c0a09"
-                 data-edge-color="#57524c"
-                 data-edge-width="1"
-                 data-shading="0.6"
-                 data-max-angle="45"
-                 data-radius="3"
-                 data-ripple-color="#faf9f6"
-                 aria-hidden="true"></div>
-
-            <div class="scroll-expand__scrim" aria-hidden="true"></div>
-
-            <div class="scroll-expand__overlay">
-              <h2 class="scroll-expand__overlay-title">Cada pixel, no lugar certo</h2>
-              <p class="scroll-expand__overlay-text">
-                Da arquitetura do código ao refinamento das animações: a interface ideal é aquela que desaparece para dar todo o protagonismo ao conteúdo.
-              </p>
-            </div>
+        <div class="carrossel" data-carrossel role="region" aria-roledescription="carrossel" aria-label="Projetos">
+          <div class="carrossel__janela">
+            <span class="carrossel__vidro carrossel__vidro--esq" aria-hidden="true"></span>
+            <span class="carrossel__vidro carrossel__vidro--dir" aria-hidden="true"></span>
+            <ul class="carrossel__trilho" role="list">
+              <li class="carrossel__item">
+                <article class="projeto">
+                  <img class="projeto__imagem" src="assets/projetos/aflo.webp" srcset="assets/projetos/aflo-800.webp 800w, assets/projetos/aflo.webp 1600w" sizes="(max-width: 699px) 84vw, 640px" alt="" width="1600" height="759" loading="lazy" draggable="false" style="object-position: 50% 0%">
+                  <div class="projeto__sombra" aria-hidden="true"></div>
+                  <div class="projeto__info">
+                    <h3 class="projeto__titulo">
+                      <a class="projeto__link" href="https://aflo-aflo.vercel.app/" target="_blank" rel="noopener noreferrer">AFlo<span class="sr-only"> (abre em nova aba)</span></a>
+                      <span class="projeto__seta"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    </h3>
+                    <p class="projeto__desc">Loja online de buquês artesanais de chenille. Construí o montador em que o cliente escolhe flor por flor, o checkout com Mercado Pago e o painel que organiza a produção dos pedidos.</p>
+                    <div class="projeto__revelar">
+                      <ul class="projeto__stack" aria-label="Tecnologias usadas">
+                        <li>Next.js</li>
+                        <li>TypeScript</li>
+                        <li>Tailwind CSS</li>
+                        <li>Prisma</li>
+                        <li>PostgreSQL</li>
+                        <li>Mercado Pago</li>
+                      </ul>
+                    </div>
+                  </div>
+                </article>
+              </li>
+              <li class="carrossel__item">
+                <article class="projeto">
+                  <img class="projeto__imagem" src="assets/projetos/portfolio.webp" srcset="assets/projetos/portfolio-800.webp 800w, assets/projetos/portfolio.webp 1600w" sizes="(max-width: 699px) 84vw, 640px" alt="" width="1600" height="1000" loading="lazy" draggable="false" style="object-position: 50% 0%">
+                  <div class="projeto__sombra" aria-hidden="true"></div>
+                  <div class="projeto__info">
+                    <h3 class="projeto__titulo">
+                      <a class="projeto__link" href="https://www.eduardobcg.com.br" target="_blank" rel="noopener noreferrer">Portfólio<span class="sr-only"> (abre em nova aba)</span></a>
+                      <span class="projeto__seta"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+                    </h3>
+                    <p class="projeto__desc">Meu portfólio pessoal, o site que você está vendo agora.</p>
+                    <div class="projeto__revelar">
+                      <ul class="projeto__stack" aria-label="Tecnologias usadas">
+                        <li>HTML</li>
+                        <li>CSS</li>
+                        <li>JavaScript</li>
+                        <li>GSAP</li>
+                        <li>WebGL</li>
+                      </ul>
+                    </div>
+                  </div>
+                </article>
+              </li>
+            </ul>
           </div>
 
-          <div class="scroll-expand__edge" aria-hidden="true"></div>
-
-          <div class="scroll-expand__title">Do pixel ao produto</div>
-          <div class="scroll-expand__hint">role para expandir</div>
-
+          <p class="sr-only" aria-live="polite" data-carrossel-anuncio></p>
         </div>
       </div>
     </section>
@@ -579,12 +548,10 @@
   <script src="js/preloader.js"></script>
   <script src="js/dither.js"></script>
   <script src="js/footer-dither.js"></script>
-  <script src="js/cubes.js"></script>
-  <script src="js/scroll-expand.js"></script>
   <script src="js/staggered-menu.js"></script>
   <script src="js/gradual-blur.js"></script>
   <script src="js/text-loop.js"></script>
-  <script src="js/morph-slider.js"></script>
+  <script src="js/carrossel.js"></script>
   <script src="js/logo-loop.js"></script>
   <script src="js/main.js"></script>
   <script src="js/animations.js"></script>
