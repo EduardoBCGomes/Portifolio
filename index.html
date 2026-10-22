@@ -102,7 +102,7 @@
     }
 
     /* cortina do primeiro quadro: só o fundo preto, até o js/preloader.js
-       montar a entrada (o EB em SVG) por cima dela e removê-la */
+       montar a entrada em dither por cima dela e removê-la */
     #eb-preloader {
       position: fixed;
       inset: 0;
@@ -112,7 +112,7 @@
 
     html.is-loading, html.is-loading body { overflow: hidden; }
 
-    /* a entrada do site: zoom através do EB (js/preloader.js) */
+    /* a entrada do site em dither (canvas do js/preloader.js) */
     .revelar {
       position: fixed;
       inset: 0;

@@ -240,7 +240,11 @@
       rafId = requestAnimationFrame(frame);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      if (paused) return;
+      // Enquanto a entrada do site (o preloader em dither) cobre a tela
+      // inteira, ninguém vê este fundo: desenhá-lo só disputava o processador
+      // com a entrada. O primeiro quadro já foi desenhado abaixo; as ondas
+      // voltam a andar quando a cortina abre (is-loading sai).
+      if (paused || document.documentElement.classList.contains('is-loading')) return;
       if (!opts.disableAnimation) elapsed += dt;
       if (now - ultimoDesenho < INTERVALO - 2) return;
       ultimoDesenho = now;
