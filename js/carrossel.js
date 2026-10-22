@@ -22,10 +22,6 @@
 
     const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduzido) raiz.classList.add('sem-movimento');
-    // Na tela de toque não há hover para pausar, e o toque já abre o projeto.
-    // Ali a faixa não anda sozinha: fica alinhada no cartão, com o próximo
-    // aparecendo na borda, e só se move com o arrasto (WCAG 2.2.2).
-    const toque = window.matchMedia('(hover: none)');
 
     const st = {
       offset: 0,
@@ -100,7 +96,7 @@
     }
 
     const parado = () =>
-      reduzido || st.hover || st.foco || st.pausadoPeloUsuario || !st.visivel || st.arrasto || st.tween;
+      reduzido || st.hover || st.dedo || st.foco || st.pausadoPeloUsuario || !st.visivel || st.arrasto || st.tween;
 
     // Rolagem da página empurra a faixa (ScrollTrigger): rolar para baixo
     // acelera para a esquerda, rolar para cima inverte. O impulso decai
@@ -112,8 +108,6 @@
         start: 'top bottom',
         end: 'bottom top',
         onUpdate: (self) => {
-          // no toque o empurrão deixaria a faixa parada entre dois cartões
-          if (toque.matches) return;
           impulso = gsap.utils.clamp(-2400, 2400, self.getVelocity()) * 0.35;
         }
       });
@@ -124,7 +118,7 @@
       const dt = Math.min(deltaMs, 64) / 1000;
       impulso *= Math.exp(-dt * 3);
       if (parado()) return;
-      st.offset += ((toque.matches ? 0 : VELOCIDADE) + impulso) * dt;
+      st.offset += (VELOCIDADE + impulso) * dt;
       aplicar();
     }
     gsap.ticker.add(tique);
@@ -173,6 +167,22 @@
 
     raiz.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') st.hover = true; });
     raiz.addEventListener('pointerleave', () => { st.hover = false; });
+
+    // No toque não existe hover: o dedo em cima segura a faixa (dá para ler
+    // com calma) e ela volta a andar pouco depois de soltar.
+    let retomar = 0;
+    raiz.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse') return;
+      clearTimeout(retomar);
+      st.dedo = true;
+    });
+    const soltarDedo = (e) => {
+      if (e.pointerType === 'mouse') return;
+      clearTimeout(retomar);
+      retomar = setTimeout(() => { st.dedo = false; }, 1500);
+    };
+    raiz.addEventListener('pointerup', soltarDedo);
+    raiz.addEventListener('pointercancel', soltarDedo);
     // Foco do teclado num cartão: a faixa leva esse cartão até o início da
     // vista, para ninguém tabular para um projeto escondido na borda.
     raiz.addEventListener('focusin', (e) => {
