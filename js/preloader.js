@@ -38,7 +38,7 @@
 
   const W = window.innerWidth;
   const H = window.innerHeight;
-  const CELULA = W < 700 ? 4 : 5;
+  const CELULA = W < 700 ? 3 : 5;
   const colunas = Math.ceil(W / CELULA);
   const linhas = Math.ceil(H / CELULA);
   const total = colunas * linhas;
@@ -64,7 +64,7 @@
   const px32 = new Uint32Array(img.data.buffer);
   const cor32 = (c) => (255 << 24 | c[2] << 16 | c[1] << 8 | c[0]) >>> 0;
 
-  const fsTela = Math.round(Math.min(220, Math.max(96, W * 0.2)));
+  const fsTela = Math.round(Math.min(220, Math.max(96, W * (W < 700 ? 0.3 : 0.2))));
   const fs = fsTela / CELULA;
   const cx = colunas / 2;
   const base = Math.round(linhas / 2 + fs * 0.36);
@@ -85,7 +85,7 @@
     const tracar = () => {
       g.fillStyle = '#fff';
       g.strokeStyle = '#fff';
-      g.lineWidth = Math.max(1, fs * 0.045);
+      g.lineWidth = Math.max(1.5, fs * 0.055);
       g.fillText('E', x0, base);
       g.strokeText('B', x0 + le, base);
     };
@@ -127,8 +127,10 @@
 
   const st = {
     subida: fs * 1.1,
-    estica: 1.35,
+    estica: 1.45,
     escala: 1,
+    tremor: 0,
+    clarao: 0,
     brilho: 0,
     halo: 0,
     barra: 0,
@@ -188,7 +190,6 @@
 
   function desenhar() {
     const agora = performance.now();
-    if (agora - ultimoDesenho < 32) return;
     ultimoDesenho = agora;
 
     const t = agora / 1000;
@@ -205,11 +206,15 @@
 
     const e = st.escala;
     const k = e * st.estica;
+    const tr = st.tremor;
+    const tx = tr > 0 ? Math.round((Math.random() - 0.5) * 2 * tr) : 0;
+    const ty = tr > 0 ? Math.round((Math.random() - 0.5) * 2 * tr) : 0;
+    const clarao = st.clarao;
     const temLogo = st.brilho > 0 && caixaLogo.x1 >= 0;
-    const lx0 = Math.floor(cx + (caixaLogo.x0 - cx) * e) - 1;
-    const lx1 = Math.ceil(cx + (caixaLogo.x1 - cx) * e) + 1;
-    let ly0 = Math.floor(base + (caixaLogo.y0 + st.subida - base) * k) - 1;
-    const ly1 = Math.min(st.corte ? base : linhas, Math.ceil(base + (caixaLogo.y1 + st.subida - base) * k) + 1);
+    const lx0 = Math.floor(cx + (caixaLogo.x0 - cx) * e) - 2 - Math.abs(tx);
+    const lx1 = Math.ceil(cx + (caixaLogo.x1 - cx) * e) + 2 + Math.abs(tx);
+    let ly0 = Math.floor(base + (caixaLogo.y0 + st.subida - base) * k) - 3 - Math.ceil(tr);
+    const ly1 = Math.min(st.corte ? base : linhas, Math.ceil(base + (caixaLogo.y1 + st.subida - base) * k) + 3 + Math.ceil(tr));
     if (ly0 < 0) ly0 = 0;
     const temHalo = st.halo > 0 && caixaHalo.x1 >= 0;
     const hx0 = Math.floor(cx + (caixaHalo.x0 - cx) * e) - 1;
@@ -219,7 +224,7 @@
 
     let y0 = 0;
     let y1 = linhas - 1;
-    if (!telaInteira && onda <= 0) {
+    if (!telaInteira && onda <= 0 && clarao <= 0) {
       let a = linhas, z = -1;
       if (temLogo) { a = Math.min(a, ly0); z = Math.max(z, ly1); }
       if (temHalo) { a = Math.min(a, hy0); z = Math.max(z, hy1); }
@@ -235,7 +240,7 @@
       const linhaLogo = temLogo && y >= ly0 && y <= ly1;
       const linhaHalo = temHalo && y >= hy0 && y <= hy1;
       const linhaBarra = temBarra && y === barraY;
-      const sy = Math.round(base + (y - base) / k - st.subida);
+      const sy = Math.round(base + (y - ty - base) / k - st.subida);
       const syh = Math.round(cy + (y - cy) / e);
       const linhaFonte = sy >= 0 && sy < linhas ? sy * colunas : -1;
       const linhaFonteHalo = syh >= 0 && syh < linhas ? syh * colunas : -1;
@@ -249,14 +254,20 @@
             S5[i] * cT1 + C5[i] * sT1 +
             S9[i] * cT2 - C9[i] * sT2 +
             S14[i] * cT3 - C14[i] * sT3;
-          const d = DIST[i] + ameba * 0.06 + b * 0.08 - onda;
+          const d = DIST[i] + ameba * 0.05 + b * 0.07 - onda;
           if (d < 0) { px32[i] = 0; continue; }
-          if (d < 0.022) { px32[i] = C_CREME; continue; }
-          if (d < 0.055) { px32[i] = C_CINZA; continue; }
+          if (d < 0.018) { px32[i] = C_CREME; continue; }
+          if (d < 0.046) { px32[i] = C_CINZA; continue; }
+          if (d < 0.072) { px32[i] = C_BRASA; continue; }
+        }
+
+        if (clarao > 0) {
+          const v = clarao * (ondaPronta ? 1 - DIST[i] * 0.9 : 0.6);
+          if (v > b) { px32[i] = v - b > 0.3 ? C_CREME : C_CINZA; continue; }
         }
 
         if (linhaLogo && linhaFonte >= 0 && x >= lx0 && x <= lx1) {
-          const sx = Math.round(cx + (x - cx) / e);
+          const sx = Math.round(cx + (x - tx - cx) / e);
           if (sx >= 0 && sx < colunas && logo[linhaFonte + sx] * st.brilho > b) {
             px32[i] = C_CREME;
             continue;
@@ -349,9 +360,9 @@
     comecarAPintar();
 
     const entrada = gsap.timeline();
-    entrada.to(st, { brilho: 1, duration: 0.9, ease: 'power2.out' }, 0);
-    entrada.to(st, { subida: 0, duration: 0.85, ease: 'expo.out' }, 0.05);
-    entrada.to(st, { estica: 1, duration: 1, ease: 'elastic.out(1, 0.45)' }, 0.18);
+    entrada.to(st, { brilho: 1, duration: 0.8, ease: 'power2.out' }, 0);
+    entrada.to(st, { subida: 0, duration: 0.8, ease: 'expo.out' }, 0.05);
+    entrada.to(st, { estica: 1, duration: 1, ease: 'elastic.out(1, 0.4)' }, 0.15);
     entrada.to(st, { halo: 0.55, duration: 1.2, ease: 'power2.out' }, 0.3);
     entrada.set(st, { corte: false }, 1.1);
 
@@ -377,37 +388,43 @@
 
     tl.to(st, { barraVisivel: 0, duration: 0.3, ease: 'power3.in' }, 0);
 
-    tl.to(st, { escala: 0.86, halo: 1, duration: 0.45, ease: 'power2.inOut' }, 0.1);
+    tl.to(st, { escala: 0.8, halo: 1, duration: 0.5, ease: 'power3.inOut' }, 0.05);
+    tl.to(st, { tremor: 1.6, duration: 0.5, ease: 'power2.in' }, 0.05);
+    tl.set(st, { tremor: 0 }, 0.55);
 
     tl.set(tela, { pointerEvents: 'none' }, 0.55);
-    tl.to(st, { onda: 1.15, duration: 1.25, ease: 'power4.out' }, 0.55);
-    tl.to(st, { escala: 3.2, duration: 0.55, ease: 'expo.in' }, 0.5);
-    tl.to(st, { brilho: 0, halo: 0, duration: 0.45, ease: 'power2.in' }, 0.62);
+    tl.fromTo(st, { clarao: 1 }, { clarao: 0, duration: 0.45, ease: 'power2.out', immediateRender: false }, 0.55);
+    tl.to(st, { onda: 1.15, duration: 1.15, ease: 'power4.out' }, 0.55);
+    tl.to(st, { escala: 3.8, duration: 0.5, ease: 'expo.in' }, 0.5);
+    tl.to(st, { brilho: 0, halo: 0, duration: 0.35, ease: 'power2.in' }, 0.58);
     tl.fromTo(tela, { x: 0, y: 0 }, {
       keyframes: [
-        { x: -7, y: 4, duration: 0.04 },
-        { x: 6, y: -5, duration: 0.04 },
-        { x: -4, y: -3, duration: 0.04 },
-        { x: 3, y: 2, duration: 0.04 },
+        { x: -11, y: 7, duration: 0.035 },
+        { x: 10, y: -8, duration: 0.035 },
+        { x: -8, y: -5, duration: 0.04 },
+        { x: 6, y: 5, duration: 0.04 },
+        { x: -4, y: 2, duration: 0.045 },
+        { x: 2, y: -2, duration: 0.05 },
         { x: 0, y: 0, duration: 0.06 }
       ],
-      ease: 'none'
+      ease: 'none',
+      immediateRender: false
     }, 0.56);
 
     if (camadas.length) {
       tl.fromTo(camadas,
         {
-          scale: W < 700 ? 1.08 : 1.15,
-          filter: 'blur(10px)',
+          scale: W < 700 ? 1.1 : 1.2,
+          filter: 'blur(14px)',
           transformOrigin: (i, el) => `50% ${Math.round(H / 2 - el.getBoundingClientRect().top)}px`
         },
         { scale: 1, filter: 'blur(0px)', duration: 1.5, ease: 'expo.out' },
-        0.55);
+        0.56);
     }
 
     tl.call(() => {
       raiz.classList.remove('is-loading');
       liberar();
-    }, null, 0.55);
+    }, null, 0.56);
   }
 })();
