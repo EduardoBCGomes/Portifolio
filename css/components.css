@@ -171,7 +171,8 @@
   border-radius: var(--radius-sm);
   background: var(--bg);
   color: var(--text);
-  font-size: var(--fs-sm);
+  /* 16px: abaixo disso o Safari do iPhone dá zoom no campo ao tocar */
+  font-size: 1rem;
   transition: border-color .25s var(--ease-out), background .25s var(--ease-out);
   resize: vertical;
 }
@@ -214,3 +215,14 @@
 }
 .form-status.is-success { color: #4ade80; }
 .form-status.is-error   { color: #f87171; }
+.form-status.is-info    { color: var(--accent-2); }
+
+.form-status__copy {
+  padding: 0;
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: .2em;
+  text-decoration-color: rgba(250, 249, 246, .4);
+}
+.form-status__copy:hover { text-decoration-color: currentColor; }

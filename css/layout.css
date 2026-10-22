@@ -403,8 +403,28 @@
 
 .contato__texto {
   max-width: 46ch;
-  margin-bottom: 2rem;
+  margin-bottom: 1.4rem;
   color: var(--muted);
+}
+
+/* disponibilidade: fato confirmado que responde "ele pode pegar agora?" */
+.contato__status {
+  display: flex;
+  align-items: flex-start;
+  gap: .6rem;
+  margin-bottom: 1.6rem;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--text);
+}
+.contato__status-ponto {
+  flex: none;
+  margin-top: .5em;
+  width: .5rem;
+  height: .5rem;
+  border-radius: 50%;
+  background: #4ade80;
+  box-shadow: 0 0 0 4px rgba(74, 222, 128, .14);
 }
 
 .contato__mail-row {
@@ -484,7 +504,13 @@
 }
 
 @media (max-width: 768px) {
-  .nav__inner .nav__cta { display: none; }
+  /* o contato é o objetivo do site: o botão fica na barra também no
+     celular, onde a maioria abre o link; só fica mais compacto */
+  .nav__inner { gap: 1rem; }
+  .nav__inner .nav__cta {
+    min-height: 40px;
+    padding-inline: .95rem;
+  }
 
   .hero {
     min-height: auto;

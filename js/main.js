@@ -101,9 +101,21 @@
 
       window.location.href = `mailto:eduardo26eduardo@gmail.com?subject=${subject}&body=${body}`;
 
-      status.textContent = 'Abrindo seu app de e-mail com a mensagem pronta…';
-      status.classList.add('is-success');
-      form.reset();
+      // Não dá para saber se o app de e-mail abriu. Por isso a mensagem fica
+      // no formulário (antes ela era apagada e se perdia quando não havia app)
+      // e há um jeito de levar o texto para outro lugar.
+      const mensagemCompleta = `${data.get('mensagem')}\n\n${data.get('nome')}\n${data.get('email')}`;
+      status.classList.add('is-info');
+      status.innerHTML =
+        'Abri seu app de e-mail com a mensagem pronta. Se ele não abriu, ' +
+        '<button type="button" class="form-status__copy">copie a mensagem</button> ' +
+        'e envie para eduardo26eduardo@gmail.com.';
+      status.querySelector('.form-status__copy').addEventListener('click', (ev) => {
+        const botao = ev.currentTarget;
+        copiarTexto(mensagemCompleta)
+          .then(() => { botao.textContent = 'mensagem copiada'; })
+          .catch(() => { botao.textContent = 'não deu para copiar'; });
+      });
     });
   }
 })();

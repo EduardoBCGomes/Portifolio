@@ -387,6 +387,47 @@
       </div>
     </section>
 
+    <section class="section projetos" id="projetos">
+      <div class="container">
+        <header class="section__head" data-reveal>
+          <h2 class="section__title">Projetos</h2>
+          <p class="section__desc">Alguns projetos que desenvolvi.</p>
+        </header>
+
+        <div class="morph-slider" data-morph-slider
+             data-transition="melt"
+             data-intensity="0.5"
+             data-aberration="0.3"
+             data-drift="0.35"
+             data-duration="1.1"
+             data-autoplay="true"
+             data-autoplay-delay="5"
+             data-overlay-color="#0c0a09">
+
+          <ol class="morph-slider-items">
+            <li class="morph-slider-item"
+                data-titulo="AFlo"
+                data-descricao="Loja online de buquês artesanais de chenille. Construí o montador em que o cliente escolhe flor por flor, o checkout com Mercado Pago e o painel que organiza a produção dos pedidos."
+                data-stack="Next.js · TypeScript · Tailwind CSS · Prisma · PostgreSQL · Mercado Pago">
+              <a href="https://aflo-aflo.vercel.app/" target="_blank" rel="noopener noreferrer">Ver projeto</a>
+              <img src="assets/projetos/aflo.webp" srcset="assets/projetos/aflo-800.webp 800w, assets/projetos/aflo.webp 1600w" sizes="(max-width: 699px) calc(100vw - 4.5rem), 1100px" alt="Página inicial da loja AFlo, com um buquê de flores de chenille" width="1600" height="759" loading="lazy">
+            </li>
+
+            <li class="morph-slider-item"
+                data-titulo="Portfólio"
+                data-descricao="Meu portfólio pessoal, o site que você está vendo agora."
+                data-stack="HTML · CSS · JavaScript · GSAP · WebGL">
+              <a href="https://www.eduardobcg.com.br" target="_blank" rel="noopener noreferrer">Abrir site</a>
+              <img src="assets/projetos/portfolio.webp" srcset="assets/projetos/portfolio-800.webp 800w, assets/projetos/portfolio.webp 1600w" sizes="(max-width: 699px) calc(100vw - 4.5rem), 1100px" alt="Página inicial do portfólio de Eduardo Borges" width="1600" height="1000" loading="lazy">
+            </li>
+
+            
+
+          </ol>
+        </div>
+      </div>
+    </section>
+
     <section
       class="scroll-expand"
       data-scroll-expand
@@ -397,8 +438,8 @@
       data-start-radius="24"
       data-end-radius="0"
       data-media-zoom="1.35"
-      data-scroll-distance="1.2"
-      data-hold-distance="0.35"
+      data-scroll-distance="0.8"
+      data-hold-distance="0.2"
       data-smoothing="0.1"
       data-overlay-scrim="0.5"
       aria-label="Apresentação em tela cheia">
@@ -439,47 +480,6 @@
       </div>
     </section>
 
-    <section class="section projetos" id="projetos">
-      <div class="container">
-        <header class="section__head" data-reveal>
-          <h2 class="section__title">Projetos</h2>
-          <p class="section__desc" data-dica-lista="Alguns projetos que desenvolvi.">Arraste, use as setas ou espere — cada projeto abre no botão.</p>
-        </header>
-
-        <div class="morph-slider" data-morph-slider
-             data-transition="melt"
-             data-intensity="0.5"
-             data-aberration="0.3"
-             data-drift="0.35"
-             data-duration="1.1"
-             data-autoplay="true"
-             data-autoplay-delay="5"
-             data-overlay-color="#0c0a09">
-
-          <ol class="morph-slider-items">
-            <li class="morph-slider-item"
-                data-titulo="AFlo"
-                data-descricao="Loja de buquês artesanais de chenille, com montador passo a passo, checkout no Mercado Pago e painel de produção."
-                data-stack="Next.js · TypeScript · Tailwind CSS · Prisma · PostgreSQL · Mercado Pago">
-              <a href="https://aflo-aflo.vercel.app/" target="_blank" rel="noopener noreferrer">Ver projeto</a>
-              <img src="assets/projetos/aflo.webp" srcset="assets/projetos/aflo-800.webp 800w, assets/projetos/aflo.webp 1600w" sizes="(max-width: 699px) calc(100vw - 4.5rem), 1100px" alt="Página inicial da loja AFlo, com um buquê de flores de chenille" width="1600" height="759" loading="lazy">
-            </li>
-
-            <li class="morph-slider-item"
-                data-titulo="Portfólio"
-                data-descricao="Meu portfólio pessoal, o site que você está vendo agora."
-                data-stack="HTML · CSS · JavaScript · GSAP · WebGL">
-              <a href="https://www.eduardobcg.com.br" target="_blank" rel="noopener noreferrer">Abrir site</a>
-              <img src="assets/projetos/portfolio.webp" srcset="assets/projetos/portfolio-800.webp 800w, assets/projetos/portfolio.webp 1600w" sizes="(max-width: 699px) calc(100vw - 4.5rem), 1100px" alt="Página inicial do portfólio de Eduardo Borges" width="1600" height="1000" loading="lazy">
-            </li>
-
-            
-
-          </ol>
-        </div>
-      </div>
-    </section>
-
     <section class="section contato" id="contato">
       <div class="container">
         <header class="section__head" data-reveal>
@@ -496,6 +496,11 @@
               Se você precisa de um site, uma aplicação web ou quer conversar sobre uma
               oportunidade profissional, entre em contato. Será um prazer entender o que
               você precisa e encontrar a melhor solução.
+            </p>
+
+            <p class="contato__status" data-reveal>
+              <span class="contato__status-ponto" aria-hidden="true"></span>
+              Disponível para projetos e vagas · remoto, atendo todo o Brasil
             </p>
 
             <div class="contato__mail-row" data-reveal>
