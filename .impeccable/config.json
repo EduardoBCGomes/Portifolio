@@ -2,28 +2,6 @@
   "detector": {
     "ignoreRules": [],
     "ignoreFiles": [],
-    "ignoreValues": [
-      {
-        "rule": "overused-font",
-        "value": "inter",
-        "createdAt": "2026-10-22T02:11:21.824Z",
-        "reason": "Claude triage: incumbent body face; PRODUCT.md commits to preserving the current identity"
-      },
-      {
-        "rule": "overused-font",
-        "value": "space grotesk",
-        "createdAt": "2026-10-22T02:11:21.983Z",
-        "reason": "Claude triage: incumbent display face; PRODUCT.md commits to preserving the current identity"
-      },
-      {
-        "rule": "cramped-padding",
-        "value": "*",
-        "files": [
-          "index.html"
-        ],
-        "createdAt": "2026-10-22T02:11:22.154Z",
-        "reason": "Claude triage: false positive on the full-bleed morph-slider (WebGL image fills the frame by design)"
-      }
-    ]
+    "ignoreValues": []
   }
 }

@@ -53,6 +53,9 @@
     trilho.appendChild(original);
 
     const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // na tela de toque não há hover para pausar: a fileira fica parada e anda
+    // só quando a pessoa arrasta (WCAG 2.2.2, nada se move sozinho sem pausa)
+    const toque = window.matchMedia('(hover: none)');
 
     const st = {
       offset: 0,
@@ -99,7 +102,7 @@
       }
 
       const pausado = st.foco || st.hover;
-      const alvo = reduzido.matches ? 0 : (pausado ? cfg.velocidadeHover : cfg.velocidade) * cfg.direcao;
+      const alvo = reduzido.matches || toque.matches ? 0 : (pausado ? cfg.velocidadeHover : cfg.velocidade) * cfg.direcao;
 
       if (st.arrasto && st.arrasto.ativo) {
         ocupado = true;
@@ -223,10 +226,10 @@
     }).observe(raiz);
 
     // A largura do periodo depende da fonte dos rótulos. Com cache frio o
-    // ready resolvia antes de a Space Grotesk chegar e o loop dava um salto
+    // ready resolvia antes de a fonte dos títulos (Archivo) chegar e o loop dava um salto
     // a cada volta; por isso pedimos a fonte e remedimos quando ela troca.
     const pronto = document.fonts && document.fonts.load
-      ? document.fonts.load('500 1em "Space Grotesk"').then(() => document.fonts.ready).catch(() => {})
+      ? document.fonts.load('500 1em "Archivo"').then(() => document.fonts.ready).catch(() => {})
       : Promise.resolve();
     pronto.then(() => { montarCopias(); acordar(); });
 

@@ -53,7 +53,6 @@
   if (form && status) {
     const rules = {
       nome: (v) => (v.trim().length >= 2 ? '' : 'Escreva pelo menos 2 caracteres.'),
-      email: (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()) ? '' : 'Informe um e-mail válido.'),
       mensagem: (v) => (v.trim().length >= 10 ? '' : 'Escreva pelo menos 10 caracteres.')
     };
 
@@ -94,17 +93,17 @@
       }
 
       const data = new FormData(form);
-      const subject = encodeURIComponent(`Contato do portfólio — ${data.get('nome')}`);
-      const body = encodeURIComponent(
-        `${data.get('mensagem')}\n\n—\n${data.get('nome')}\n${data.get('email')}`
-      );
+      // sem campo de e-mail: a mensagem sai da conta de quem escreve, então a
+      // resposta já tem para onde ir
+      const subject = encodeURIComponent(`Contato pelo portfólio: ${data.get('nome')}`);
+      const body = encodeURIComponent(`${data.get('mensagem')}\n\n${data.get('nome')}`);
 
       window.location.href = `mailto:eduardo26eduardo@gmail.com?subject=${subject}&body=${body}`;
 
       // Não dá para saber se o app de e-mail abriu. Por isso a mensagem fica
       // no formulário (antes ela era apagada e se perdia quando não havia app)
       // e há um jeito de levar o texto para outro lugar.
-      const mensagemCompleta = `${data.get('mensagem')}\n\n${data.get('nome')}\n${data.get('email')}`;
+      const mensagemCompleta = `${data.get('mensagem')}\n\n${data.get('nome')}`;
       status.classList.add('is-info');
       status.innerHTML =
         'Abri seu app de e-mail com a mensagem pronta. Se ele não abriu, ' +

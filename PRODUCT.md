@@ -33,7 +33,7 @@ Desenvolvedor web e bacharel em Ciência da Computação que começou no suporte
 ## Capabilities and Constraints
 
 - Site estático em HTML, CSS e JavaScript puro, sem framework e sem etapa de build; animações com GSAP via CDN; publicado na Vercel (www.eduardobcg.com.br é o endereço principal; o domínio sem www e eduardobcg.vercel.app redirecionam para ele).
-- Página única com seções: topo (hero), Sobre mim, apresentação expansível, Projetos, Contato e rodapé.
+- Página única com seções: topo (hero), Sobre mim, Projetos (carrossel infinito), Contato e rodapé.
 - Tecnologias que Eduardo usa e pode citar: HTML, CSS, JavaScript, TypeScript, React, Next.js, Tailwind CSS, GSAP, WebGL, Git.
 - Idioma: português do Brasil.
 - Sem backend: o formulário não envia por servidor, abre o app de e-mail.

@@ -43,8 +43,8 @@
   const fontesTexto = (document.fonts && document.fonts.load)
     ? Promise.race([
         Promise.all([
-          document.fonts.load('700 1em "Space Grotesk"'),
-          document.fonts.load('400 1em "Inter"')
+          document.fonts.load('700 1em "Archivo"'),
+          document.fonts.load('400 1em "Atkinson Hyperlegible Next"')
         ]).catch(() => {}),
         new Promise((r) => setTimeout(r, 2000))
       ])

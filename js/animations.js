@@ -135,7 +135,9 @@
           nav.classList.toggle('is-stuck', grudar);
         }
 
-        const esconder = self.direction === 1 && y > 400;
+        // no celular a barra fica sempre: é onde estão o "Vamos conversar"
+        // e o menu, e rolar a página inteira de volta para achá-los cansa
+        const esconder = isDesktop && self.direction === 1 && y > 400;
         if (esconder !== navEscondida) {
           navEscondida = esconder;
           gsap.to(nav, {
@@ -260,7 +262,7 @@
     : Promise.resolve();
 
   // O document.fonts.ready lido aqui no começo resolve na hora: nenhuma
-  // fonte foi pedida ainda. Com cache frio a Space Grotesk chegava depois
+  // fonte foi pedida ainda. Com cache frio a fonte dos títulos (Archivo) chegava depois
   // da cortina e o SplitText media as linhas com a fonte reserva — quebra
   // de linha errada no texto mascarado. Pedimos as fontes do texto
   // dividido explicitamente e esperamos o ready de novo, com um teto para
@@ -268,8 +270,8 @@
   function fontesDoTexto() {
     if (!document.fonts || !document.fonts.load) return Promise.resolve();
     return Promise.all([
-      document.fonts.load('700 1em "Space Grotesk"'),
-      document.fonts.load('400 1em "Space Grotesk"')
+      document.fonts.load('700 1em "Archivo"'),
+      document.fonts.load('400 1em "Archivo"')
     ]).then(() => document.fonts.ready);
   }
 

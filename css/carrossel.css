@@ -83,7 +83,7 @@
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: linear-gradient(to top, rgba(12, 10, 9, .9) 0%, rgba(12, 10, 9, .6) 38%, rgba(12, 10, 9, 0) 70%);
+  background: linear-gradient(to top, rgba(12, 10, 9, .95) 0%, rgba(12, 10, 9, .82) 40%, rgba(12, 10, 9, .35) 68%, rgba(12, 10, 9, 0) 88%);
   opacity: 0;
   transition: opacity .4s ease;
 }
@@ -131,7 +131,7 @@
 
 .projeto__desc {
   color: rgba(236, 232, 225, .8);
-  font-size: .8125rem;
+  font-size: .875rem;
   line-height: 1.5;
 }
 
@@ -145,7 +145,7 @@
   padding: .26rem .6rem;
   border: 1px solid rgba(250, 249, 246, .26);
   background: rgba(250, 249, 246, .08);
-  font-size: .7rem;
+  font-size: .75rem;
   font-weight: 500;
   line-height: 1.2;
   letter-spacing: .06em;

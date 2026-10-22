@@ -418,7 +418,7 @@
   display: flex;
   align-items: flex-start;
   gap: .6rem;
-  margin-bottom: 1.6rem;
+  margin-bottom: 0;
   font-size: var(--fs-sm);
   font-weight: 500;
   color: var(--text);
@@ -431,6 +431,17 @@
   border-radius: 50%;
   background: #4ade80;
   box-shadow: 0 0 0 4px rgba(74, 222, 128, .14);
+}
+
+/* caminhos secundários (e-mail, GitHub, LinkedIn) em um grupo só, separado
+   da mensagem principal; o formulário ao lado é a ação principal */
+.contato__direto {
+  margin-top: 2.6rem;
+  margin-bottom: .55rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-sm);
+  color: var(--muted);
 }
 
 .contato__mail-row {
@@ -534,8 +545,12 @@
   .scroll-hint { display: none; }
 
   /* em retrato o 3:4 ocupava a tela inteira; 4:5 deixa ver o que vem depois */
-  .hero__photo-frame,
-  .sobre__photo-wrap { aspect-ratio: 4 / 5; }
+  .hero__photo-frame { aspect-ratio: 4 / 5; }
+
+  /* a segunda foto vem pouco depois da primeira: deitada e mais baixa, ela
+     mostra o moinho ao fundo e não repete o retrato de corpo inteiro */
+  .sobre__photo-wrap { aspect-ratio: 4 / 3; }
+  .sobre__photo { object-position: 50% 30%; }
 
   .sobre__media { max-width: 100%; }
 

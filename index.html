@@ -77,8 +77,8 @@
 
   <!-- as duas fontes do texto (declaradas em css/base.css) começam a baixar
        já, junto com o CSS, em vez de esperar o navegador descobrir que são usadas -->
-  <link rel="preload" href="assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/atkinson-next-latin.woff2" as="font" type="font/woff2" crossorigin>
 
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/layout.css">
@@ -120,7 +120,7 @@
     #eb-preloader .eb-logo {
       display: flex;
       align-items: baseline;
-      font-family: "Archivo Black", "Space Grotesk", sans-serif;
+      font-family: "Archivo Black", "Archivo", sans-serif;
       font-size: clamp(4.5rem, 14vw, 9.4rem);
       line-height: .8;
       letter-spacing: -.02em;
@@ -239,8 +239,8 @@
           <p class="sm-socials-title">Redes</p>
           <ul class="sm-socials-list" role="list">
 
-            <li><a href="https://github.com/EduardoBCGomes" class="sm-socials-link" target="_blank" rel="noopener noreferrer">GitHub</a></li>
-            <li><a href="https://www.linkedin.com/in/eduardo-borges-07228714a/" class="sm-socials-link" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+            <li><a href="https://github.com/EduardoBCGomes" class="sm-socials-link" target="_blank" rel="noopener noreferrer">GitHub<span class="sr-only"> (abre em nova aba)</span></a></li>
+            <li><a href="https://www.linkedin.com/in/eduardo-borges-07228714a/" class="sm-socials-link" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (abre em nova aba)</span></a></li>
             <li><a href="mailto:eduardo26eduardo@gmail.com" class="sm-socials-link">E-mail</a></li>
           </ul>
         </nav>
@@ -265,9 +265,9 @@
           </h1>
 
           <p class="hero__lead" data-hero="lead">
-            Sou Eduardo Borges, bacharel em Ciência da Computação. Desenvolvo sites e
-            aplicações web que unem interfaces intuitivas, funcionalidade e código bem
-            estruturado.
+            Sou Eduardo Borges, bacharel em Ciência da Computação. Vim do suporte
+            técnico, onde aprendi a entender o problema de quem usa antes de escrever
+            código. Hoje desenvolvo sites e aplicações web com esse olhar.
           </p>
 
           <div class="hero__actions" data-hero="actions">
@@ -303,12 +303,12 @@
     <div class="text-loop-band">
       <div
         data-text-loop
-        data-text="Interfaces ✦ Animação ✦ Acessibilidade ✦ Performance"
+        data-text="Entender o problema ✦ Resolver no código ✦ Entregar funcionando"
         data-shape="wave"
         data-separator="✦"
         data-curviness="26"
         data-speed="70"
-        data-direction="forward"
+        data-direction="reverse"
         data-font-size="34"
         data-font-weight="700"
         data-letter-spacing="1"
@@ -350,15 +350,14 @@
 
             <div class="sobre__body" data-reveal>
               <p>
-                Hoje, aplico essa visão no desenvolvimento de sites e aplicações web, unindo
-                interface, funcionalidade e organização do código. Trabalho com tecnologias
-                como JavaScript, TypeScript, React e Next.js, sempre buscando criar produtos
-                digitais intuitivos, eficientes e fáceis de manter.
+                Hoje uso essa experiência para construir sites e aplicações web com
+                JavaScript, TypeScript, React e Next.js. Cuido da interface e também do
+                código por trás dela, para que o projeto continue fácil de manter depois
+                de entregue.
               </p>
               <p>
-                Acredito que um bom projeto vai além da aparência. Ele precisa resolver um
-                problema, funcionar bem no dia a dia e oferecer uma experiência simples para
-                quem utiliza.
+                Para mim, um projeto está pronto quando resolve o problema de quem vai
+                usar, funciona bem no dia a dia e não precisa de manual para ser entendido.
               </p>
             </div>
 
@@ -463,14 +462,16 @@
 
             <p class="contato__texto" data-reveal>
               Se você precisa de um site, uma aplicação web ou quer conversar sobre uma
-              oportunidade profissional, entre em contato. Será um prazer entender o que
-              você precisa e encontrar a melhor solução.
+              vaga, me escreva. Conte o que você tem em mente e a gente vê junto o melhor
+              caminho.
             </p>
 
             <p class="contato__status" data-reveal>
               <span class="contato__status-ponto" aria-hidden="true"></span>
               Disponível para projetos e vagas · remoto, atendo todo o Brasil
             </p>
+
+            <p class="contato__direto" data-reveal>Se preferir, fale direto comigo:</p>
 
             <div class="contato__mail-row" data-reveal>
               <a href="mailto:eduardo26eduardo@gmail.com" class="contato__mail">eduardo26eduardo@gmail.com</a>
@@ -483,8 +484,8 @@
 
             <ul class="socials" data-stagger>
 
-              <li><a href="https://github.com/EduardoBCGomes" class="social" data-magnetic target="_blank" rel="noopener noreferrer">GitHub</a></li>
-              <li><a href="https://www.linkedin.com/in/eduardo-borges-07228714a/" class="social" data-magnetic target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+              <li><a href="https://github.com/EduardoBCGomes" class="social" data-magnetic target="_blank" rel="noopener noreferrer">GitHub<span class="sr-only"> (abre em nova aba)</span></a></li>
+              <li><a href="https://www.linkedin.com/in/eduardo-borges-07228714a/" class="social" data-magnetic target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (abre em nova aba)</span></a></li>
             </ul>
           </div>
 
@@ -493,12 +494,6 @@
               <label for="nome">Nome</label>
               <input type="text" id="nome" name="nome" required autocomplete="name" placeholder="Como te chamo?" aria-describedby="erro-nome">
               <p class="field__error" id="erro-nome" data-error-for="nome"></p>
-            </div>
-
-            <div class="field">
-              <label for="email">E-mail</label>
-              <input type="email" id="email" name="email" required autocomplete="email" placeholder="voce@email.com" aria-describedby="erro-email">
-              <p class="field__error" id="erro-email" data-error-for="email"></p>
             </div>
 
             <div class="field">
