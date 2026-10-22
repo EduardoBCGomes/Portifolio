@@ -1,13 +1,6 @@
 (function () {
   'use strict';
 
-  // Ideia do Aurora Footer (Reverse UI, inspirado no site do Dia): nove
-  // colunas em degrau sobem da base da tela conforme a rolagem atravessa o
-  // espaço depois do rodapé, e a página volta sozinha quando a pessoa para
-  // ali. No original as colunas são um degradê colorido desfocado; aqui o
-  // degradê vira o mesmo pontilhado Bayer 8x8 do fundo do topo.
-
-  // Alturas das colunas, tiradas do SVG original (viewBox 1567 x 584).
   const ALTURAS = [0.497, 0.685, 0.822, 0.908, 1, 0.908, 0.822, 0.685, 0.497];
 
   const VERT = `#version 300 es
@@ -41,8 +34,6 @@
                mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), u.x), u.y);
   }
 
-  // Altura do degrau em x. Entre duas colunas a troca é suave, no lugar do
-  // desfoque gaussiano do original.
   float altura(float x) {
     float pos = x * 9.0 - 0.5;
     float i = floor(pos);
@@ -73,11 +64,8 @@
       return;
     }
 
-    // posição relativa dentro da coluna: 0 na base, 1 no topo (como o
-    // degradê de cada barra no original, que vai da base até o topo dela)
     float t = uv.y / h;
 
-    // as faixas ondulam devagar, como cortina de aurora
     float onda = ruido(vec2(uv.x * 5.0 + uTempo * 0.07, uTempo * 0.11));
     t += (onda - 0.5) * 0.06;
 
@@ -89,7 +77,6 @@
     int by = int(mod(celula.y, 8.0));
     float nivel = clamp(floor(brilho * 3.0 + bayer[by * 8 + bx]) / 3.0, 0.0, 1.0);
 
-    // fora das colunas o canvas é transparente: a página aparece por trás
     fragColor = vec4(uTinta * nivel, nivel);
   }`;
 
@@ -128,7 +115,6 @@
       powerPreference: 'low-power'
     });
 
-    // Sem WebGL2 o espaço no fim da página ficaria vazio à toa.
     const desistir = () => raiz.remove();
     if (!gl) return desistir();
 
@@ -163,8 +149,6 @@
     gl.clearColor(0, 0, 0, 0);
 
     const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // A volta automática só no desktop, como no original: no celular a
-    // rolagem por toque já tem o próprio elástico do sistema.
     const desktop = window.matchMedia('(min-width: 1000px)');
 
     let raf = 0;
@@ -187,8 +171,6 @@
       gl.uniform2f(u.uRes, w, h);
     }
 
-    // 0 quando o topo do espaço encosta na base da tela, 1 quando o fim do
-    // espaço chega nela (o offset ['start end', 'end end'] do original).
     function progresso() {
       const r = espaco.getBoundingClientRect();
       if (r.height <= 0) return 0;
@@ -215,7 +197,6 @@
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-      // Visível e com movimento liberado: as faixas continuam ondulando.
       if (!reduzido && !document.hidden) raf = requestAnimationFrame(quadro);
     }
 
@@ -223,8 +204,6 @@
       if (!raf && !perdido) raf = requestAnimationFrame(quadro);
     }
 
-    // Volta automática: parou de rolar com as colunas à mostra, a página
-    // sobe sozinha até o rodapé encostar na base da tela.
     let espera = 0;
     let voltando = false;
 
@@ -265,12 +244,9 @@
 
     medir();
     acordar();
-    // Recarregou a página já no fim: a volta também vale.
     agendarVolta();
   }
 
-  // Fica no fim da página: só monta o WebGL quando o fim está a uma tela de
-  // distância, em vez de compilar o shader no carregamento.
   document.querySelectorAll('[data-aurora-dither]').forEach((raiz) => {
     if (!('IntersectionObserver' in window)) return iniciar(raiz);
     const io = new IntersectionObserver((entradas) => {

@@ -206,9 +206,6 @@
     });
   }
 
-  // A barra do topo não muda mais de largura ao abrir (isso arrastava o EB
-  // e o botão). Só em telas muito largas o botão fica fora do painel claro;
-  // aí ele desliza até a borda interna do painel, junto com a entrada dele.
   let toggleTween = null;
   function moverToggle(opening) {
     toggleTween?.kill();

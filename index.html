@@ -75,8 +75,6 @@
   <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png">
   <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
 
-  <!-- as duas fontes do texto (declaradas em css/base.css) começam a baixar
-       já, junto com o CSS, em vez de esperar o navegador descobrir que são usadas -->
   <link rel="preload" href="assets/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/atkinson-next-latin.woff2" as="font" type="font/woff2" crossorigin>
 
@@ -90,8 +88,6 @@
   <link rel="stylesheet" href="css/logo-loop.css">
 
   <style>
-    /* Archivo Black só com as letras E e B (~2,7 KB), embutida: o "EB" da
-       cortina é a primeira coisa na tela e não espera nenhum pedido de rede */
     @font-face {
       font-family: "Archivo Black";
       font-style: normal;
@@ -101,8 +97,6 @@
       unicode-range: U+42, U+45;
     }
 
-    /* cortina do primeiro quadro: só o fundo preto, até o js/preloader.js
-       montar a entrada em dither por cima dela e removê-la */
     #eb-preloader {
       position: fixed;
       inset: 0;
@@ -112,7 +106,6 @@
 
     html.is-loading, html.is-loading body { overflow: hidden; }
 
-    /* a entrada do site em dither (canvas do js/preloader.js) */
     .revelar {
       position: fixed;
       inset: 0;
@@ -122,7 +115,6 @@
     }
   </style>
 
-  <!-- sem JavaScript não há entrada animada: a cortina não pode ficar -->
   <noscript><style>#eb-preloader { display: none; }</style></noscript>
 
   <script>
@@ -497,7 +489,6 @@
     </div>
   </footer>
 
-  <!-- espaço depois do rodapé: rolar por ele faz as colunas subirem -->
   <div class="aurora" data-aurora-dither aria-hidden="true">
     <div class="aurora__espaco"></div>
     <canvas class="aurora__canvas"></canvas>

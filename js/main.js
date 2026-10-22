@@ -4,8 +4,6 @@
   const year = document.getElementById('year');
   if (year) year.textContent = new Date().getFullYear();
 
-  // Nem todo mundo tem um app de e-mail configurado: o mailto abre o nada.
-  // Copiar o endereço resolve esse caso com um clique.
   function copiarTexto(texto) {
     if (navigator.clipboard && window.isSecureContext) {
       return navigator.clipboard.writeText(texto);
@@ -93,16 +91,11 @@
       }
 
       const data = new FormData(form);
-      // sem campo de e-mail: a mensagem sai da conta de quem escreve, então a
-      // resposta já tem para onde ir
       const subject = encodeURIComponent(`Contato pelo portfólio: ${data.get('nome')}`);
       const body = encodeURIComponent(`${data.get('mensagem')}\n\n${data.get('nome')}`);
 
       window.location.href = `mailto:eduardo26eduardo@gmail.com?subject=${subject}&body=${body}`;
 
-      // Não dá para saber se o app de e-mail abriu. Por isso a mensagem fica
-      // no formulário (antes ela era apagada e se perdia quando não havia app)
-      // e há um jeito de levar o texto para outro lugar.
       const mensagemCompleta = `${data.get('mensagem')}\n\n${data.get('nome')}`;
       status.classList.add('is-info');
       status.innerHTML =

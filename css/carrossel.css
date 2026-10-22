@@ -1,9 +1,3 @@
-/* Carrossel infinito de projetos, no estilo do "Endless Carousel Pro"
-   (Framer): cartões grandes de cantos retos, quase colados, só a imagem à
-   mostra; no hover (ou foco do teclado) sobem a legenda e as tecnologias
-   sobre uma sombra. Vidro desfocado nas laterais da faixa. Os cartões são
-   deitados (16:10) porque as imagens são capturas de tela de sites: em pé,
-   o corte escondia metade de cada projeto. */
 .carrossel {
   --carrossel-gap: 12px;
   --carrossel-cartao: min(760px, 86vw);
@@ -28,10 +22,8 @@
 }
 .carrossel[data-arrastando] .carrossel__trilho { cursor: grabbing; }
 
-/* sem JavaScript a faixa vira uma rolagem horizontal comum */
 .carrossel:not(.is-pronto) .carrossel__janela { overflow-x: auto; }
 
-/* vidro desfocado nas laterais: os cartões entram e saem "fora de foco" */
 .carrossel__vidro {
   position: absolute;
   inset-block: 0;
@@ -78,7 +70,6 @@
   pointer-events: none;
 }
 
-/* a sombra nasce junto com a legenda */
 .projeto__sombra {
   position: absolute;
   inset: 0;
@@ -108,8 +99,6 @@
   color: var(--accent);
 }
 
-/* o cartão inteiro abre o projeto (o clique é repassado ao link do título
-   em carrossel.js); o contorno de foco do link desenha o cartão todo */
 .projeto { cursor: pointer; }
 .carrossel[data-arrastando] .projeto { cursor: grabbing; }
 .projeto__link:focus-visible { outline: none; }
@@ -164,7 +153,6 @@
 }
 .projeto:hover .projeto__seta svg { transform: translate(2px, -2px); }
 
-/* no toque não existe hover: legenda e tecnologias ficam sempre à mostra */
 @media (hover: none) {
   .projeto__sombra,
   .projeto__info {
@@ -173,8 +161,6 @@
   }
 }
 
-/* no celular o cartão deitado fica baixo demais para a legenda por cima:
-   a imagem vai inteira no topo e o texto desce para baixo dela */
 @media (max-width: 699px) {
   .projeto {
     aspect-ratio: auto;

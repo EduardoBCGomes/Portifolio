@@ -1,20 +1,11 @@
 (function () {
   'use strict';
 
-  // Transição em dither para os saltos longos da página, nos links marcados
-  // com data-transicao: EB, "Vamos conversar", "Ver projetos", "Entrar em
-  // contato", "Voltar ao topo" e os itens do menu lateral. A tela se cobre de
-  // pixels na mesma matriz de Bayer 8x8 dos outros dithers do site, a página
-  // pula para o destino por trás e os pixels se desfazem. A varredura segue o
-  // sentido do salto, em diagonal e com a borda em forma de ameba: ao descer
-  // ela vem do canto superior direito para baixo; ao subir, do canto inferior
-  // esquerdo para cima.
-
   const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)');
-  const TITULO_Y = 100;  // onde o título da seção para (a barra vai até ~64 px)
-  const CELULA = 5;      // px de tela por pixel do dither
-  const COBRIR = 0.5;    // s
-  const REVELAR = 0.6;   // s
+  const TITULO_Y = 100;
+  const CELULA = 5;
+  const COBRIR = 0.5;
+  const REVELAR = 0.6;
 
   const BAYER = [
      0, 32,  8, 40,  2, 34, 10, 42,
@@ -27,8 +18,6 @@
     63, 31, 55, 23, 61, 29, 53, 21
   ].map((v) => v / 64);
 
-  // tons da paleta: a borda da varredura brilha em creme, depois cinza
-  // quente, e o resto fica no fundo do site
   const CREME = [236, 232, 225];
   const CINZA = [61, 57, 52];
   const FUNDO = [12, 10, 9];
@@ -39,21 +28,19 @@
   document.body.appendChild(tela);
   const ctx = tela.getContext('2d');
 
-  // o dither é desenhado em baixa resolução (um pixel por célula) e ampliado
-  // sem suavização: barato o bastante para rodar a cada quadro
   const mini = document.createElement('canvas');
   const mctx = mini.getContext('2d');
   let img = null;
-  let posicoes = null; // onde a célula fica na diagonal (0 = canto de partida)
+  let posicoes = null;
   let bayers = null;
-  let nx = null;       // coordenadas normalizadas, para a borda ondulante
+  let nx = null;
   let ny = null;
   let colunas = 0;
   let linhas = 0;
   let ocupado = false;
 
-  const AMEBA = 0.17; // quanto a borda avança e recua em lóbulos
-  const PESO_BAYER = 0.12; // pouco: a borda fica pontilhada sem perder a forma
+  const AMEBA = 0.17;
+  const PESO_BAYER = 0.12;
 
   function medir(subindo) {
     const w = window.innerWidth;
@@ -75,21 +62,14 @@
       for (let x = 0; x < colunas; x++) {
         const u = x / (colunas - 1 || 1);
         const i = y * colunas + x;
-        // descendo: nasce no canto superior direito e vai até o inferior
-        // esquerdo; subindo: nasce no inferior esquerdo e vai ao superior
-        // direito. A diagonal usa a tela normalizada, de canto a canto.
         posicoes[i] = subindo ? (u + (1 - v)) / 2 : ((1 - u) + v) / 2;
         bayers[i] = BAYER[(y & 7) * 8 + (x & 7)];
-        nx[i] = u * (w / h); // mantém os lóbulos redondos em tela larga
+        nx[i] = u * (w / h);
         ny[i] = v;
       }
     }
   }
 
-  // Limiar de cada célula: a posição na diagonal, empurrada por ondas suaves
-  // que mudam com o tempo (a borda vira uma ameba que ondula enquanto anda),
-  // mais a matriz de Bayer, que deixa essa borda pontilhada. Normalizado
-  // para 0..1.
   function limiar(i, t) {
     const x = nx[i];
     const y = ny[i];
@@ -102,7 +82,6 @@
     return (base * p + bayers[i] * PESO_BAYER + AMEBA * p) / (1 + AMEBA * 2 * p);
   }
 
-  // d: quanto a célula já passou do limiar (0 = acabou de entrar)
   function pintar(progresso, cobrindo) {
     const dados = img.data;
     const t = performance.now() / 1000;
@@ -136,12 +115,6 @@
     });
   }
 
-  // Enquadramento: o título da seção para a TITULO_Y px do topo da tela, logo
-  // abaixo da barra. Antes a seção encostava na barra e o respiro interno dela
-  // (~100 px) se somava à folga: sobrava espaço vazio em cima e o conteúdo
-  // (cartões dos projetos, botão do formulário) ficava cortado embaixo.
-  // Mede pelo início da seção mais o padding, que não sofre o deslocamento
-  // das animações de entrada.
   function destinoDe(link) {
     const id = link.getAttribute('href');
     if (id === '#hero') return { alvo: document.getElementById('hero'), topo: 0 };
@@ -157,11 +130,8 @@
     const destino = destinoDe(link);
     if (!destino) return;
     const { alvo, topo } = destino;
-    // Itens do menu lateral: o menu trava a rolagem enquanto está aberto, então
-    // ele fecha antes do salto. Com cortina, fecha por trás dela.
     const menu = link.closest('.staggered-menu-panel') ? window.portfolioStaggeredMenu : null;
 
-    // salto curto (já está perto) não precisa de cortina
     if (reduzido.matches || Math.abs(topo - window.scrollY) < window.innerHeight * 0.6) {
       menu?.close();
       window.scrollTo({ top: topo, behavior: reduzido.matches ? 'auto' : 'smooth' });
@@ -172,8 +142,6 @@
       await animar(COBRIR, true);
       if (menu) {
         menu.close();
-        // a saída do menu desliza para a direita em 0,32 s, e a revelação
-        // começa por esse lado: termina a animação já, ainda sob a cortina
         const partes = document.querySelectorAll(
           '.staggered-menu-wrapper, .staggered-menu-wrapper *, .sm-toggle, .sm-toggle *'
         );
@@ -187,14 +155,12 @@
       ocupado = false;
     }
 
-    // quem usa teclado continua a partir do destino, não do link clicado
     if (peloTeclado) {
       if (!alvo.hasAttribute('tabindex')) alvo.setAttribute('tabindex', '-1');
       alvo.focus({ preventScroll: true });
     }
   }
 
-  // captura no documento: roda antes da rolagem suave das âncoras
   document.addEventListener('click', (e) => {
     const link = e.target.closest('a[data-transicao]');
     if (!link || typeof gsap === 'undefined') return;

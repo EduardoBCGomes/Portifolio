@@ -27,8 +27,6 @@
 
     const cleanups = [];
 
-    // mesmo enquadramento da transição em dither: o título da seção para a
-    // 100 px do topo, descontando o respiro interno da seção
     const tituloY = 100;
     const onAnchorClick = (e) => {
       const target = document.querySelector(e.currentTarget.getAttribute('href'));
@@ -48,8 +46,6 @@
     const heroTitles = gsap.utils.toArray('[data-hero-title]');
     let splits = [];
 
-    // Roda enquanto a cortina ainda está saindo (ela libera no começo do
-    // fade), então quase não precisa de atraso próprio.
     const intro = gsap.timeline({
       defaults: { ease: EASE },
       delay: .05,
@@ -68,8 +64,6 @@
       intro.set('.hero__title', { opacity: 1 }, 0);
 
       heroTitles.forEach((line, i) => {
-        // o texto lido por leitores de tela e pelo Google é o .sr-only do h1;
-        // aria 'auto' poria aria-label num span, o que não é permitido
         const split = new SplitText(line, { type: 'chars', aria: 'none' });
         splits.push(split);
         intro.from(split.chars, {
@@ -138,8 +132,6 @@
           nav.classList.toggle('is-stuck', grudar);
         }
 
-        // no celular a barra fica sempre: é onde estão o "Vamos conversar"
-        // e o menu, e rolar a página inteira de volta para achá-los cansa
         const esconder = isDesktop && self.direction === 1 && y > 400;
         if (esconder !== navEscondida) {
           navEscondida = esconder;
@@ -189,18 +181,10 @@
         return;
       }
 
-      // As linhas dependem da largura do texto. Divididas uma vez só, ficavam
-      // congeladas: se a largura mudava depois (navegador de app que abre
-      // estreito, celular girando, janela redimensionada) saía uma palavra
-      // por linha. Com autoSplit o SplitText refaz a divisão quando a largura
-      // muda ou a fonte termina de carregar, e o tween devolvido no onSplit
-      // continua do ponto em que estava.
       gsap.set(el, { opacity: 1, y: 0 });
       const split = SplitText.create(el, {
         type: 'lines',
         mask: 'lines',
-        // linhas não quebram palavras: o texto continua legível como está,
-        // sem o aria-label em <p> que o modo 'auto' colocaria
         aria: 'none',
         autoSplit: true,
         onSplit: (self) => gsap.from(self.lines, {
@@ -264,12 +248,6 @@
     ? window.portfolioPreloader.done
     : Promise.resolve();
 
-  // O document.fonts.ready lido aqui no começo resolve na hora: nenhuma
-  // fonte foi pedida ainda. Com cache frio a fonte dos títulos (Archivo) chegava depois
-  // da cortina e o SplitText media as linhas com a fonte reserva — quebra
-  // de linha errada no texto mascarado. Pedimos as fontes do texto
-  // dividido explicitamente e esperamos o ready de novo, com um teto para
-  // nunca segurar a página.
   function fontesDoTexto() {
     if (!document.fonts || !document.fonts.load) return Promise.resolve();
     return Promise.all([

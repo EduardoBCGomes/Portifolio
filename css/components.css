@@ -171,7 +171,6 @@
   border-radius: var(--radius-sm);
   background: var(--bg);
   color: var(--text);
-  /* 16px: abaixo disso o Safari do iPhone dá zoom no campo ao tocar */
   font-size: 1rem;
   transition: border-color .25s var(--ease-out), background .25s var(--ease-out);
   resize: vertical;
@@ -187,7 +186,6 @@
   box-shadow: 0 0 0 4px rgba(250, 249, 246, .07);
 }
 
-/* sem isto o preenchimento automático do Chrome pinta o campo de claro */
 .field input:-webkit-autofill,
 .field input:-webkit-autofill:hover,
 .field input:-webkit-autofill:focus {

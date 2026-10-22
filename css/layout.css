@@ -28,16 +28,12 @@
     inset: 10px;
     border-radius: 22px;
     border: 1px solid rgba(250, 249, 246, .1);
-    /* a faixa externa também sai arredondada: com 10px ela não alcançava
-       os cantos da tela e o que passava por baixo (as colunas do rodapé)
-       aparecia ali. 40px cobre o canto inteiro. */
     box-shadow:
       inset 0 1px 0 rgba(250, 249, 246, .16),
       inset 0 -1px 0 rgba(250, 249, 246, .18),
       0 0 0 40px var(--bg);
   }
 
-  /* a barra de progresso fica dentro da moldura, recortada no mesmo raio */
   .scroll-progress {
     inset: 10px 10px auto 10px;
     height: 24px;
@@ -53,8 +49,6 @@
   will-change: transform;
 }
 
-/* O vidro fica numa camada própria para poder sumir com fade: degradê e
-   backdrop-filter não fazem transição, então trocavam de uma vez. */
 .nav::before {
   content: "";
   position: absolute;
@@ -85,8 +79,6 @@
 
 .nav__inner { justify-content: flex-end; }
 
-/* monograma em dois tons: o B vazado da tela de carregamento não
-   funciona nesse tamanho (o contorno fecha os furos da letra) */
 .nav__logo {
   margin-right: auto;
   display: inline-flex;
@@ -104,10 +96,6 @@
 }
 .nav__logo:hover .nav__logo-b { color: var(--accent); }
 
-/* Menu abrindo: EB e "Vamos conversar" ficam no lugar e só somem com
-   fade, junto com o vidro da barra. Ao fechar voltam com um pequeno
-   atraso, depois que o painel começou a sair. (O seletor com .nav vence o
-   transition do .btn, que antes engolia o fade do botão.) */
 .nav .nav__logo,
 .nav .nav__cta {
   transition: opacity .45s var(--ease-out) .18s,
@@ -133,8 +121,6 @@
               box-shadow .3s var(--ease-out);
 }
 
-/* "Menu"/"Fechar" escurece quando o painel claro chega por baixo dele e
-   clareia de novo quando o painel já está saindo */
 .sm-toggle { transition: color .3s var(--ease-out) .12s; }
 .nav--menu-open .sm-toggle {
   color: #0c0a09;
@@ -157,9 +143,6 @@
   pointer-events: none;
 }
 
-/* Degradê de reserva (sem WebGL). Fica numa camada própria para sair com
-   fade enquanto o pontilhado entra: trocar o "background" direto fazia o
-   fundo apagar de uma vez antes de o pontilhado aparecer (o flick). */
 .hero__bg::before {
   content: "";
   position: absolute;
@@ -179,7 +162,6 @@
   height: 100%;
   display: block;
   opacity: 0;
-  /* entra por baixo da cortina: quase tudo já aconteceu quando ela sai */
   transition: opacity .8s var(--ease-out);
 
   -webkit-mask-image:
@@ -194,7 +176,6 @@
 
 .hero__dither.is-ready { opacity: .5; }
 
-/* no celular o texto fica por cima do pontilhado: fundo mais discreto */
 @media (max-width: 768px) {
   .hero__dither.is-ready { opacity: .32; }
 }
@@ -233,7 +214,6 @@
 .hero__lead {
   max-width: 46ch;
   font-size: var(--fs-lead);
-  /* mais claro que o cinza de rótulos: fica sobre o pontilhado do fundo */
   color: var(--accent-2);
   margin-bottom: 2.4rem;
 }
@@ -370,7 +350,6 @@
   will-change: transform;
 }
 
-/* item de grid: sem isto o trilho do LogoLoop (max-content) estica a coluna */
 .sobre__content { min-width: 0; }
 
 .sobre__lead {
@@ -381,7 +360,6 @@
   margin-bottom: 1.6rem;
   color: var(--accent-2);
 }
-/* o parágrafo é longo: a primeira frase em destaque dá um ponto de entrada */
 .sobre__lead-destaque { color: var(--text); }
 .sobre__body {
   color: var(--text-2);
@@ -389,8 +367,6 @@
   margin-bottom: 2.4rem;
 }
 .sobre__body p + p { margin-top: 1rem; }
-
-
 
 .contato__grid {
   display: grid;
@@ -413,7 +389,6 @@
   color: var(--text-2);
 }
 
-/* disponibilidade: fato confirmado que responde "ele pode pegar agora?" */
 .contato__status {
   display: flex;
   align-items: flex-start;
@@ -433,8 +408,6 @@
   box-shadow: 0 0 0 4px rgba(74, 222, 128, .14);
 }
 
-/* caminhos secundários (e-mail, GitHub, LinkedIn) em um grupo só, separado
-   da mensagem principal; o formulário ao lado é a ação principal */
 .contato__direto {
   margin-top: 2.6rem;
   margin-bottom: .55rem;
@@ -471,9 +444,6 @@
   font-size: var(--fs-sm);
 }
 
-/* Aurora em dither (ideia do Aurora Footer da Reverse UI / site do Dia):
-   o espaço fica no fim da página e o canvas fica preso na base da tela.
-   As colunas sobem conforme a rolagem atravessa o espaço. */
 .aurora__espaco { height: 175px; }
 
 .aurora__canvas {
@@ -521,8 +491,6 @@
 }
 
 @media (max-width: 768px) {
-  /* o contato é o objetivo do site: o botão fica na barra também no
-     celular, onde a maioria abre o link; só fica mais compacto */
   .nav__inner { gap: 1rem; }
   .nav__inner .nav__cta {
     min-height: 40px;
@@ -544,11 +512,8 @@
 
   .scroll-hint { display: none; }
 
-  /* em retrato o 3:4 ocupava a tela inteira; 4:5 deixa ver o que vem depois */
   .hero__photo-frame { aspect-ratio: 4 / 5; }
 
-  /* a segunda foto vem pouco depois da primeira: deitada e mais baixa, ela
-     mostra o moinho ao fundo e não repete o retrato de corpo inteiro */
   .sobre__photo-wrap { aspect-ratio: 4 / 3; }
   .sobre__photo { object-position: 50% 30%; }
 
@@ -558,7 +523,6 @@
 }
 
 @media (max-width: 480px) {
-  /* os dois botões cabem lado a lado; abaixo de ~340px voltam a empilhar */
   .hero__actions { gap: .6rem; }
   .hero__actions .btn {
     flex: 1 1 auto;
@@ -566,8 +530,6 @@
   }
 }
 
-/* transição em dither dos saltos longos (EB, "Vamos conversar", "Voltar ao
-   topo"): cobre tudo, inclusive a barra e a moldura, só enquanto acontece */
 .transicao-dither {
   position: fixed;
   inset: 0;

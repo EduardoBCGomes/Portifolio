@@ -1,20 +1,6 @@
 (function () {
   'use strict';
 
-  // Entrada do site em dither. A cortina preta do HTML segura a tela até
-  // aqui; este script desenha por cima dela num canvas e a remove. Tudo é
-  // desenhado em baixa resolução (uma célula = um pixel do dither, matriz de
-  // Bayer 8x8 como nos outros dithers do site) e ampliado sem suavização.
-  // Princípios de motion:
-  //  1. encenação: o EB se materializa em pixels, subindo de trás de uma linha;
-  //  2. comprimir e esticar: ele sobe esticado e assenta com um quique;
-  //  3. ação secundária: um halo pontilhado acende e uma barra de pixels
-  //     mostra o carregamento real;
-  //  4. antecipação: pronto o carregamento, o EB contrai e o halo "carrega";
-  //  5. exagero: uma onda de choque em dither parte do EB, com borda de ameba
-  //     em creme; o logo se desfaz em pixels e a tela treme por um instante;
-  //  6. continuação: o topo chega ampliado e desfocado e assenta.
-
   const raiz = document.documentElement;
   const cortina = document.getElementById('eb-preloader');
 
@@ -27,7 +13,6 @@
     raiz.classList.remove('is-loading');
     liberar();
   }
-  // sem cortina ou sem GSAP (CDN fora do ar), a página entra direto
   if (!cortina || typeof gsap === 'undefined') { soltarSemAnimacao(); return; }
 
   const reduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -47,7 +32,7 @@
 
   const CREME = [250, 249, 246];
   const CINZA = [61, 57, 52];
-  const BRASA = [33, 30, 27]; // halo: um degrau acima do fundo
+  const BRASA = [33, 30, 27];
   const GRAO = [24, 21, 19];
   const FUNDO = [12, 10, 9];
 
@@ -66,34 +51,24 @@
   document.body.appendChild(tela);
   raiz.classList.add('is-loading');
 
-  // O canvas só começa a pintar no primeiro quadro de animação, depois que
-  // todos os scripts da página rodaram; até lá a cortina preta do HTML segura
-  // a tela. Pintar já durante este script adiantava a "primeira pintura" da
-  // página para antes da preparação do fundo WebGL do topo, e esse trabalho
-  // passava a contar como bloqueio no Lighthouse.
   function comecarAPintar() {
     gsap.ticker.add(desenhar);
   }
 
-  // canvas desenhado no processador, fora da GPU: só copia pixels ampliados, e
-  // assim não disputa a GPU com a compilação do fundo WebGL do topo, que
-  // acontece ao mesmo tempo (com a GPU, ela virava uma tarefa de ~1 s)
   const ctx = tela.getContext('2d', { willReadFrequently: true });
   const mini = document.createElement('canvas');
   mini.width = colunas;
   mini.height = linhas;
   const mctx = mini.getContext('2d', { willReadFrequently: true });
   const img = mctx.createImageData(colunas, linhas);
-  // uma escrita por célula (RGBA empacotado) em vez de quatro
   const px32 = new Uint32Array(img.data.buffer);
   const cor32 = (c) => (255 << 24 | c[2] << 16 | c[1] << 8 | c[0]) >>> 0;
 
-  // ---- máscara do logo e do halo, em células ----
   const fsTela = Math.round(Math.min(220, Math.max(96, W * 0.2)));
-  const fs = fsTela / CELULA;          // corpo da letra, em células
+  const fs = fsTela / CELULA;
   const cx = colunas / 2;
-  const base = Math.round(linhas / 2 + fs * 0.36);  // linha de base
-  const cy = base - fs * 0.36;         // centro da caixa alta
+  const base = Math.round(linhas / 2 + fs * 0.36);
+  const cy = base - fs * 0.36;
   let logo = new Float32Array(total);
   let halo = new Float32Array(total);
 
@@ -112,7 +87,7 @@
       g.strokeStyle = '#fff';
       g.lineWidth = Math.max(1, fs * 0.045);
       g.fillText('E', x0, base);
-      g.strokeText('B', x0 + le, base);  // o B do monograma é vazado
+      g.strokeText('B', x0 + le, base);
     };
     tracar();
     let d = g.getImageData(0, 0, colunas, linhas).data;
@@ -128,7 +103,6 @@
     d = g.getImageData(0, 0, colunas, linhas).data;
     for (let i = 0; i < total; i++) halo[i] = Math.min(1, (d[i * 4 + 3] / 255) * 1.6);
 
-    // retângulos onde o logo e o halo existem: fora deles nada é amostrado
     caixaLogo = caixa(logo, 0.01);
     caixaHalo = caixa(halo, 0.02);
     return { x0, largura: le + lb };
@@ -151,17 +125,16 @@
   let caixaLogo = { x0: 0, x1: -1, y0: 0, y1: -1 };
   let caixaHalo = { x0: 0, x1: -1, y0: 0, y1: -1 };
 
-  // ---- estado animado ----
   const st = {
-    subida: fs * 1.1,  // o logo começa abaixo da linha
+    subida: fs * 1.1,
     estica: 1.35,
     escala: 1,
-    brilho: 0,         // quanto do logo já se materializou
+    brilho: 0,
     halo: 0,
-    barra: 0,          // progresso do carregamento
+    barra: 0,
     barraVisivel: 1,
-    onda: 0,           // raio da onda de choque (0..1+)
-    corte: true        // o logo só aparece acima da linha de base
+    onda: 0,
+    corte: true
   };
   let medidas = { x0: cx, largura: 0 };
   const maxDist = Math.hypot(Math.max(cx, colunas - cx), Math.max(cy, linhas - cy));
@@ -172,8 +145,6 @@
   const C_GRAO = cor32(GRAO);
   const C_FUNDO = cor32(FUNDO);
 
-  // Posição na matriz de Bayer e o grão do fundo (fixo) de cada célula: barato,
-  // calculado já.
   const BAY = new Float32Array(total);
   const FUNDO_CEL = new Uint32Array(total);
   for (let y = 0; y < linhas; y++) {
@@ -184,11 +155,6 @@
     }
   }
 
-  // A onda de choque usa, por célula, a distância até o centro e os
-  // senos/cossenos da borda de ameba (sin(a + bt) = sin a·cos bt + cos a·sin bt):
-  // por quadro sobram multiplicações e somas. Esse cálculo é pesado (hypot,
-  // atan2 e seis senos por célula) e só serve no fim, então roda quando o
-  // navegador está ocioso, e não junto com o carregamento da página.
   let DIST, S5, C5, S9, C9, S14, C14;
   let ondaPronta = false;
   function prepararOnda() {
@@ -216,10 +182,7 @@
     ? (f) => window.requestIdleCallback(f, { timeout: 1500 })
     : (f) => setTimeout(f, 300);
 
-  // 30 quadros por segundo bastam para pixel art e cortam o trabalho pela metade
   let ultimoDesenho = 0;
-  // Antes da onda só mudam as linhas do logo, do halo e da barra: o resto da
-  // tela fica como foi desenhado no primeiro quadro.
   let telaInteira = true;
   let faixaAnterior = [0, -1];
 
@@ -240,7 +203,6 @@
     const cT2 = 0.3 * Math.cos(t * 3.1), sT2 = 0.3 * Math.sin(t * 3.1);
     const cT3 = 0.2 * Math.cos(t * 5), sT3 = 0.2 * Math.sin(t * 5);
 
-    // faixas de tela ocupadas pelo logo e pelo halo transformados
     const e = st.escala;
     const k = e * st.estica;
     const temLogo = st.brilho > 0 && caixaLogo.x1 >= 0;
@@ -255,8 +217,6 @@
     const hy0 = Math.floor(cy + (caixaHalo.y0 - cy) * e) - 1;
     const hy1 = Math.ceil(cy + (caixaHalo.y1 - cy) * e) + 1;
 
-    // linhas a redesenhar: tudo durante a onda (ou no primeiro quadro); antes
-    // dela, só a faixa do logo, do halo e da barra, somada à do quadro anterior
     let y0 = 0;
     let y1 = linhas - 1;
     if (!telaInteira && onda <= 0) {
@@ -284,7 +244,6 @@
         const i = y * colunas + x;
         const b = BAY[i];
 
-        // 5: onda de choque, de dentro para fora, com borda de ameba
         if (onda > 0 && ondaPronta) {
           const ameba =
             S5[i] * cT1 + C5[i] * sT1 +
@@ -296,7 +255,6 @@
           if (d < 0.055) { px32[i] = C_CINZA; continue; }
         }
 
-        // 1 e 2: o logo, amostrado com subida, estiramento e escala
         if (linhaLogo && linhaFonte >= 0 && x >= lx0 && x <= lx1) {
           const sx = Math.round(cx + (x - cx) / e);
           if (sx >= 0 && sx < colunas && logo[linhaFonte + sx] * st.brilho > b) {
@@ -305,13 +263,11 @@
           }
         }
 
-        // 3: a barra de carregamento, pontilhada
         if (linhaBarra && x >= barraIni && x <= barraFim && b < 0.8) {
           px32[i] = C_CREME;
           continue;
         }
 
-        // halo pontilhado em volta do logo
         if (linhaHalo && linhaFonteHalo >= 0 && x >= hx0 && x <= hx1) {
           const sxh = Math.round(cx + (x - cx) / e);
           if (sxh >= 0 && sxh < colunas && halo[linhaFonteHalo + sxh] * st.halo > b) {
@@ -320,22 +276,18 @@
           }
         }
 
-        // fundo com grão de pixels
         px32[i] = FUNDO_CEL[i];
       }
     }
-    // só a faixa que mudou vai para a tela (o resto do canvas já está certo)
     const n = y1 - y0 + 1;
     mctx.putImageData(img, 0, 0, 0, y0, colunas, n);
     ctx.imageSmoothingEnabled = false;
     ctx.clearRect(0, y0 * CELULA, W, n * CELULA);
     ctx.drawImage(mini, 0, y0, colunas, n, 0, y0 * CELULA, colunas * CELULA, n * CELULA);
 
-    // o primeiro quadro já está no canvas: a cortina pode sair sem piscar
     if (cortina && cortina.isConnected) cortina.remove();
   }
 
-  // ---- carregamento real ----
   function espera(ms) { return new Promise((r) => setTimeout(r, ms)); }
   const etapas = [];
   let feitas = 0;
@@ -396,7 +348,6 @@
     medidas = desenharMascaras();
     comecarAPintar();
 
-    // 1 e 2: materializa subindo, esticado, e assenta com quique
     const entrada = gsap.timeline();
     entrada.to(st, { brilho: 1, duration: 0.9, ease: 'power2.out' }, 0);
     entrada.to(st, { subida: 0, duration: 0.85, ease: 'expo.out' }, 0.05);
@@ -404,7 +355,6 @@
     entrada.to(st, { halo: 0.55, duration: 1.2, ease: 'power2.out' }, 0.3);
     entrada.set(st, { corte: false }, 1.1);
 
-    // a conta da onda fica pronta enquanto o EB está parado na tela
     quandoOcioso(prepararOnda);
 
     pronto
@@ -413,7 +363,7 @@
   });
 
   function sair() {
-    prepararOnda(); // se o navegador não ficou ocioso a tempo, calcula agora
+    prepararOnda();
     const hero = document.querySelector('.hero');
     const camadas = hero ? [...hero.querySelectorAll(':scope > .hero__bg, :scope > .hero__inner')] : [];
 
@@ -425,19 +375,14 @@
       }
     });
 
-    // a barra cumpriu o papel: recolhe para o centro
     tl.to(st, { barraVisivel: 0, duration: 0.3, ease: 'power3.in' }, 0);
 
-    // 4: antecipação, o EB contrai e o halo carrega
     tl.to(st, { escala: 0.86, halo: 1, duration: 0.45, ease: 'power2.inOut' }, 0.1);
 
-    // 5: a onda de choque parte do EB
     tl.set(tela, { pointerEvents: 'none' }, 0.55);
     tl.to(st, { onda: 1.15, duration: 1.25, ease: 'power4.out' }, 0.55);
-    // o logo estoura para fora e se desfaz em pixels
     tl.to(st, { escala: 3.2, duration: 0.55, ease: 'expo.in' }, 0.5);
     tl.to(st, { brilho: 0, halo: 0, duration: 0.45, ease: 'power2.in' }, 0.62);
-    // o tranco: a tela treme por um instante
     tl.fromTo(tela, { x: 0, y: 0 }, {
       keyframes: [
         { x: -7, y: 4, duration: 0.04 },
@@ -449,8 +394,6 @@
       ease: 'none'
     }, 0.56);
 
-    // 6: a página chega ampliada e desfocada e assenta. Amplia o que está
-    // dentro do .hero (que recorta): a página nunca fica mais larga que a tela.
     if (camadas.length) {
       tl.fromTo(camadas,
         {
@@ -462,7 +405,6 @@
         0.55);
     }
 
-    // a entrada do título começa junto com a onda
     tl.call(() => {
       raiz.classList.remove('is-loading');
       liberar();

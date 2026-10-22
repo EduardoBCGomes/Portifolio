@@ -1,11 +1,7 @@
 (function () {
   'use strict';
 
-  // Carrossel infinito de projetos com GSAP. A faixa anda devagar sozinha,
-  // dá para arrastar e usar as setas do teclado. Para quando o mouse ou o
-  // foco do teclado está nela.
-
-  const VELOCIDADE = 26; // px/s, devagar o bastante para ler
+  const VELOCIDADE = 26;
   const LIMIAR_ARRASTO = 6;
 
   function iniciar(raiz) {
@@ -36,20 +32,11 @@
       bloquearCliqueAte: 0
     };
 
-    // Cópias suficientes para a faixa nunca acabar na tela. Ficam fora da
-    // leitura de tela e do Tab (quem navega assim vê só os originais), mas
-    // continuam clicáveis e com o hover: para quem usa o mouse, toda cópia
-    // é um cartão de verdade.
-    // Um conjunto de cópias também ANTES dos originais: a faixa fica deslocada
-    // um período para a esquerda, então sempre há cartões dos dois lados.
-    // Sem isso, ao puxar para a direita o espaço à esquerda do primeiro cartão
-    // ficava vazio e, quando a faixa dava a volta, o cartão da esquerda sumia.
     function copia(item) {
       const c = item.cloneNode(true);
       c.setAttribute('aria-hidden', 'true');
       c.setAttribute('data-copia', '');
       c.querySelectorAll('a, button').forEach((el) => el.setAttribute('tabindex', '-1'));
-      // a cópia nasce visível mesmo se o original estiver no meio da entrada
       c.querySelectorAll('.projeto').forEach((p) => {
         p.style.removeProperty('opacity');
         p.style.removeProperty('clip-path');
@@ -77,8 +64,6 @@
       if (st.periodo <= 0) return;
       const p = st.periodo;
       const x = ((st.offset % p) + p) % p;
-      // -p: as cópias da frente ficam fora da tela, à esquerda, e os
-      // originais começam no lugar de sempre
       gsap.set(trilho, { x: -p - x });
     }
 
@@ -98,9 +83,6 @@
     const parado = () =>
       reduzido || st.hover || st.dedo || st.foco || st.pausadoPeloUsuario || !st.visivel || st.arrasto || st.tween;
 
-    // Rolagem da página empurra a faixa (ScrollTrigger): rolar para baixo
-    // acelera para a esquerda, rolar para cima inverte. O impulso decai
-    // sozinho, então a faixa volta à velocidade de cruzeiro quando a página para.
     let impulso = 0;
     if (window.ScrollTrigger && !reduzido) {
       ScrollTrigger.create({
@@ -113,7 +95,6 @@
       });
     }
 
-    // Movimento contínuo no ticker do GSAP (mesmo relógio das outras animações).
     function tique(_tempo, deltaMs) {
       const dt = Math.min(deltaMs, 64) / 1000;
       impulso *= Math.exp(-dt * 3);
@@ -123,8 +104,6 @@
     }
     gsap.ticker.add(tique);
 
-    // Entrada com ScrollTrigger: os cartões sobem e se abrem de baixo para
-    // cima, um depois do outro, quando a seção chega na tela.
     function entrada() {
       if (!window.ScrollTrigger || reduzido) return;
       const cartoes = [...trilho.querySelectorAll('.projeto')];
@@ -141,7 +120,6 @@
       });
     }
 
-    // Setas: vão para o projeto vizinho, alinhado pela borda do cartão.
     function irPara(direcao) {
       if (!st.passo) return;
       if (st.tween) st.tween.kill();
@@ -168,8 +146,6 @@
     raiz.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') st.hover = true; });
     raiz.addEventListener('pointerleave', () => { st.hover = false; });
 
-    // No toque não existe hover: o dedo em cima segura a faixa (dá para ler
-    // com calma) e ela volta a andar pouco depois de soltar.
     let retomar = 0;
     raiz.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'mouse') return;
@@ -183,8 +159,6 @@
     };
     raiz.addEventListener('pointerup', soltarDedo);
     raiz.addEventListener('pointercancel', soltarDedo);
-    // Foco do teclado num cartão: a faixa leva esse cartão até o início da
-    // vista, para ninguém tabular para um projeto escondido na borda.
     raiz.addEventListener('focusin', (e) => {
       st.foco = true;
       const item = e.target.closest('.carrossel__item');
@@ -210,8 +184,6 @@
       else if (e.key === 'ArrowLeft') { e.preventDefault(); irPara(-1); }
     });
 
-    // Arrastar (mouse e toque). Só vira arrasto se o gesto for horizontal;
-    // no toque vertical a página rola normalmente.
     trilho.addEventListener('pointerdown', (e) => {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
       st.arrasto = { id: e.pointerId, x: e.clientX, y: e.clientY, inicio: st.offset, ativo: false, amostras: [] };
@@ -227,7 +199,7 @@
         d.ativo = true;
         if (st.tween) { st.tween.kill(); st.tween = null; }
         d.inicio = st.offset + dx;
-        try { trilho.setPointerCapture(e.pointerId); } catch (err) { /* sem captura */ }
+        try { trilho.setPointerCapture(e.pointerId); } catch (err) { }
         raiz.setAttribute('data-arrastando', '');
       }
       st.offset = d.inicio - dx;
@@ -243,10 +215,9 @@
       st.arrasto = null;
       if (!d.ativo) return;
       raiz.removeAttribute('data-arrastando');
-      try { trilho.releasePointerCapture(e.pointerId); } catch (err) { /* já solto */ }
+      try { trilho.releasePointerCapture(e.pointerId); } catch (err) { }
       st.bloquearCliqueAte = performance.now() + 350;
 
-      // arremesso: continua na direção do gesto e encaixa no cartão
       let v = 0;
       const s = d.amostras;
       if (!cancelado && s.length > 1) {
@@ -272,7 +243,6 @@
     }, true);
     trilho.addEventListener('dragstart', (e) => e.preventDefault());
 
-    // Clique em qualquer ponto do cartão (original ou cópia) abre o projeto.
     trilho.addEventListener('click', (e) => {
       if (e.target.closest('a')) return;
       const link = e.target.closest('.projeto')?.querySelector('.projeto__link');
@@ -281,8 +251,6 @@
 
     new IntersectionObserver(([en]) => { st.visivel = en.isIntersecting; }, { threshold: 0 }).observe(raiz);
 
-    // começa com a largura atual: o observador dispara uma vez ao iniciar e
-    // não deve refazer as cópias que acabaram de ser montadas
     let larguraAnterior = janela.clientWidth;
     new ResizeObserver(() => {
       if (janela.clientWidth === larguraAnterior) return;
@@ -291,7 +259,7 @@
     }).observe(janela);
 
     montarCopias();
-    entrada(); // depois das cópias, para elas entrarem junto
+    entrada();
     raiz.classList.add('is-pronto');
   }
 

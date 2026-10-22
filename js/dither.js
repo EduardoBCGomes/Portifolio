@@ -232,18 +232,12 @@
     let last = performance.now();
     let ultimoDesenho = 0;
 
-    // As ondas andam devagar: 30 quadros por segundo bastam e deixam a GPU
-    // livre para a entrada do topo e a rolagem.
     const INTERVALO = 1000 / 30;
 
     function frame(now) {
       rafId = requestAnimationFrame(frame);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      // Enquanto a entrada do site (o preloader em dither) cobre a tela
-      // inteira, ninguém vê este fundo: desenhá-lo só disputava o processador
-      // com a entrada. O primeiro quadro já foi desenhado abaixo; as ondas
-      // voltam a andar quando a cortina abre (is-loading sai).
       if (paused || document.documentElement.classList.contains('is-loading')) return;
       if (!opts.disableAnimation) elapsed += dt;
       if (now - ultimoDesenho < INTERVALO - 2) return;
@@ -252,7 +246,6 @@
       gl.drawArrays(gl.TRIANGLES, 0, 3);
     }
 
-    // primeiro quadro já desenhado: o canvas nunca aparece vazio (preto)
     gl.uniform1f(u.time, 0);
     gl.drawArrays(gl.TRIANGLES, 0, 3);
     rafId = requestAnimationFrame(frame);
@@ -278,9 +271,6 @@
   const canvas = document.querySelector('[data-dither]');
   if (!canvas) return;
 
-  // Liga logo no carregamento, por baixo da cortina do "EB": a compilação do
-  // shader acontece onde ninguém vê, e quando a cortina sai o fundo já está
-  // lá, estável. Ligar depois da entrada fazia ele surgir atrasado e piscar.
   ligar();
 
   function ligar() {

@@ -165,7 +165,7 @@
         d.inicio = st.offset;
         st.velocidade = 0;
         st.deslize = false;
-        try { raiz.setPointerCapture(e.pointerId); } catch (err) { /* sem captura */ }
+        try { raiz.setPointerCapture(e.pointerId); } catch (err) { }
         raiz.setAttribute('data-dragging', '');
       }
       st.offset = d.inicio - (ao - d.base);
@@ -181,7 +181,7 @@
       st.arrasto = null;
       if (!d.ativo) return;
       raiz.removeAttribute('data-dragging');
-      try { raiz.releasePointerCapture(e.pointerId); } catch (err) { /* ja solto */ }
+      try { raiz.releasePointerCapture(e.pointerId); } catch (err) { }
       const agora = performance.now();
       st.bloquearCliqueAte = agora + 400;
       let v = 0;
@@ -222,9 +222,6 @@
       acordar();
     }).observe(raiz);
 
-    // A largura do periodo depende da fonte dos rótulos. Com cache frio o
-    // ready resolvia antes de a fonte dos títulos (Archivo) chegar e o loop dava um salto
-    // a cada volta; por isso pedimos a fonte e remedimos quando ela troca.
     const pronto = document.fonts && document.fonts.load
       ? document.fonts.load('500 1em "Archivo"').then(() => document.fonts.ready).catch(() => {})
       : Promise.resolve();

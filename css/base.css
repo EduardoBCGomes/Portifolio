@@ -1,12 +1,3 @@
-/* Fontes hospedadas no próprio site (antes vinham do Google Fonts). Sem o
-   pedido extra ao Google, o navegador já conhece as fontes ao ler este CSS,
-   e a cortina de carregamento pode esperar por elas: o texto nunca aparece
-   numa fonte e troca para outra na frente da pessoa. As duas são variáveis,
-   então um arquivo cobre todos os pesos usados.
-   Títulos em Archivo, da mesma família do "Archivo Black" do monograma EB:
-   a marca e os títulos falam a mesma língua. Texto corrido em Atkinson
-   Hyperlegible Next, desenhada para leitura fácil (letras que não se
-   confundem, como I/l/1 e O/0), que combina com o cuidado com acessibilidade. */
 @font-face {
   font-family: "Atkinson Hyperlegible Next";
   font-style: normal;
@@ -34,12 +25,9 @@
 html {
   -webkit-text-size-adjust: 100%;
   color-scheme: dark;
-  /* âncoras e foco do teclado param abaixo da barra fixa do topo */
   scroll-padding-top: 84px;
 
   scrollbar-gutter: stable;
-  /* nada transformado pode alargar a página: no iPhone o body sozinho não
-     basta, e o navegador afastava a tela inteira para caber o excesso */
   overflow-x: clip;
 }
 
@@ -62,7 +50,6 @@ a { color: inherit; text-decoration: none; }
   --surface-2:   #211d18;
   --text:        #ece8e1;
   --muted:       #8f8a83;
-  /* nível entre o texto principal e o cinza de rótulos: parágrafos de apoio */
   --text-2:      #aca79f;
   --placeholder: #86817a;
   --line:        rgba(250, 249, 246, .09);
@@ -85,7 +72,6 @@ a { color: inherit; text-decoration: none; }
   --fs-sm:    .875rem;
   --fs-xs:    .75rem;
 
-  /* no celular os 14vh viravam vãos vazios entre seções; a largura manda */
   --space-section: clamp(4.5rem, 4vw + 3rem, 9rem);
   --gutter:        clamp(1.25rem, 5vw, 4rem);
   --container:     1240px;
@@ -154,7 +140,6 @@ h1, h2, h3, h4 {
 
 p { text-wrap: pretty; }
 
-/* o acento virou quase branco: texto branco por cima sumia na seleção */
 ::selection {
   background: var(--accent);
   color: var(--on-accent);
