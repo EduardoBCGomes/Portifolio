@@ -27,13 +27,16 @@
 
     const cleanups = [];
 
-    const navHeight = 84;
+    // mesmo enquadramento da transição em dither: o título da seção para a
+    // 100 px do topo, descontando o respiro interno da seção
+    const tituloY = 100;
     const onAnchorClick = (e) => {
       const target = document.querySelector(e.currentTarget.getAttribute('href'));
       if (!target) return;
       e.preventDefault();
 
-      const top = target.getBoundingClientRect().top + window.scrollY - navHeight;
+      const respiro = parseFloat(getComputedStyle(target).paddingTop) || 0;
+      const top = target.getBoundingClientRect().top + window.scrollY + respiro - tituloY;
       window.scrollTo({ top, behavior: 'smooth' });
     };
 

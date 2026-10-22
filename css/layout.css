@@ -565,3 +565,20 @@
     padding-inline: 1.1rem;
   }
 }
+
+/* transição em dither dos saltos longos (EB, "Vamos conversar", "Voltar ao
+   topo"): cobre tudo, inclusive a barra e a moldura, só enquanto acontece */
+.transicao-dither {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  visibility: hidden;
+  image-rendering: pixelated;
+}
+.transicao-dither.is-ativa {
+  visibility: visible;
+  pointer-events: auto;
+}

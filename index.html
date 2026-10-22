@@ -183,11 +183,11 @@
   <header class="nav" id="nav">
     <div class="nav__inner">
 
-      <a href="#hero" class="nav__logo" aria-label="EB, Eduardo Borges — voltar ao início">
+      <a href="#hero" class="nav__logo" data-transicao aria-label="EB, Eduardo Borges — voltar ao início">
         <span class="nav__logo-e" aria-hidden="true">E</span><span class="nav__logo-b" aria-hidden="true">B</span>
       </a>
 
-      <a href="#contato" class="btn btn--sm btn--primary nav__cta">Vamos conversar</a>
+      <a href="#contato" class="btn btn--sm btn--primary nav__cta" data-transicao>Vamos conversar</a>
 
       <button class="sm-toggle" type="button"
               aria-label="Abrir menu" aria-expanded="false" aria-controls="staggered-menu-panel">
@@ -214,22 +214,22 @@
       <div class="sm-panel-inner">
         <ul class="sm-panel-list" role="list">
           <li class="sm-panel-itemWrap">
-            <a class="sm-panel-item" href="#hero" aria-label="Ir para o início">
+            <a class="sm-panel-item" data-transicao href="#hero" aria-label="Ir para o início">
               <span class="sm-panel-itemLabel">Início</span>
             </a>
           </li>
           <li class="sm-panel-itemWrap">
-            <a class="sm-panel-item" href="#sobre" aria-label="Ir para a seção sobre mim">
+            <a class="sm-panel-item" data-transicao href="#sobre" aria-label="Ir para a seção sobre mim">
               <span class="sm-panel-itemLabel">Sobre</span>
             </a>
           </li>
           <li class="sm-panel-itemWrap">
-            <a class="sm-panel-item" href="#projetos" aria-label="Ir para os projetos">
+            <a class="sm-panel-item" data-transicao href="#projetos" aria-label="Ir para os projetos">
               <span class="sm-panel-itemLabel">Projetos</span>
             </a>
           </li>
           <li class="sm-panel-itemWrap">
-            <a class="sm-panel-item" href="#contato" aria-label="Ir para o contato">
+            <a class="sm-panel-item" data-transicao href="#contato" aria-label="Ir para o contato">
               <span class="sm-panel-itemLabel">Contato</span>
             </a>
           </li>
@@ -271,11 +271,11 @@
           </p>
 
           <div class="hero__actions" data-hero="actions">
-            <a href="#projetos" class="btn btn--primary">
+            <a href="#projetos" class="btn btn--primary" data-transicao>
               Ver projetos
               <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </a>
-            <a href="#contato" class="btn btn--ghost">Entrar em contato</a>
+            <a href="#contato" class="btn btn--ghost" data-transicao>Entrar em contato</a>
           </div>
         </div>
 
@@ -526,7 +526,7 @@
   <footer class="footer">
     <div class="container footer__inner">
       <p>© <span id="year"></span> Eduardo Borges</p>
-      <a href="#hero" class="footer__top">Voltar ao topo <span aria-hidden="true">↑</span></a>
+      <a href="#hero" class="footer__top" data-transicao>Voltar ao topo <span aria-hidden="true">↑</span></a>
     </div>
   </footer>
 
@@ -549,6 +549,7 @@
   <script src="js/carrossel.js"></script>
   <script src="js/logo-loop.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/transicao-dither.js"></script>
   <script src="js/animations.js"></script>
 </body>
 </html>
