@@ -6,7 +6,7 @@
    o corte escondia metade de cada projeto. */
 .carrossel {
   --carrossel-gap: 12px;
-  --carrossel-cartao: min(640px, 84vw);
+  --carrossel-cartao: min(760px, 86vw);
   position: relative;
 }
 

@@ -44,28 +44,35 @@
     // leitura de tela e do Tab (quem navega assim vê só os originais), mas
     // continuam clicáveis e com o hover: para quem usa o mouse, toda cópia
     // é um cartão de verdade.
+    // Um conjunto de cópias também ANTES dos originais: a faixa fica deslocada
+    // um período para a esquerda, então sempre há cartões dos dois lados.
+    // Sem isso, ao puxar para a direita o espaço à esquerda do primeiro cartão
+    // ficava vazio e, quando a faixa dava a volta, o cartão da esquerda sumia.
+    function copia(item) {
+      const c = item.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true');
+      c.setAttribute('data-copia', '');
+      c.querySelectorAll('a, button').forEach((el) => el.setAttribute('tabindex', '-1'));
+      // a cópia nasce visível mesmo se o original estiver no meio da entrada
+      c.querySelectorAll('.projeto').forEach((p) => {
+        p.style.removeProperty('opacity');
+        p.style.removeProperty('clip-path');
+        p.style.removeProperty('transform');
+        p.style.removeProperty('translate');
+      });
+      return c;
+    }
+
     function montarCopias() {
-      [...trilho.children].slice(n).forEach((c) => c.remove());
-      st.periodo = 0;
+      trilho.querySelectorAll('[data-copia]').forEach((c) => c.remove());
+      originais.forEach((item) => trilho.insertBefore(copia(item), originais[0]));
+      st.periodo = originais[0].offsetLeft - trilho.children[0].offsetLeft;
       const larguraJanela = janela.clientWidth;
       let copias = 0;
       do {
-        originais.forEach((item) => {
-          const c = item.cloneNode(true);
-          c.setAttribute('aria-hidden', 'true');
-          c.querySelectorAll('a, button').forEach((el) => el.setAttribute('tabindex', '-1'));
-          // a cópia nasce visível mesmo se o original estiver no meio da entrada
-          c.querySelectorAll('.projeto').forEach((p) => {
-            p.style.removeProperty('opacity');
-            p.style.removeProperty('clip-path');
-            p.style.removeProperty('transform');
-            p.style.removeProperty('translate');
-          });
-          trilho.appendChild(c);
-        });
+        originais.forEach((item) => trilho.appendChild(copia(item)));
         copias++;
-        st.periodo = trilho.children[n].offsetLeft - originais[0].offsetLeft;
-      } while (st.periodo > 0 && st.periodo * copias < larguraJanela * 1.5 && copias < 8);
+      } while (st.periodo > 0 && st.periodo * copias < larguraJanela * 1.2 && copias < 8);
       st.passo = st.periodo / n;
       aplicar();
     }
@@ -74,7 +81,9 @@
       if (st.periodo <= 0) return;
       const p = st.periodo;
       const x = ((st.offset % p) + p) % p;
-      gsap.set(trilho, { x: -x });
+      // -p: as cópias da frente ficam fora da tela, à esquerda, e os
+      // originais começam no lugar de sempre
+      gsap.set(trilho, { x: -p - x });
     }
 
     function indiceAtual() {
