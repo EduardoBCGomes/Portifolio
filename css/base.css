@@ -38,6 +38,9 @@ html {
   scroll-padding-top: 84px;
 
   scrollbar-gutter: stable;
+  /* nada transformado pode alargar a página: no iPhone o body sozinho não
+     basta, e o navegador afastava a tela inteira para caber o excesso */
+  overflow-x: clip;
 }
 
 img, picture, svg, video {

@@ -8,7 +8,7 @@
   //  3. ação secundária: a linha embaixo mostra o carregamento real;
   //  4. antecipação: pronto o carregamento, o EB recua como quem pega impulso;
   //  5. exagero e transformação: as letras viram janelas e a câmera mergulha
-  //     pela haste do E até a página ocupar a tela;
+  //     pela haste do B (perto do centro do logo) até a página ocupar a tela;
   //  6. continuação e sobreposição: o topo chega ampliado e desfocado e
   //     assenta, com a entrada do título começando ainda durante o zoom.
 
@@ -94,8 +94,10 @@
     const x0 = W / 2 - (le + lb) / 2;
     svg.querySelectorAll('.revelar__e').forEach((t) => t.setAttribute('x', x0));
     svg.querySelectorAll('.revelar__b').forEach((t) => t.setAttribute('x', x0 + le));
-    // ponto de mergulho: o meio da haste do E (traço cheio do Archivo Black)
-    return { x: x0 + fs * 0.17, y: base - fs * 0.36 };
+    // Ponto de mergulho: o meio da haste do B. É um traço cheio (na máscara o
+    // B é um furo inteiro) e fica a poucos pixels do centro do logo; a haste
+    // do E, mais à esquerda, fazia o zoom puxar o EB para o lado.
+    return { x: x0 + le + fs * 0.17, y: base - fs * 0.36 };
   }
 
   function espera(ms) { return new Promise((r) => setTimeout(r, ms)); }
@@ -181,7 +183,7 @@
     const tl = gsap.timeline({
       onComplete: () => {
         svg.remove();
-        if (hero) gsap.set(hero, { clearProps: 'transform,filter' });
+        if (camadas.length) gsap.set(camadas, { clearProps: 'transform,filter' });
       }
     });
 
@@ -196,16 +198,33 @@
     tl.to(letrasVisiveis, { opacity: 0, duration: 0.3, ease: 'power1.out' }, 0.42);
     tl.set(svg, { pointerEvents: 'none' }, 0.42);
 
-    // 6: a página chega ampliada e desfocada e assenta, por baixo do zoom
-    if (hero) {
-      tl.fromTo(hero,
-        { scale: 1.18, filter: 'blur(10px)', transformOrigin: '50% 45%' },
+    // 6: a página chega ampliada e desfocada e assenta, por baixo do zoom.
+    // Amplia o fundo e o conteúdo DENTRO do topo, que recorta o que passa da
+    // borda: ampliar o próprio .hero deixava a página mais larga que a tela,
+    // e o celular afastava a página inteira e voltava ("explodia"). A origem
+    // é o centro da tela, não o meio de um topo mais alto que ela.
+    const camadas = hero ? [...hero.querySelectorAll(':scope > .hero__bg, :scope > .hero__inner')] : [];
+    if (camadas.length) {
+      const ampliado = W < 700 ? 1.08 : 1.18;
+      tl.fromTo(camadas,
+        {
+          scale: ampliado,
+          filter: 'blur(10px)',
+          transformOrigin: (i, el) => `50% ${Math.round(H / 2 - el.getBoundingClientRect().top)}px`
+        },
         { scale: 1, filter: 'blur(0px)', duration: 1.5, ease: 'expo.out' },
         0.5);
     }
 
-    // 5: o mergulho pela haste do E
-    tl.to(ambos, { scale: 110, duration: 1.15, ease: 'expo.in' }, 0.55);
+    // 5: o mergulho pela haste do B, levando esse ponto até o centro exato
+    // da tela enquanto cresce: o zoom fica centrado
+    tl.to(ambos, {
+      scale: 110,
+      x: W / 2 - mergulho.x,
+      y: H / 2 - mergulho.y,
+      duration: 1.15,
+      ease: 'expo.in'
+    }, 0.55);
 
     // a entrada do título começa quando as letras viram janelas: o texto já
     // vai aparecendo por dentro do EB e termina junto com o mergulho
