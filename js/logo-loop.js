@@ -98,7 +98,7 @@
         raiz.removeAttribute('data-intro');
       }
 
-      const pausado = st.foco || st.hover;
+      const pausado = st.foco || st.hover || document.documentElement.classList.contains('sem-movimento');
       const alvo = reduzido.matches ? 0 : (pausado ? cfg.velocidadeHover : cfg.velocidade) * cfg.direcao;
 
       if (st.arrasto && st.arrasto.ativo) {
@@ -208,6 +208,7 @@
     });
 
     if (reduzido.addEventListener) reduzido.addEventListener('change', acordar);
+    document.addEventListener('portfolio:movimento', acordar);
 
     new IntersectionObserver(([en]) => {
       st.visivel = en.isIntersecting;

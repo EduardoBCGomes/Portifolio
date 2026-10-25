@@ -8,7 +8,6 @@
     const janela = raiz.querySelector('.carrossel__janela');
     const trilho = raiz.querySelector('.carrossel__trilho');
     const anuncio = raiz.querySelector('[data-carrossel-anuncio]');
-    const botaoPausa = raiz.querySelector('[data-pausa]');
     if (!janela || !trilho || typeof gsap === 'undefined') return;
     if (window.ScrollTrigger) gsap.registerPlugin(ScrollTrigger);
 
@@ -25,7 +24,6 @@
       passo: 0,
       hover: false,
       foco: false,
-      pausadoPeloUsuario: false,
       visivel: true,
       arrasto: null,
       tween: null,
@@ -42,6 +40,10 @@
         p.style.removeProperty('clip-path');
         p.style.removeProperty('transform');
         p.style.removeProperty('translate');
+      });
+      c.querySelectorAll('.projeto__imagem').forEach((img) => {
+        img.style.removeProperty('transform');
+        img.style.removeProperty('transition');
       });
       return c;
     }
@@ -81,7 +83,8 @@
     }
 
     const parado = () =>
-      reduzido || st.hover || st.dedo || st.foco || st.pausadoPeloUsuario || !st.visivel || st.arrasto || st.tween;
+      reduzido || st.hover || st.dedo || st.foco || !st.visivel || st.arrasto || st.tween ||
+      document.documentElement.classList.contains('sem-movimento');
 
     let impulso = 0;
     if (window.ScrollTrigger && !reduzido) {
@@ -95,12 +98,28 @@
       });
     }
 
+    const quieto = () => document.documentElement.classList.contains('sem-movimento');
+    const inclinar = reduzido ? null : gsap.quickTo(trilho, 'skewX', { duration: .45, ease: 'power3.out' });
+    let ultimoOffset = 0;
+    let velocidade = 0;
+    let inclinacao = 0;
+
     function tique(_tempo, deltaMs) {
       const dt = Math.min(deltaMs, 64) / 1000;
       impulso *= Math.exp(-dt * 3);
-      if (parado()) return;
-      st.offset += (VELOCIDADE + impulso) * dt;
-      aplicar();
+      if (!parado()) {
+        st.offset += (VELOCIDADE + impulso) * dt;
+        aplicar();
+      }
+      if (!inclinar || !dt) return;
+      const instante = (st.offset - ultimoOffset) / dt;
+      ultimoOffset = st.offset;
+      velocidade += (instante - velocidade) * (1 - Math.exp(-dt * 10));
+      let alvo = quieto() ? 0 : gsap.utils.clamp(-3, 3, velocidade / 420);
+      if (Math.abs(alvo) < .2) alvo = 0;
+      if (Math.abs(alvo - inclinacao) < .05) return;
+      inclinacao = alvo;
+      inclinar(alvo);
     }
     gsap.ticker.add(tique);
 
@@ -134,17 +153,34 @@
       });
     }
 
-    raiz.querySelector('[data-anterior]')?.addEventListener('click', () => irPara(-1));
-    raiz.querySelector('[data-proximo]')?.addEventListener('click', () => irPara(1));
-
-    botaoPausa?.addEventListener('click', () => {
-      st.pausadoPeloUsuario = !st.pausadoPeloUsuario;
-      botaoPausa.setAttribute('aria-pressed', String(st.pausadoPeloUsuario));
-      botaoPausa.setAttribute('aria-label', st.pausadoPeloUsuario ? 'Retomar o movimento' : 'Pausar o movimento');
-    });
-
     raiz.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') st.hover = true; });
-    raiz.addEventListener('pointerleave', () => { st.hover = false; });
+    raiz.addEventListener('pointerleave', () => { st.hover = false; itemSobMouse = null; });
+
+    const vidro = raiz.querySelector('.carrossel__vidro--esq');
+    let itemSobMouse = null;
+    trilho.addEventListener('pointerover', (e) => {
+      if (e.pointerType !== 'mouse' || st.arrasto || !st.passo) return;
+      const item = e.target.closest('.carrossel__item');
+      if (!item || item === itemSobMouse) return;
+      itemSobMouse = item;
+      const j = janela.getBoundingClientRect();
+      const r = item.getBoundingClientRect();
+      const margem = (vidro ? vidro.getBoundingClientRect().width : 0) + 8;
+      const min = j.left + margem;
+      const max = j.right - margem;
+      let delta = 0;
+      if (r.width > max - min || r.left < min) delta = r.left - min;
+      else if (r.right > max) delta = r.right - max;
+      if (Math.abs(delta) < 2) return;
+      if (st.tween) st.tween.kill();
+      st.tween = gsap.to(st, {
+        offset: st.offset + delta,
+        duration: reduzido ? 0.01 : 0.55,
+        ease: 'power3.out',
+        onUpdate: aplicar,
+        onComplete: () => { st.tween = null; }
+      });
+    });
 
     let retomar = 0;
     raiz.addEventListener('pointerdown', (e) => {
@@ -242,6 +278,47 @@
       if (performance.now() < st.bloquearCliqueAte) { e.preventDefault(); e.stopPropagation(); }
     }, true);
     trilho.addEventListener('dragstart', (e) => e.preventDefault());
+
+    if (!reduzido && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      raiz.classList.add('is-interativo');
+      let imagemAtual = null;
+
+      const soltarImagem = () => {
+        if (!imagemAtual) return;
+        const img = imagemAtual;
+        imagemAtual = null;
+        img.style.transition = 'none';
+        gsap.to(img, {
+          x: 0, y: 0, scale: 1.001,
+          duration: .7,
+          ease: 'power3.out',
+          overwrite: 'auto',
+          onComplete: () => gsap.set(img, { clearProps: 'transform,transition' })
+        });
+      };
+
+      trilho.addEventListener('pointermove', (e) => {
+        if (e.pointerType !== 'mouse') return;
+        if ((st.arrasto && st.arrasto.ativo) || quieto()) { soltarImagem(); return; }
+        const projeto = e.target.closest('.projeto');
+        const img = projeto && projeto.querySelector('.projeto__imagem');
+        if (!img) { soltarImagem(); return; }
+        if (img !== imagemAtual) soltarImagem();
+        imagemAtual = img;
+        const r = projeto.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width - 0.5;
+        const ny = (e.clientY - r.top) / r.height - 0.5;
+        gsap.to(img, {
+          x: -nx * 26,
+          y: -ny * 14,
+          scale: 1.07,
+          duration: .7,
+          ease: 'power3.out',
+          overwrite: 'auto'
+        });
+      });
+      trilho.addEventListener('pointerleave', soltarImagem);
+    }
 
     trilho.addEventListener('click', (e) => {
       if (e.target.closest('a')) return;

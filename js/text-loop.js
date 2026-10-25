@@ -56,7 +56,7 @@
 
   function createTextLoop(root, index) {
     const cfg = {
-      text: root.dataset.text || 'React ✦ Bits',
+      text: root.dataset.text || '',
       shape: root.dataset.shape || 'wave',
       path: root.dataset.path || null,
       speed: num(root, 'speed', 90),
@@ -69,7 +69,7 @@
       uppercase: bool(root, 'uppercase', true),
       color: root.dataset.color || '#ffffff',
       ribbon: bool(root, 'ribbon', true),
-      ribbonColor: root.dataset.ribbonColor || '#5227FF',
+      ribbonColor: root.dataset.ribbonColor || '#faf9f6',
       ribbonWidth: num(root, 'ribbonWidth', 86),
       pauseOnHover: bool(root, 'pauseOnHover', true),
       viewHeight: num(root, 'viewHeight', 520)
@@ -135,7 +135,35 @@
     root.appendChild(svg);
 
     let length = 0;
-    let tween = null;
+    let offset = 0;
+    let impulso = 0;
+    let ligado = false;
+    let rodando = false;
+    let visivel = true;
+    let sobre = false;
+    const sentido = cfg.direction === 'reverse' ? -1 : 1;
+
+    function atualizar() {
+      rodando = ligado && visivel && !sobre && !document.documentElement.classList.contains('sem-movimento');
+    }
+
+    function tique(_tempo, deltaMs) {
+      const dt = Math.min(deltaMs, 64) / 1000;
+      impulso *= Math.exp(-dt * 2.4);
+      if (!rodando || !length) return;
+      offset = (offset + (cfg.speed + impulso) * sentido * dt) % length;
+      apply(offset);
+    }
+
+    if (cfg.pauseOnHover) {
+      root.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { sobre = true; atualizar(); } });
+      root.addEventListener('pointerleave', () => { sobre = false; atualizar(); });
+    }
+    document.addEventListener('portfolio:movimento', atualizar);
+    new IntersectionObserver(([entry]) => {
+      visivel = entry.isIntersecting;
+      atualizar();
+    }, { threshold: 0 }).observe(root);
 
     function measure() {
       let unitWidth = 0;
@@ -155,7 +183,8 @@
         tp.setAttribute('textLength', String(length));
       });
 
-      apply(0);
+      offset %= length;
+      apply(offset);
       start();
     }
 
@@ -166,30 +195,26 @@
     }
 
     function start() {
-      tween?.kill();
-
       const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       if (prefersReduced || cfg.speed <= 0 || typeof gsap === 'undefined') return;
 
-      const state = { offset: 0 };
-      tween = gsap.to(state, {
-        offset: cfg.direction === 'reverse' ? -length : length,
-        duration: length / cfg.speed,
-        ease: 'none',
-        repeat: -1,
-        onUpdate: () => apply(state.offset)
-      });
-
-      if (cfg.pauseOnHover) {
-        root.addEventListener('pointerenter', () => tween && tween.pause());
-        root.addEventListener('pointerleave', () => tween && tween.resume());
+      if (!ligado) {
+        ligado = true;
+        gsap.ticker.add(tique);
+        if (window.ScrollTrigger) {
+          gsap.registerPlugin(ScrollTrigger);
+          ScrollTrigger.create({
+            trigger: root,
+            start: 'top bottom',
+            end: 'bottom top',
+            onUpdate: (self) => {
+              impulso = gsap.utils.clamp(-3200, 3200, self.getVelocity()) * 0.1;
+            }
+          });
+        }
       }
 
-      const io = new IntersectionObserver(([entry]) => {
-        if (!tween) return;
-        entry.isIntersecting ? tween.resume() : tween.pause();
-      }, { threshold: 0 });
-      io.observe(root);
+      atualizar();
     }
 
     measure();
@@ -198,7 +223,10 @@
       document.fonts.ready.then(measure);
     }
 
-    return { refresh: measure, destroy: () => tween?.kill() };
+    return {
+      refresh: measure,
+      destroy: () => { ligado = false; rodando = false; if (typeof gsap !== 'undefined') gsap.ticker.remove(tique); }
+    };
   }
 
   const loops = [];

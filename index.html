@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eduardo Borges — Dev Web</title>
-  <meta name="description" content="Portfólio de Eduardo Borges, Dev Web. Desenvolvo sites e aplicações web com interfaces intuitivas, funcionalidade e código bem estruturado.">
+  <meta name="description" content="Eduardo Borges, Dev Web. Vim do suporte técnico e desenvolvo sites e aplicações web entendendo o problema de quem usa antes de escrever código.">
   <meta name="author" content="Eduardo Borges">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="canonical" href="https://www.eduardobcg.com.br/">
@@ -14,7 +14,7 @@
   <meta property="og:site_name" content="Eduardo Borges">
   <meta property="og:url" content="https://www.eduardobcg.com.br/">
   <meta property="og:title" content="Eduardo Borges — Dev Web">
-  <meta property="og:description" content="Desenvolvo sites e aplicações web com interfaces intuitivas, funcionalidade e código bem estruturado.">
+  <meta property="og:description" content="Vim do suporte técnico e desenvolvo sites e aplicações web entendendo o problema de quem usa antes de escrever código.">
   <meta property="og:image" content="https://www.eduardobcg.com.br/assets/og-image.jpg">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
@@ -24,7 +24,7 @@
   <meta property="profile:last_name" content="Borges">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Eduardo Borges — Dev Web">
-  <meta name="twitter:description" content="Desenvolvo sites e aplicações web com interfaces intuitivas, funcionalidade e código bem estruturado.">
+  <meta name="twitter:description" content="Vim do suporte técnico e desenvolvo sites e aplicações web entendendo o problema de quem usa antes de escrever código.">
   <meta name="twitter:image" content="https://www.eduardobcg.com.br/assets/og-image.jpg">
   <meta name="theme-color" content="#0c0a09">
   <meta name="color-scheme" content="dark">
@@ -59,6 +59,7 @@
           "url": "https://www.eduardobcg.com.br/",
           "image": "https://www.eduardobcg.com.br/assets/img/retrato.webp",
           "email": "mailto:eduardo26eduardo@gmail.com",
+          "telephone": "+55 17 99649-6625",
           "knowsAbout": ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Next.js", "Tailwind CSS", "GSAP", "WebGL", "Acessibilidade web"],
           "sameAs": [
             "https://github.com/EduardoBCGomes",
@@ -165,8 +166,8 @@
 
   <div class="staggered-menu-wrapper" data-staggered-menu data-position="right">
     <div class="sm-prelayers" aria-hidden="true">
-      <div class="sm-prelayer" style="background: #3d3934"></div>
-      <div class="sm-prelayer" style="background: #14110e"></div>
+      <div class="sm-prelayer"></div>
+      <div class="sm-prelayer"></div>
     </div>
 
     <aside id="staggered-menu-panel" class="staggered-menu-panel" aria-hidden="true" aria-label="Menu principal">
@@ -194,15 +195,17 @@
           </li>
         </ul>
 
-        <nav class="sm-socials" aria-label="Redes sociais">
-          <p class="sm-socials-title">Redes</p>
+        <nav class="sm-socials" aria-label="Fale comigo">
+          <p class="sm-socials-title">Fale comigo</p>
           <ul class="sm-socials-list" role="list">
-
+            <li><a href="https://wa.me/5517996496625?text=Ol%C3%A1%2C%20Eduardo!%20Vim%20pelo%20seu%20portf%C3%B3lio." class="sm-socials-link" target="_blank" rel="noopener noreferrer">WhatsApp<span class="sr-only"> (abre em nova aba)</span></a></li>
             <li><a href="https://github.com/EduardoBCGomes" class="sm-socials-link" target="_blank" rel="noopener noreferrer">GitHub<span class="sr-only"> (abre em nova aba)</span></a></li>
             <li><a href="https://www.linkedin.com/in/eduardo-borges-07228714a/" class="sm-socials-link" target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (abre em nova aba)</span></a></li>
             <li><a href="mailto:eduardo26eduardo@gmail.com" class="sm-socials-link">E-mail</a></li>
           </ul>
         </nav>
+
+        <button type="button" class="sm-pausa" data-pausar-animacoes>Pausar animações</button>
       </div>
     </aside>
   </div>
@@ -277,18 +280,18 @@
         data-ribbon-color="#FAF9F6"
         data-ribbon-width="72"
         data-view-height="190"
-        data-pause-on-hover="false"></div>
+        data-pause-on-hover="true"></div>
     </div>
 
     <section class="section sobre" id="sobre">
       <div class="container">
-        <header class="section__head" data-reveal>
-          <h2 class="section__title">Sobre mim</h2>
+        <header class="section__head">
+          <h2 class="section__title" data-titulo-dither>Sobre mim</h2>
         </header>
 
         <div class="sobre__grid">
-          <div class="sobre__media" data-reveal>
-            <div class="sobre__photo-wrap">
+          <div class="sobre__media">
+            <div class="sobre__photo-wrap" data-revelar-y>
               <img
                 src="assets/img/corpo.webp"
                 srcset="assets/img/corpo-480.webp 480w, assets/img/corpo.webp 820w"
@@ -323,7 +326,7 @@
             <div class="logoloop" data-logo-loop data-intro
                  data-speed="40" data-logo-height="22" data-gap="44"
                  data-hover-speed="0" data-fade-out-width="0.12"
-                 role="region" aria-label="Tecnologias que uso">
+                 role="region" aria-label="Tecnologias que uso" tabindex="0">
               <ul class="logoloop__list" role="list">
                 <li class="logoloop__item"><div class="logoloop__content"><span class="logoloop__node"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z"/></svg></span><span class="logoloop__label">HTML</span></div></li>
                 <li class="logoloop__item"><div class="logoloop__content"><span class="logoloop__node"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M0 0v20.16A3.84 3.84 0 0 0 3.84 24h16.32A3.84 3.84 0 0 0 24 20.16V3.84A3.84 3.84 0 0 0 20.16 0Zm14.256 13.08c1.56 0 2.28 1.08 2.304 2.64h-1.608c.024-.288-.048-.6-.144-.84-.096-.192-.288-.264-.552-.264-.456 0-.696.264-.696.84-.024.576.288.888.768 1.08.72.288 1.608.744 1.92 1.296q.432.648.432 1.656c0 1.608-.912 2.592-2.496 2.592-1.656 0-2.4-1.032-2.424-2.688h1.68c0 .792.264 1.176.792 1.176.264 0 .456-.072.552-.24.192-.312.24-1.176-.048-1.512-.312-.408-.912-.6-1.32-.816q-.828-.396-1.224-.936c-.24-.36-.36-.888-.36-1.536 0-1.44.936-2.472 2.424-2.448m5.4 0c1.584 0 2.304 1.08 2.328 2.64h-1.608c0-.288-.048-.6-.168-.84-.096-.192-.264-.264-.528-.264-.48 0-.72.264-.72.84s.288.888.792 1.08c.696.288 1.608.744 1.92 1.296.264.432.408.984.408 1.656.024 1.608-.888 2.592-2.472 2.592-1.68 0-2.424-1.056-2.448-2.688h1.68c0 .744.264 1.176.792 1.176.264 0 .456-.072.552-.24.216-.312.264-1.176-.048-1.512-.288-.408-.888-.6-1.32-.816-.552-.264-.96-.576-1.2-.936s-.36-.888-.36-1.536c-.024-1.44.912-2.472 2.4-2.448m-11.031.018c.711-.006 1.419.198 1.839.63.432.432.672 1.128.648 1.992H9.336c.024-.456-.096-.792-.432-.96-.312-.144-.768-.048-.888.24-.12.264-.192.576-.168.864v3.504c0 .744.264 1.128.768 1.128a.65.65 0 0 0 .552-.264c.168-.24.192-.552.168-.84h1.776c.096 1.632-.984 2.712-2.568 2.688-1.536 0-2.496-.864-2.472-2.472v-4.032c0-.816.24-1.44.696-1.848.432-.408 1.146-.624 1.857-.63"/></svg></span><span class="logoloop__label">CSS</span></div></li>
@@ -345,8 +348,8 @@
 
     <section class="section projetos" id="projetos">
       <div class="container">
-        <header class="section__head" data-reveal>
-          <h2 class="section__title">Projetos</h2>
+        <header class="section__head">
+          <h2 class="section__title" data-titulo-dither>Projetos</h2>
         </header>
 
         <div class="carrossel" data-carrossel role="region" aria-roledescription="carrossel" aria-label="Projetos">
@@ -356,15 +359,18 @@
             <ul class="carrossel__trilho" role="list">
               <li class="carrossel__item">
                 <article class="projeto">
-                  <img class="projeto__imagem" src="assets/projetos/aflo.webp" srcset="assets/projetos/aflo-480.webp 480w, assets/projetos/aflo-640.webp 640w, assets/projetos/aflo-800.webp 800w, assets/projetos/aflo.webp 1600w" sizes="(max-width: 699px) 86vw, 760px" alt="" width="1600" height="759" loading="lazy" draggable="false" style="object-position: 50% 0%">
+                  <div class="projeto__midia">
+                    <img class="projeto__imagem" src="assets/projetos/aflo.webp" srcset="assets/projetos/aflo-480.webp 480w, assets/projetos/aflo-640.webp 640w, assets/projetos/aflo-800.webp 800w, assets/projetos/aflo.webp 1600w" sizes="(max-width: 699px) 86vw, 760px" alt="" width="1600" height="759" loading="lazy" draggable="false">
+                  </div>
                   <div class="projeto__sombra" aria-hidden="true"></div>
                   <div class="projeto__info">
                     <h3 class="projeto__titulo">
                       <a class="projeto__link" href="https://aflo-aflo.vercel.app/" target="_blank" rel="noopener noreferrer">AFlo<span class="sr-only"> (abre em nova aba)</span></a>
                       <span class="projeto__seta"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                     </h3>
-                    <p class="projeto__desc">Loja online de buquês artesanais de chenille. Construí o montador em que o cliente escolhe flor por flor, o checkout com Mercado Pago e o painel que organiza a produção dos pedidos.</p>
+                    <p class="projeto__resumo" aria-hidden="true">Loja de buquês com montador, checkout no Mercado Pago e painel de produção.</p>
                     <div class="projeto__revelar">
+                      <p class="projeto__desc">Loja online de buquês artesanais de chenille. Construí o montador em que o cliente escolhe flor por flor, o checkout com Mercado Pago e o painel que organiza a produção dos pedidos.</p>
                       <ul class="projeto__stack" aria-label="Tecnologias usadas">
                         <li>Next.js</li>
                         <li>TypeScript</li>
@@ -379,15 +385,18 @@
               </li>
               <li class="carrossel__item">
                 <article class="projeto">
-                  <img class="projeto__imagem" src="assets/projetos/portfolio.webp" srcset="assets/projetos/portfolio-480.webp 480w, assets/projetos/portfolio-640.webp 640w, assets/projetos/portfolio-800.webp 800w, assets/projetos/portfolio.webp 1600w" sizes="(max-width: 699px) 86vw, 760px" alt="" width="1600" height="1000" loading="lazy" draggable="false" style="object-position: 50% 0%">
+                  <div class="projeto__midia">
+                    <img class="projeto__imagem" src="assets/projetos/portfolio.webp" srcset="assets/projetos/portfolio-480.webp 480w, assets/projetos/portfolio-640.webp 640w, assets/projetos/portfolio-800.webp 800w, assets/projetos/portfolio.webp 1600w" sizes="(max-width: 699px) 86vw, 760px" alt="" width="1600" height="1000" loading="lazy" draggable="false">
+                  </div>
                   <div class="projeto__sombra" aria-hidden="true"></div>
                   <div class="projeto__info">
                     <h3 class="projeto__titulo">
                       <a class="projeto__link" href="https://www.eduardobcg.com.br" target="_blank" rel="noopener noreferrer">Portfólio<span class="sr-only"> (abre em nova aba)</span></a>
                       <span class="projeto__seta"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
                     </h3>
-                    <p class="projeto__desc">Meu portfólio pessoal, o site que você está vendo agora.</p>
+                    <p class="projeto__resumo" aria-hidden="true">O site que você está vendo agora.</p>
                     <div class="projeto__revelar">
+                      <p class="projeto__desc">Meu portfólio pessoal, o site que você está vendo agora.</p>
                       <ul class="projeto__stack" aria-label="Tecnologias usadas">
                         <li>HTML</li>
                         <li>CSS</li>
@@ -409,16 +418,12 @@
 
     <section class="section contato" id="contato">
       <div class="container">
-        <header class="section__head" data-reveal>
-          <h2 class="section__title">Contato</h2>
+        <header class="section__head">
+          <h2 class="section__title" data-titulo-dither>Vamos tirar sua ideia do papel?</h2>
         </header>
 
         <div class="contato__grid">
           <div class="contato__cta">
-            <p class="contato__big" data-split-lines>
-              Vamos tirar sua ideia do papel?
-            </p>
-
             <p class="contato__texto" data-reveal>
               Se você precisa de um site, uma aplicação web ou quer conversar sobre uma
               vaga, me escreva. Conte o que você tem em mente e a gente vê junto o melhor
@@ -429,10 +434,60 @@
               <span class="contato__status-ponto" aria-hidden="true"></span>
               Disponível para projetos e vagas · remoto, atendo todo o Brasil
             </p>
+          </div>
 
-            <p class="contato__direto" data-reveal>Se preferir, fale direto comigo:</p>
+          <form class="contact-form" id="contactForm" novalidate data-revelar-y>
+            <div class="field">
+              <label for="nome">Nome</label>
+              <div class="field__caixa">
+                <input type="text" id="nome" name="nome" required autocomplete="name" placeholder="Como te chamo?" aria-describedby="erro-nome">
+                <span class="field__ok" aria-hidden="true"></span>
+                <span class="field__canto field__canto--a" aria-hidden="true"></span>
+                <span class="field__canto field__canto--b" aria-hidden="true"></span>
+                <span class="field__canto field__canto--c" aria-hidden="true"></span>
+                <span class="field__canto field__canto--d" aria-hidden="true"></span>
+              </div>
+              <p class="field__error" id="erro-nome" data-error-for="nome"></p>
+            </div>
 
-            <div class="contato__mail-row" data-reveal>
+            <div class="field">
+              <div class="field__topo">
+                <label for="mensagem">Mensagem</label>
+                <span class="field__contador" data-contador aria-hidden="true">mínimo de 10 caracteres</span>
+              </div>
+              <div class="field__caixa">
+                <textarea id="mensagem" name="mensagem" rows="5" required placeholder="Conte sobre o projeto ou a vaga…" aria-describedby="erro-mensagem"></textarea>
+                <span class="field__ok" aria-hidden="true"></span>
+                <span class="field__canto field__canto--a" aria-hidden="true"></span>
+                <span class="field__canto field__canto--b" aria-hidden="true"></span>
+                <span class="field__canto field__canto--c" aria-hidden="true"></span>
+                <span class="field__canto field__canto--d" aria-hidden="true"></span>
+              </div>
+              <p class="field__error" id="erro-mensagem" data-error-for="mensagem"></p>
+            </div>
+
+            <div class="form-envio">
+              <button type="submit" class="btn btn--primary btn--block btn--enviar" aria-describedby="form-dica">
+                <span class="btn__rotulo">Enviar mensagem</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </button>
+              <p class="form-dica" id="form-dica">Abre o seu app de e-mail com a mensagem pronta para enviar.</p>
+            </div>
+
+            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+            <canvas class="form-glitch" aria-hidden="true"></canvas>
+          </form>
+
+          <div class="contato__direto-bloco" data-reveal>
+            <p class="contato__direto">Se preferir, fale direto comigo:</p>
+
+            <a href="https://wa.me/5517996496625?text=Ol%C3%A1%2C%20Eduardo!%20Vim%20pelo%20seu%20portf%C3%B3lio." class="btn btn--ghost contato__whats" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+              <span>WhatsApp <span class="contato__whats-numero">(17) 99649-6625</span></span>
+              <span class="sr-only"> (abre o WhatsApp em nova aba)</span>
+            </a>
+
+            <div class="contato__mail-row">
               <a href="mailto:eduardo26eduardo@gmail.com" class="contato__mail">eduardo26eduardo@gmail.com</a>
               <button type="button" class="contato__copy" data-copiar="eduardo26eduardo@gmail.com">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M15 9V6.5A2.5 2.5 0 0 0 12.5 4h-6A2.5 2.5 0 0 0 4 6.5v6A2.5 2.5 0 0 0 6.5 15H9" stroke="currentColor" stroke-width="1.8"/></svg>
@@ -440,31 +495,7 @@
               </button>
               <p class="sr-only" role="status" aria-live="polite" data-copiar-status></p>
             </div>
-
-            <ul class="socials" data-stagger>
-
-              <li><a href="https://github.com/EduardoBCGomes" class="social" data-magnetic target="_blank" rel="noopener noreferrer">GitHub<span class="sr-only"> (abre em nova aba)</span></a></li>
-              <li><a href="https://www.linkedin.com/in/eduardo-borges-07228714a/" class="social" data-magnetic target="_blank" rel="noopener noreferrer">LinkedIn<span class="sr-only"> (abre em nova aba)</span></a></li>
-            </ul>
           </div>
-
-          <form class="contact-form" id="contactForm" novalidate data-reveal>
-            <div class="field">
-              <label for="nome">Nome</label>
-              <input type="text" id="nome" name="nome" required autocomplete="name" placeholder="Como te chamo?" aria-describedby="erro-nome">
-              <p class="field__error" id="erro-nome" data-error-for="nome"></p>
-            </div>
-
-            <div class="field">
-              <label for="mensagem">Mensagem</label>
-              <textarea id="mensagem" name="mensagem" rows="5" required placeholder="Conte um pouco sobre a ideia..." aria-describedby="erro-mensagem"></textarea>
-              <p class="field__error" id="erro-mensagem" data-error-for="mensagem"></p>
-            </div>
-
-            <button type="submit" class="btn btn--primary btn--block">Enviar mensagem</button>
-
-            <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
-          </form>
         </div>
       </div>
     </section>
@@ -474,7 +505,7 @@
   <div data-gradual-blur
        data-target="page"
        data-position="bottom"
-       data-height="4.5rem"
+       data-height="2.5rem"
        data-strength="1.1"
        data-div-count="3"
        data-curve="bezier"
@@ -485,7 +516,11 @@
   <footer class="footer">
     <div class="container footer__inner">
       <p>© <span id="year"></span> Eduardo Borges</p>
-      <a href="#hero" class="footer__top" data-transicao>Voltar ao topo <span aria-hidden="true">↑</span></a>
+      <button type="button" class="footer__pausa" data-pausar-animacoes>Pausar animações</button>
+      <a href="#hero" class="footer__top" data-transicao>
+        Voltar ao topo
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
     </div>
   </footer>
 
@@ -506,7 +541,9 @@
   <script src="js/text-loop.js"></script>
   <script src="js/carrossel.js"></script>
   <script src="js/logo-loop.js"></script>
+  <script src="js/revelar-dither.js"></script>
   <script src="js/main.js"></script>
+  <script src="js/glitch-dither.js"></script>
   <script src="js/transicao-dither.js"></script>
   <script src="js/animations.js"></script>
 </body>

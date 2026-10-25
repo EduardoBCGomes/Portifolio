@@ -28,7 +28,7 @@ Desenvolvedor web e bacharel em Ciência da Computação que começou no suporte
 - Atende o Brasil todo, em trabalho remoto.
 - Está disponível agora para projetos e vagas; o site pode dizer isso.
 - Visitantes abrem tanto no celular (links compartilhados) quanto no desktop (recrutadores, clientes avaliando com calma).
-- Contato: formulário que abre o e-mail (mailto), e-mail eduardo26eduardo@gmail.com com botão de copiar, GitHub (EduardoBCGomes) e LinkedIn.
+- Contato: formulário que abre o e-mail (mailto), WhatsApp (17) 99649-6625, e-mail eduardo26eduardo@gmail.com com botão de copiar, GitHub (EduardoBCGomes) e LinkedIn.
 
 ## Capabilities and Constraints
 

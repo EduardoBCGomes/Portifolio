@@ -191,13 +191,14 @@
         return;
       }
 
-      if (!reduzido) tempo += dt;
+      const pausado = document.documentElement.classList.contains('sem-movimento');
+      if (!reduzido && !pausado) tempo += dt;
       gl.uniform1f(u.uTempo, tempo);
       gl.uniform1f(u.uSubida, subida);
       gl.clear(gl.COLOR_BUFFER_BIT);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
 
-      if (!reduzido && !document.hidden) raf = requestAnimationFrame(quadro);
+      if (!reduzido && !pausado && !document.hidden) raf = requestAnimationFrame(quadro);
     }
 
     function acordar() {
@@ -227,6 +228,7 @@
     }, { passive: true });
 
     window.addEventListener('resize', acordar);
+    document.addEventListener('portfolio:movimento', acordar);
     new ResizeObserver(() => { medir(); acordar(); }).observe(canvas);
 
     document.addEventListener('visibilitychange', () => {

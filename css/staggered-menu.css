@@ -38,6 +38,8 @@
   height: 100%;
   width: 100%;
 }
+.sm-prelayer:nth-child(1) { background: #3d3934; }
+.sm-prelayer:nth-child(2) { background: #14110e; }
 
 .staggered-menu-panel {
   position: absolute;
@@ -78,7 +80,9 @@
 
 .sm-panel-item {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   color: var(--sm-panel-fg);
   font-family: var(--font-display);
   font-weight: 700;
@@ -87,11 +91,36 @@
   letter-spacing: -.04em;
   text-transform: uppercase;
   padding-right: 1.4em;
-  transition: color .25s var(--ease-out);
+  transition: color .25s var(--ease-out), padding-left .35s var(--ease-out);
 }
 
+.sm-panel-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: .42em;
+  height: .58em;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 7' shape-rendering='crispEdges'%3E%3Crect x='0' y='0' width='1' height='1' fill='%2314110e'/%3E%3Crect x='0' y='1' width='1' height='1' fill='%2314110e'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%2314110e'/%3E%3Crect x='0' y='2' width='1' height='1' fill='%2314110e'/%3E%3Crect x='1' y='2' width='1' height='1' fill='%2314110e'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%2314110e'/%3E%3Crect x='0' y='3' width='1' height='1' fill='%2314110e'/%3E%3Crect x='1' y='3' width='1' height='1' fill='%2314110e'/%3E%3Crect x='2' y='3' width='1' height='1' fill='%2314110e'/%3E%3Crect x='3' y='3' width='1' height='1' fill='%2314110e'/%3E%3Crect x='0' y='4' width='1' height='1' fill='%2314110e'/%3E%3Crect x='1' y='4' width='1' height='1' fill='%2314110e'/%3E%3Crect x='2' y='4' width='1' height='1' fill='%2314110e'/%3E%3Crect x='0' y='5' width='1' height='1' fill='%2314110e'/%3E%3Crect x='1' y='5' width='1' height='1' fill='%2314110e'/%3E%3Crect x='0' y='6' width='1' height='1' fill='%2314110e'/%3E%3Crect x='1' y='0' width='1' height='1' fill='%238f8a83'/%3E%3Crect x='3' y='2' width='1' height='1' fill='%238f8a83'/%3E%3Crect x='3' y='4' width='1' height='1' fill='%238f8a83'/%3E%3Crect x='1' y='6' width='1' height='1' fill='%238f8a83'/%3E%3C/svg%3E") no-repeat center / contain;
+  image-rendering: pixelated;
+  opacity: 0;
+  translate: -.4em -50%;
+  transition: opacity .2s var(--ease-out), translate .35s var(--ease-out);
+  pointer-events: none;
+}
+.sm-panel-item:hover::before,
+.sm-panel-item:focus-visible::before {
+  opacity: 1;
+  translate: 0 -50%;
+}
 .sm-panel-item:hover,
-.sm-panel-item:focus-visible { color: rgba(20, 17, 14, .42); }
+.sm-panel-item:focus-visible { padding-left: .5em; }
+.sm-panel-item:focus-visible {
+  outline: none;
+  text-decoration: underline;
+  text-decoration-thickness: .06em;
+  text-underline-offset: .14em;
+}
 
 .sm-panel-itemLabel {
   display: inline-block;
@@ -130,7 +159,7 @@
   font-weight: 600;
   letter-spacing: .16em;
   text-transform: uppercase;
-  color: rgba(20, 17, 14, .45);
+  color: rgba(20, 17, 14, .7);
   opacity: 0;
 }
 
@@ -142,7 +171,9 @@
 }
 
 .sm-socials-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
   padding: 2px 0;
   font-size: 1.1rem;
   font-weight: 500;
@@ -153,7 +184,7 @@
 
 .staggered-menu-panel .sm-socials-list:hover .sm-socials-link:not(:hover),
 .staggered-menu-panel .sm-socials-list:focus-within .sm-socials-link:not(:focus-visible) {
-  opacity: .35;
+  opacity: .6;
 }
 
 .sm-socials-link:focus-visible {
@@ -166,6 +197,7 @@
   display: inline-flex;
   align-items: center;
   gap: .5rem;
+  min-height: 44px;
   padding: .55rem .35rem;
   color: var(--text);
   font-size: var(--fs-sm);
@@ -224,6 +256,26 @@
   border-radius: 2px;
   transform: translate(-50%, -50%);
   will-change: transform;
+}
+
+.sm-pausa {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: .25rem;
+  color: rgba(20, 17, 14, .75);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-color: rgba(20, 17, 14, .3);
+  text-underline-offset: .25em;
+  transition: color .25s var(--ease-out);
+}
+.sm-pausa:hover { color: var(--sm-panel-fg); }
+.sm-pausa:focus-visible {
+  outline: 2px solid var(--sm-accent);
+  outline-offset: 3px;
 }
 
 @media (max-width: 640px) {

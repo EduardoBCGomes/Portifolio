@@ -3,7 +3,29 @@
 
   const wrapper = document.querySelector('[data-staggered-menu]');
   const toggleBtn = document.querySelector('.sm-toggle');
-  if (!wrapper || !toggleBtn || typeof gsap === 'undefined') return;
+  if (!wrapper || !toggleBtn) return;
+
+  if (typeof gsap === 'undefined') {
+    const painel = wrapper.querySelector('.staggered-menu-panel');
+    const titulo = wrapper.querySelector('.sm-socials-title');
+    if (titulo) titulo.style.opacity = '1';
+    let aberto = false;
+    const definir = (abrir) => {
+      aberto = abrir;
+      wrapper.toggleAttribute('data-open', abrir);
+      painel?.setAttribute('aria-hidden', String(!abrir));
+      toggleBtn.setAttribute('aria-expanded', String(abrir));
+      toggleBtn.setAttribute('aria-label', abrir ? 'Fechar menu' : 'Abrir menu');
+      document.body.classList.toggle('is-locked', abrir);
+      if (abrir) painel?.querySelector('a, button')?.focus();
+    };
+    toggleBtn.addEventListener('click', () => definir(!aberto));
+    painel?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => definir(false)));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && aberto) { definir(false); toggleBtn.focus(); }
+    });
+    return;
+  }
 
   const panel = wrapper.querySelector('.staggered-menu-panel');
   const preContainer = wrapper.querySelector('.sm-prelayers');

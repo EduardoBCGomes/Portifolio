@@ -238,7 +238,8 @@
       rafId = requestAnimationFrame(frame);
       const dt = Math.min((now - last) / 1000, 0.05);
       last = now;
-      if (paused || document.documentElement.classList.contains('is-loading')) return;
+      const raiz = document.documentElement;
+      if (paused || raiz.classList.contains('is-loading') || raiz.classList.contains('sem-movimento')) return;
       if (!opts.disableAnimation) elapsed += dt;
       if (now - ultimoDesenho < INTERVALO - 2) return;
       ultimoDesenho = now;

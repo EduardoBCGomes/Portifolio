@@ -147,8 +147,10 @@
         );
         gsap.getTweensOf(partes).forEach((tw) => tw.progress(1));
       }
+      window.portfolioTitulos?.antesDoSalto(alvo);
       window.scrollTo({ top: topo, behavior: 'instant' });
       if (window.ScrollTrigger) ScrollTrigger.update();
+      setTimeout(() => window.portfolioTitulos?.depoisDoSalto(alvo), 220);
       await animar(REVELAR, false);
       tela.classList.remove('is-ativa');
       ctx.clearRect(0, 0, tela.width, tela.height);

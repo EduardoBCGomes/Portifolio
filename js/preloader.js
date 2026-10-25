@@ -38,6 +38,12 @@
 
   const W = window.innerWidth;
   const H = window.innerHeight;
+  if (W < 2 || H < 2) { soltarSemAnimacao(); return; }
+
+  const seguranca = setTimeout(() => {
+    document.querySelector('canvas.revelar')?.remove();
+    soltarSemAnimacao();
+  }, 12000);
   const CELULA = W < 700 ? 3 : 5;
   const colunas = Math.ceil(W / CELULA);
   const linhas = Math.ceil(H / CELULA);
@@ -349,7 +355,7 @@
       gsap.to(tela, {
         opacity: 0,
         duration: 0.3,
-        onComplete: () => { gsap.ticker.remove(desenhar); tela.remove(); }
+        onComplete: () => { clearTimeout(seguranca); gsap.ticker.remove(desenhar); tela.remove(); cortina?.remove(); }
       });
     });
     return;
@@ -380,8 +386,10 @@
 
     const tl = gsap.timeline({
       onComplete: () => {
+        clearTimeout(seguranca);
         gsap.ticker.remove(desenhar);
         tela.remove();
+        cortina?.remove();
         if (camadas.length) gsap.set(camadas, { clearProps: 'transform,filter' });
       }
     });

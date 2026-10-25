@@ -20,12 +20,14 @@
   mm.add({
     isDesktop: '(min-width: 900px)',
     isMobile: '(max-width: 899px)',
-    motionOk: '(prefers-reduced-motion: no-preference)'
+    motionOk: '(prefers-reduced-motion: no-preference)',
+    podeApontar: '(hover: hover) and (pointer: fine)'
   }, (context) => {
-    const { isDesktop, motionOk } = context.conditions;
+    const { isDesktop, motionOk, podeApontar } = context.conditions;
     if (!motionOk) return;
 
     const cleanups = [];
+    const parado = () => document.documentElement.classList.contains('sem-movimento');
 
     const tituloY = 100;
     const onAnchorClick = (e) => {
@@ -198,6 +200,62 @@
       splits.push(split);
     });
 
+    const R = window.portfolioRevelar;
+    const titulos = gsap.utils.toArray('[data-titulo-dither]');
+    const blocos = gsap.utils.toArray('[data-revelar-y]');
+
+    const revelarTitulo = (titulo) => {
+      if (titulo.dataset.reservado) return;
+      titulo.closest('.section__head')?.classList.add('is-revelado');
+      if (R) R.revelarTexto(titulo, { duracao: .9 });
+      else titulo.style.maskImage = 'none';
+    };
+
+    titulos.forEach((titulo) => {
+      if (R) R.esconder(titulo);
+      ScrollTrigger.create({
+        trigger: titulo,
+        start: 'top 88%',
+        once: true,
+        onEnter: () => revelarTitulo(titulo)
+      });
+    });
+
+    blocos.forEach((bloco) => {
+      if (R) R.esconder(bloco);
+      ScrollTrigger.create({
+        trigger: bloco,
+        start: 'top 84%',
+        once: true,
+        onEnter: () => {
+          if (R) R.revelarBloco(bloco, { duracao: 1.15 });
+          else bloco.style.maskImage = 'none';
+        }
+      });
+    });
+
+    window.portfolioTitulos = {
+      antesDoSalto(secao) {
+        const titulo = secao && secao.querySelector('[data-titulo-dither]');
+        if (!titulo || !R || !R.ativo()) return;
+        titulo.dataset.reservado = '1';
+        R.esconder(titulo);
+      },
+      depoisDoSalto(secao) {
+        const titulo = secao && secao.querySelector('[data-titulo-dither]');
+        if (!titulo || !titulo.dataset.reservado) return;
+        delete titulo.dataset.reservado;
+        revelarTitulo(titulo);
+      }
+    };
+    cleanups.push(() => {
+      window.portfolioTitulos = null;
+      titulos.concat(blocos).forEach((el) => {
+        delete el.dataset.reservado;
+        if (R) R.limpar(el);
+      });
+    });
+
     gsap.fromTo('[data-about-photo]',
       { scale: 1.2 },
       {
@@ -212,26 +270,23 @@
       }
     );
 
-    if (isDesktop) {
-      gsap.utils.toArray('[data-magnetic]').forEach((el) => {
-        const xTo = gsap.quickTo(el, 'x', { duration: .55, ease: 'elastic.out(1, .4)' });
-        const yTo = gsap.quickTo(el, 'y', { duration: .55, ease: 'elastic.out(1, .4)' });
+    const ouvir = (el, eventos) => {
+      Object.entries(eventos).forEach(([nome, fn]) => el.addEventListener(nome, fn));
+      cleanups.push(() => Object.entries(eventos).forEach(([nome, fn]) => el.removeEventListener(nome, fn)));
+    };
 
-        const onMove = (e) => {
-          const r = el.getBoundingClientRect();
-          xTo((e.clientX - (r.left + r.width / 2)) * .35);
-          yTo((e.clientY - (r.top + r.height / 2)) * .45);
-        };
-        const onLeave = () => { xTo(0); yTo(0); };
+    const logo = document.querySelector('.nav__logo');
+    const letraE = document.querySelector('.nav__logo-e');
+    const letraB = document.querySelector('.nav__logo-b');
 
-        el.addEventListener('pointermove', onMove);
-        el.addEventListener('pointerleave', onLeave);
-
-        cleanups.push(() => {
-          el.removeEventListener('pointermove', onMove);
-          el.removeEventListener('pointerleave', onLeave);
-        });
-      });
+    if (podeApontar && logo && letraE && letraB) {
+      const abrir = gsap.timeline({ paused: true, defaults: { duration: .22, ease: 'steps(3)' } })
+        .to(letraE, { x: -3, y: -3 }, 0)
+        .to(letraB, { x: 3, y: 3 }, 0);
+      const entrar = () => { if (!parado()) abrir.play(); };
+      const sair = () => abrir.reverse();
+      ouvir(logo, { pointerenter: entrar, pointerleave: sair, focus: entrar, blur: sair });
+      cleanups.push(() => gsap.set([letraE, letraB], { clearProps: 'transform' }));
     }
 
     return () => {
